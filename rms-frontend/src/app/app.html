@@ -1,1 +1,20 @@
-<router-outlet />
+<main>
+  <h1>{{ title() }}</h1>
+
+  <nav class="module-navigation" *ngIf="shouldShowNavigation()">
+    <div class="nav-section">
+      <h3>Modules</h3>
+      <a routerLink="/cir-admin" routerLinkActive="active">CIR Admin</a>
+      <a routerLink="/cir-user" routerLinkActive="active">CIR User</a>
+      <a routerLink="/acr-admin" routerLinkActive="active">ACR Admin</a>
+      <a routerLink="/acr-user" routerLinkActive="active">ACR User</a>
+    </div>
+
+    <div class="nav-section">
+      <h3>Authentication</h3>
+      <a routerLink="/auth/cir-admin-login" routerLinkActive="active">CIR Admin Login</a>
+    </div>
+  </nav>
+
+  <router-outlet />
+</main>

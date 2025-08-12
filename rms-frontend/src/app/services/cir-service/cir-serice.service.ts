@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 
 export enum CirEndPoint {
   LOGIN_USER = '/user/login',
@@ -29,7 +29,7 @@ export class CirSericeService {
 
   baseUrl!: string;
 
-  constructor(  
+  constructor(
     private httpClient: HttpClient,
   ) {
     this.baseUrl = environment.baseUrl;

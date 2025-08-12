@@ -11,18 +11,6 @@ const routes: Routes = [
   {
     path: 'cir-admin-login',
     loadComponent: () => import('./components/cir-admin-login/cir-admin-login.component').then(m => m.CirAdminLoginComponent)
-  },
-  {
-    path: 'cir-user-login',
-    loadComponent: () => import('./components/cir-user-login/cir-user-login.component').then(m => m.CirUserLoginComponent)
-  },
-  {
-    path: 'acr-admin-login',
-    loadComponent: () => import('./components/acr-admin-login/acr-admin-login.component').then(m => m.AcrAdminLoginComponent)
-  },
-  {
-    path: 'acr-user-login',
-    loadComponent: () => import('./components/acr-user-login/acr-user-login.component').then(m => m.AcrUserLoginComponent)
   }
 ];
 
