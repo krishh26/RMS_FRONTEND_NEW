@@ -1,0 +1,149 @@
+.modal-container {
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 0;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+      color: #2c3e50;
+      font-weight: 600;
+      font-size: 1.5rem;
+    }
+
+    button {
+      color: #6c757d;
+
+      &:hover {
+        color: #495057;
+      }
+    }
+  }
+
+  .modal-content {
+    padding: 0 24px;
+    max-height: 70vh;
+    overflow-y: auto;
+
+    .form-row {
+      margin-bottom: 20px;
+
+      &.full-width {
+        width: 100%;
+      }
+
+      &.two-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+
+        @media (max-width: 600px) {
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+      }
+
+      mat-form-field {
+        width: 100%;
+
+        &.mat-form-field-appearance-outline {
+          .mat-form-field-outline {
+            color: #e9ecef;
+          }
+
+          &:focus-within {
+            .mat-form-field-outline {
+              color: #667eea;
+            }
+          }
+        }
+      }
+
+      textarea {
+        min-height: 80px;
+        resize: vertical;
+      }
+    }
+  }
+
+  .modal-actions {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin: 0;
+
+    button {
+      min-width: 100px;
+      padding: 8px 24px;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &[mat-button] {
+        color: #6c757d;
+        border: 1px solid #e9ecef;
+
+        &:hover {
+          background-color: #f8f9fa;
+          border-color: #dee2e6;
+        }
+      }
+
+      &[mat-raised-button] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+
+        &:hover:not(:disabled) {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          transform: none;
+        }
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  .modal-container {
+    .modal-header {
+      padding: 16px 20px 0;
+      margin-bottom: 16px;
+
+      h2 {
+        font-size: 1.3rem;
+      }
+    }
+
+    .modal-content {
+      padding: 0 20px;
+
+      .form-row {
+        margin-bottom: 16px;
+      }
+    }
+
+    .modal-actions {
+      padding: 16px 20px;
+      flex-direction: column;
+
+      button {
+        width: 100%;
+        margin-bottom: 8px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
