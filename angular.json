@@ -23,11 +23,26 @@
             "assets": [
               {
                 "glob": "**/*",
+                "input": "src/app/assets",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
                 "input": "public"
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/app/assets/css/adminlte.min.css",
+              "src/app/assets/css/all.min.css",
+              "src/app/assets/css/demo.css",
+              "src/app/assets/css/icheck-bootstrap.min.css",
+              "src/app/assets/scss/paper-dashboard.scss"
+            ],
+            "scripts": [
+              "src/app/assets/js/jquery.min.js",
+              "src/app/assets/js/bootstrap.bundle.min.js",
+              "src/app/assets/js/adminlte.min.js"
             ],
             "server": "src/main.server.ts",
             "outputMode": "server",
@@ -82,11 +97,26 @@
             "assets": [
               {
                 "glob": "**/*",
+                "input": "src/app/assets",
+                "output": "/assets/"
+              },
+              {
+                "glob": "**/*",
                 "input": "public"
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/app/assets/css/adminlte.min.css",
+              "src/app/assets/css/all.min.css",
+              "src/app/assets/css/demo.css",
+              "src/app/assets/css/icheck-bootstrap.min.css",
+              "src/app/assets/scss/paper-dashboard.scss"
+            ],
+            "scripts": [
+              "src/app/assets/js/jquery.min.js",
+              "src/app/assets/js/bootstrap.bundle.min.js",
+              "src/app/assets/js/adminlte.min.js"
             ]
           }
         }
