@@ -7,7 +7,7 @@ import { ProjectWiseJobListComponent } from './components/project-wise-job-list/
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'dashboard',
+    redirectTo: 'projects',
     pathMatch: 'full'
   },
   {

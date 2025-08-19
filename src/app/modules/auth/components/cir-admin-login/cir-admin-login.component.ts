@@ -7,6 +7,8 @@ import { RecaptchaModule } from 'ng-recaptcha';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CirSericeService } from '../../../../services/cir-service/cir-serice.service';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { NotificationService } from '../../../../services/notification/notification.service';
+import { Patterns } from '../../../../shared/constant/validation-patterns.const';
 
 @Component({
   selector: 'app-cir-admin-login',
@@ -23,24 +25,18 @@ export class CirAdminLoginComponent {
   DecodedToken: any = [];
   captchaToken: string = '';
   captchaError = false;
-  loginData = {
-    username: '',
-    password: ''
-  };
 
   constructor(
     private router: Router,
     private cirservice: CirSericeService,
+    private notificationService: NotificationService,
     private localStorageService: LocalStorageService,
   ) {
     this.loginForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.minLength(8)])
+      email: new FormControl('', [Validators.required, Validators.pattern(Patterns.email)]),
+      password: new FormControl('', [Validators.required, Validators.pattern(Patterns.password)])
     });
   }
-
-  isLoading = false;
-  errorMessage = '';
 
   ngOnInit() {
   }
@@ -61,15 +57,13 @@ export class CirAdminLoginComponent {
           localStorage.setItem("DecodedToken", JSON.stringify(this.DecodedToken));
           this.localStorageService.setLoginToken(response?.data);
           this.localStorageService.setLogger(response?.data?.user);
-          this.router.navigate(['/cir/cir-active-roles']);
-          console.log('Success:', response?.message);
+          this.router.navigate(['/cir-admin/projects']);
+          this.notificationService.showSuccess(response?.message);
         } else {
-          console.error('Error:', response?.message);
-          this.errorMessage = response?.message || 'Login failed';
+          this.notificationService.showError(response?.message);
         }
       }, (error) => {
-        console.error('Error:', error?.error?.message || 'Something went wrong!');
-        this.errorMessage = error?.error?.message || 'Something went wrong!';
+        this.notificationService.showError(error?.error?.message || 'Something went wrong!');
       })
     }
   }
