@@ -1,0 +1,75 @@
+<div class="user-list-container">
+  <div class="header">
+    <h2>User Management</h2>
+    <button class="add-btn" routerLink="../add">Add New User</button>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <input type="text" placeholder="Search users..." class="search-input">
+    </div>
+    <div class="filter-group">
+      <select class="filter-select">
+        <option value="">All Roles</option>
+        <option value="admin">Admin</option>
+        <option value="user">User</option>
+      </select>
+      <select class="filter-select">
+        <option value="">All Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Last Login</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>
+            <span class="role-badge" [ngClass]="user.role.toLowerCase()">
+              {{ user.role }}
+            </span>
+          </td>
+          <td>
+            <span class="status-badge" [ngClass]="user.status.toLowerCase()">
+              {{ user.status }}
+            </span>
+          </td>
+          <td>{{ user.lastLogin }}</td>
+          <td class="actions">
+            <button class="action-btn edit" (click)="editUser(user.id)" title="Edit">
+              Edit
+            </button>
+            <button class="action-btn toggle" (click)="toggleUserStatus(user.id)" title="Toggle Status">
+              {{ user.status === 'Active' ? 'Deactivate' : 'Activate' }}
+            </button>
+            <button class="action-btn delete" (click)="deleteUser(user.id)" title="Delete">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <button class="page-btn">&lt;</button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <button class="page-btn">&gt;</button>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="job-list-container">
+  <div class="header">
+    <h2>Job Listings</h2>
+  </div>
+
+  <div class="search-filters">
+    <div class="search-bar">
+      <input type="text" placeholder="Search jobs by title, company, or location..." class="search-input">
+      <button class="search-button">Search</button>
+    </div>
+    <div class="filters">
+      <select class="filter-select">
+        <option value="">Job Type</option>
+        <option value="full-time">Full-time</option>
+        <option value="part-time">Part-time</option>
+        <option value="contract">Contract</option>
+      </select>
+      <select class="filter-select">
+        <option value="">Location</option>
+        <option value="new-york">New York</option>
+        <option value="san-francisco">San Francisco</option>
+        <option value="remote">Remote</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="jobs-grid">
+    <div class="job-card" *ngFor="let job of jobs">
+      <div class="job-header">
+        <h3>{{ job.title }}</h3>
+        <span class="job-type">{{ job.type }}</span>
+      </div>
+      <div class="job-company">
+        <span class="company-name">{{ job.company }}</span>
+      </div>
+      <div class="job-details">
+        <span class="location">📍 {{ job.location }}</span>
+        <span class="posted-date">Posted: {{ job.postedDate }}</span>
+      </div>
+      <div class="job-actions">
+        <button class="action-btn view" (click)="viewJob(job.id)">View Details</button>
+        <button class="action-btn apply" (click)="applyForJob(job.id)">Apply Now</button>
+        <button class="action-btn save" (click)="saveJob(job.id)">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pagination">
+    <button class="page-btn">&lt;</button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <button class="page-btn">&gt;</button>
+  </div>
+</div>

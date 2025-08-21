@@ -1,0 +1,77 @@
+<div class="project-list-container">
+  <div class="header">
+    <h2>Project Management</h2>
+    <button class="add-btn" routerLink="../add">Add New Project</button>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <input type="text" placeholder="Search projects..." class="search-input">
+    </div>
+    <div class="filter-group">
+      <select class="filter-select">
+        <option value="">All Status</option>
+        <option value="active">Active</option>
+        <option value="planning">Planning</option>
+        <option value="completed">Completed</option>
+      </select>
+      <select class="filter-select">
+        <option value="">All Clients</option>
+        <option value="tech-corp">Tech Corp</option>
+        <option value="innovation-inc">Innovation Inc</option>
+        <option value="design-studio">Design Studio</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="projects-table">
+      <thead>
+        <tr>
+          <th>Project Name</th>
+          <th>Client</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Status</th>
+          <th>Budget</th>
+          <th>Team Size</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let project of projects">
+          <td>{{ project.name }}</td>
+          <td>{{ project.client }}</td>
+          <td>{{ project.startDate }}</td>
+          <td>{{ project.endDate }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="project.status.toLowerCase()">
+              {{ project.status }}
+            </span>
+          </td>
+          <td>${{ project.budget | number }}</td>
+          <td>{{ project.team }}</td>
+          <td class="actions">
+            <button class="action-btn view" (click)="viewDetails(project.id)" title="View Details">
+              View
+            </button>
+            <button class="action-btn edit" (click)="editProject(project.id)" title="Edit">
+              Edit
+            </button>
+            <button class="action-btn delete" (click)="deleteProject(project.id)" title="Delete">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <button class="page-btn">&lt;</button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <button class="page-btn">&gt;</button>
+  </div>
+</div>

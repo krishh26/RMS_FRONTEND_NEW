@@ -1,0 +1,93 @@
+<div class="send-job-container">
+  <div class="header">
+    <h2>Send Job Invitation</h2>
+  </div>
+
+  <div class="job-details">
+    <h3>Selected Job</h3>
+    <div class="job-info">
+      <div class="info-item">
+        <span class="label">Title:</span>
+        <span class="value">{{ selectedJob.title }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Department:</span>
+        <span class="value">{{ selectedJob.department }}</span>
+      </div>
+      <div class="info-item">
+        <span class="label">Location:</span>
+        <span class="value">{{ selectedJob.location }}</span>
+      </div>
+    </div>
+  </div>
+
+  <form [formGroup]="sendJobForm" (ngSubmit)="onSubmit()" class="send-job-form">
+    <div class="form-group candidates-section">
+      <div class="section-header">
+        <label>Select Candidates</label>
+        <div class="selection-actions">
+          <button type="button" class="action-btn" (click)="onSelectAll()">Select All</button>
+          <button type="button" class="action-btn" (click)="onClearAll()">Clear All</button>
+        </div>
+      </div>
+
+      <div class="candidates-list">
+        <div class="candidate-item" *ngFor="let candidate of candidates">
+          <label class="checkbox-container">
+            <!-- <input type="checkbox"
+                   [value]="candidate.id"
+                   [checked]="sendJobForm.get('selectedCandidates')?.value?.includes(candidate.id)"
+                   (change)="onCandidateSelect(candidate.id, ($event.target as HTMLInputElement).checked)"> -->
+            <span class="checkmark"></span>
+            <div class="candidate-info">
+              <span class="name">{{ candidate.name }}</span>
+              <span class="email">{{ candidate.email }}</span>
+            </div>
+          </label>
+        </div>
+      </div>
+      <div class="error-message" *ngIf="sendJobForm.get('selectedCandidates')?.invalid && sendJobForm.get('selectedCandidates')?.touched">
+        Please select at least one candidate
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="subject">Email Subject</label>
+      <input
+        type="text"
+        id="subject"
+        formControlName="subject"
+        [class.error]="sendJobForm.get('subject')?.invalid && sendJobForm.get('subject')?.touched">
+      <div class="error-message" *ngIf="sendJobForm.get('subject')?.invalid && sendJobForm.get('subject')?.touched">
+        Subject is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="message">Email Message</label>
+      <textarea
+        id="message"
+        formControlName="message"
+        rows="8"
+        [class.error]="sendJobForm.get('message')?.invalid && sendJobForm.get('message')?.touched"></textarea>
+      <div class="error-message" *ngIf="sendJobForm.get('message')?.invalid && sendJobForm.get('message')?.touched">
+        Message is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="checkbox-container">
+        <input type="checkbox" formControlName="includeJobDescription">
+        <span class="checkmark"></span>
+        Include full job description in the email
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="cancel-btn" routerLink="../">Cancel</button>
+      <button type="submit" class="submit-btn" [disabled]="sendJobForm.invalid">
+        Send Invitations
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,78 @@
+<div class="application-list-container">
+  <div class="header">
+    <h2>Job Applications</h2>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <input type="text" placeholder="Search applications..." class="search-input">
+    </div>
+    <div class="filter-group">
+      <select class="filter-select">
+        <option value="">All Status</option>
+        <option value="under-review">Under Review</option>
+        <option value="shortlisted">Shortlisted</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="applications-table">
+      <thead>
+        <tr>
+          <th>Applicant</th>
+          <th>Job Title</th>
+          <th>Contact</th>
+          <th>Experience</th>
+          <th>Applied Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let app of applications">
+          <td>{{ app.applicant }}</td>
+          <td>{{ app.jobTitle }}</td>
+          <td>
+            <div class="contact-info">
+              <div>{{ app.email }}</div>
+              <div>{{ app.phone }}</div>
+            </div>
+          </td>
+          <td>{{ app.experience }}</td>
+          <td>{{ app.appliedDate }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="app.status.toLowerCase().replace(' ', '-')">
+              {{ app.status }}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="action-btn view" (click)="viewApplication(app.id)" title="View Details">
+              View
+            </button>
+            <button class="action-btn download" (click)="downloadResume(app.id)" title="Download Resume">
+              Resume
+            </button>
+            <!-- <select
+              class="status-select"
+              [value]="app.status"
+              (change)="updateStatus(app.id, $event.target.value)">
+              <option value="Under Review">Under Review</option>
+              <option value="Shortlisted">Shortlist</option>
+              <option value="Rejected">Reject</option>
+            </select> -->
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <button class="page-btn">&lt;</button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <button class="page-btn">&gt;</button>
+  </div>
+</div>

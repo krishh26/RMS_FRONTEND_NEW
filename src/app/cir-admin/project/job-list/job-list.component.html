@@ -1,0 +1,89 @@
+<div class="job-list-container">
+  <div class="header">
+    <h2>Job Management</h2>
+    <button class="add-btn" routerLink="../job-add">Add New Job</button>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <input type="text" placeholder="Search jobs..." class="search-input">
+    </div>
+    <div class="filter-group">
+      <select class="filter-select">
+        <option value="">All Departments</option>
+        <option value="engineering">Engineering</option>
+        <option value="product">Product</option>
+        <option value="design">Design</option>
+      </select>
+      <select class="filter-select">
+        <option value="">All Locations</option>
+        <option value="new-york">New York</option>
+        <option value="san-francisco">San Francisco</option>
+        <option value="remote">Remote</option>
+      </select>
+      <select class="filter-select">
+        <option value="">All Status</option>
+        <option value="active">Active</option>
+        <option value="closed">Closed</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="jobs-table">
+      <thead>
+        <tr>
+          <th>Job Title</th>
+          <th>Department</th>
+          <th>Location</th>
+          <th>Type</th>
+          <th>Experience</th>
+          <th>Posted Date</th>
+          <th>Status</th>
+          <th>Applications</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let job of jobs">
+          <td>{{ job.title }}</td>
+          <td>{{ job.department }}</td>
+          <td>{{ job.location }}</td>
+          <td>{{ job.type }}</td>
+          <td>{{ job.experience }}</td>
+          <td>{{ job.postedDate }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="job.status.toLowerCase()">
+              {{ job.status }}
+            </span>
+          </td>
+          <td>
+            <span class="applications-count">{{ job.applications }}</span>
+          </td>
+          <td class="actions">
+            <button class="action-btn view" (click)="viewApplications(job.id)" title="View Applications">
+              Applications
+            </button>
+            <button class="action-btn edit" (click)="editJob(job.id)" title="Edit">
+              Edit
+            </button>
+            <button class="action-btn toggle" (click)="toggleJobStatus(job.id)" title="Toggle Status">
+              {{ job.status === 'Active' ? 'Close' : 'Reopen' }}
+            </button>
+            <button class="action-btn delete" (click)="deleteJob(job.id)" title="Delete">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination">
+    <button class="page-btn">&lt;</button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <button class="page-btn">&gt;</button>
+  </div>
+</div>

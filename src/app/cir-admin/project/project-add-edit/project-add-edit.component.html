@@ -1,0 +1,134 @@
+<div class="project-form-container">
+  <div class="header">
+    <h2>{{ isEditMode ? 'Edit Project' : 'Add New Project' }}</h2>
+  </div>
+
+  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="project-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Project Name</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          placeholder="Enter project name"
+          [class.error]="projectForm.get('name')?.invalid && projectForm.get('name')?.touched">
+        <div class="error-message" *ngIf="projectForm.get('name')?.invalid && projectForm.get('name')?.touched">
+          Project name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="client">Client</label>
+        <select
+          id="client"
+          formControlName="client"
+          [class.error]="projectForm.get('client')?.invalid && projectForm.get('client')?.touched">
+          <option value="">Select Client</option>
+          <option *ngFor="let client of clients" [value]="client.name">
+            {{ client.name }}
+          </option>
+        </select>
+        <div class="error-message" *ngIf="projectForm.get('client')?.invalid && projectForm.get('client')?.touched">
+          Client is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="startDate">Start Date</label>
+        <input
+          type="date"
+          id="startDate"
+          formControlName="startDate"
+          [class.error]="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched">
+        <div class="error-message" *ngIf="projectForm.get('startDate')?.invalid && projectForm.get('startDate')?.touched">
+          Start date is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="endDate">End Date</label>
+        <input
+          type="date"
+          id="endDate"
+          formControlName="endDate"
+          [class.error]="projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched">
+        <div class="error-message" *ngIf="projectForm.get('endDate')?.invalid && projectForm.get('endDate')?.touched">
+          End date is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select
+          id="status"
+          formControlName="status"
+          [class.error]="projectForm.get('status')?.invalid && projectForm.get('status')?.touched">
+          <option value="planning">Planning</option>
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+        </select>
+        <div class="error-message" *ngIf="projectForm.get('status')?.invalid && projectForm.get('status')?.touched">
+          Status is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="budget">Budget ($)</label>
+        <input
+          type="number"
+          id="budget"
+          formControlName="budget"
+          placeholder="Enter budget amount"
+          [class.error]="projectForm.get('budget')?.invalid && projectForm.get('budget')?.touched">
+        <div class="error-message" *ngIf="projectForm.get('budget')?.invalid && projectForm.get('budget')?.touched">
+          <span *ngIf="projectForm.get('budget')?.errors?.['required']">Budget is required</span>
+          <span *ngIf="projectForm.get('budget')?.errors?.['min']">Budget must be greater than 0</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="teamSize">Team Size</label>
+        <input
+          type="number"
+          id="teamSize"
+          formControlName="teamSize"
+          placeholder="Enter team size"
+          [class.error]="projectForm.get('teamSize')?.invalid && projectForm.get('teamSize')?.touched">
+        <div class="error-message" *ngIf="projectForm.get('teamSize')?.invalid && projectForm.get('teamSize')?.touched">
+          <span *ngIf="projectForm.get('teamSize')?.errors?.['required']">Team size is required</span>
+          <span *ngIf="projectForm.get('teamSize')?.errors?.['min']">Team size must be at least 1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Project Description</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        rows="4"
+        placeholder="Enter project description"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="objectives">Project Objectives</label>
+      <textarea
+        id="objectives"
+        formControlName="objectives"
+        rows="4"
+        placeholder="Enter project objectives"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
+      <button type="submit" class="submit-btn" [disabled]="projectForm.invalid">
+        {{ isEditMode ? 'Update' : 'Create' }} Project
+      </button>
+    </div>
+  </form>
+</div>

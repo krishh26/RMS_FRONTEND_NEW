@@ -1,0 +1,158 @@
+<div class="job-form-container">
+  <div class="header">
+    <h2>{{ isEditMode ? 'Edit Job' : 'Add New Job' }}</h2>
+  </div>
+
+  <form [formGroup]="jobForm" (ngSubmit)="onSubmit()" class="job-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="title">Job Title</label>
+        <input
+          type="text"
+          id="title"
+          formControlName="title"
+          placeholder="Enter job title"
+          [class.error]="jobForm.get('title')?.invalid && jobForm.get('title')?.touched">
+        <div class="error-message" *ngIf="jobForm.get('title')?.invalid && jobForm.get('title')?.touched">
+          Job title is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="department">Department</label>
+        <select
+          id="department"
+          formControlName="department"
+          [class.error]="jobForm.get('department')?.invalid && jobForm.get('department')?.touched">
+          <option value="">Select Department</option>
+          <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+        </select>
+        <div class="error-message" *ngIf="jobForm.get('department')?.invalid && jobForm.get('department')?.touched">
+          Department is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="location">Location</label>
+        <select
+          id="location"
+          formControlName="location"
+          [class.error]="jobForm.get('location')?.invalid && jobForm.get('location')?.touched">
+          <option value="">Select Location</option>
+          <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
+        </select>
+        <div class="error-message" *ngIf="jobForm.get('location')?.invalid && jobForm.get('location')?.touched">
+          Location is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="type">Job Type</label>
+        <select
+          id="type"
+          formControlName="type"
+          [class.error]="jobForm.get('type')?.invalid && jobForm.get('type')?.touched">
+          <option *ngFor="let type of jobTypes" [value]="type">{{ type }}</option>
+        </select>
+        <div class="error-message" *ngIf="jobForm.get('type')?.invalid && jobForm.get('type')?.touched">
+          Job type is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="experience">Required Experience</label>
+        <input
+          type="text"
+          id="experience"
+          formControlName="experience"
+          placeholder="e.g., 3+ years"
+          [class.error]="jobForm.get('experience')?.invalid && jobForm.get('experience')?.touched">
+        <div class="error-message" *ngIf="jobForm.get('experience')?.invalid && jobForm.get('experience')?.touched">
+          Experience is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="salary">Salary Range (Optional)</label>
+        <input
+          type="text"
+          id="salary"
+          formControlName="salary"
+          placeholder="e.g., $80,000 - $100,000">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Job Description</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        rows="4"
+        placeholder="Enter detailed job description"
+        [class.error]="jobForm.get('description')?.invalid && jobForm.get('description')?.touched"></textarea>
+      <div class="error-message" *ngIf="jobForm.get('description')?.invalid && jobForm.get('description')?.touched">
+        Job description is required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="requirements">Requirements</label>
+      <textarea
+        id="requirements"
+        formControlName="requirements"
+        rows="4"
+        placeholder="Enter job requirements"
+        [class.error]="jobForm.get('requirements')?.invalid && jobForm.get('requirements')?.touched"></textarea>
+      <div class="error-message" *ngIf="jobForm.get('requirements')?.invalid && jobForm.get('requirements')?.touched">
+        Requirements are required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="responsibilities">Responsibilities</label>
+      <textarea
+        id="responsibilities"
+        formControlName="responsibilities"
+        rows="4"
+        placeholder="Enter job responsibilities"
+        [class.error]="jobForm.get('responsibilities')?.invalid && jobForm.get('responsibilities')?.touched"></textarea>
+      <div class="error-message" *ngIf="jobForm.get('responsibilities')?.invalid && jobForm.get('responsibilities')?.touched">
+        Responsibilities are required
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="benefits">Benefits (Optional)</label>
+      <textarea
+        id="benefits"
+        formControlName="benefits"
+        rows="4"
+        placeholder="Enter job benefits"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select
+        id="status"
+        formControlName="status"
+        [class.error]="jobForm.get('status')?.invalid && jobForm.get('status')?.touched">
+        <option value="active">Active</option>
+        <option value="closed">Closed</option>
+      </select>
+      <div class="error-message" *ngIf="jobForm.get('status')?.invalid && jobForm.get('status')?.touched">
+        Status is required
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
+      <button type="submit" class="submit-btn" [disabled]="jobForm.invalid">
+        {{ isEditMode ? 'Update' : 'Post' }} Job
+      </button>
+    </div>
+  </form>
+</div>
