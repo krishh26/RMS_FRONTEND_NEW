@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 import { CirAdminLoginComponent } from './cir-admin-login/cir-admin-login.component';
 import { CirUserLoginComponent } from './cir-user-login/cir-user-login.component';
@@ -26,6 +27,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    RecaptchaModule,
+    RecaptchaFormsModule,
     RouterModule.forChild(routes)
   ]
 })

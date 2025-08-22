@@ -1,0 +1,368 @@
+/*!
+
+=========================================================
+* Paper Dashboard Angular - v2.1.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/paper-dashboard-angular
+* Copyright 2019 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/paper-dashboard-angular/blob/master/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
+.custom-header {
+  box-shadow: 0px 4px 18px 0px rgba(0, 0, 0, 0.0784313725);
+  background-color: #F5F5F4;
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.navbar {
+  margin-bottom: 0px;
+}
+
+.navbar .navbar-brand {
+  text-transform: capitalize;
+  font-size: 20px;
+  padding-top: 0rem;
+  padding-bottom: 0rem;
+  line-height: 1.625rem;
+}
+
+.custom-header .navbar .navbar-nav .nav-link {
+  color: #140e0e;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.custom-header .navbar a.dropdown-item {
+  color: #140e0e;
+  font-size: 16px;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+  background-color: #feeaea;
+  border-radius: 0px;
+  color: #140e0e !important;
+}
+
+.custom-header .navbar .navbar-nav .nav-link:hover,
+.custom-header .navbar .navbar-nav .nav-link.active {
+  color: #ff0000 !important;
+}
+
+
+footer {
+  background-color: #140e0e;
+  color: #FFF;
+}
+
+.tim-row {
+  margin-bottom: 20px;
+}
+
+.tim-white-buttons {
+  background-color: #777777;
+}
+
+.typography-line {
+  padding-left: 25%;
+  margin-bottom: 35px;
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.typography-line span {
+  bottom: 10px;
+  color: #c0c1c2;
+  display: block;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 13px;
+  left: 0;
+  position: absolute;
+  width: 260px;
+  text-transform: none;
+}
+
+.tim-row {
+  padding-top: 60px;
+}
+
+.tim-row h3 {
+  margin-top: 0;
+}
+
+.offline-doc .page-header {
+  display: flex;
+  align-items: center;
+}
+
+.offline-doc .footer {
+  position: absolute;
+  width: 100%;
+  background: transparent;
+  bottom: 0;
+  color: #fff;
+  z-index: 1;
+}
+
+@media all and (min-width: 992px) {
+  .sidebar .nav>li.active-pro {
+    position: absolute;
+    width: 100%;
+    bottom: 10px;
+  }
+}
+
+.card.card-upgrade .card-category {
+  max-width: 530px;
+  margin: 0 auto;
+}
+
+/* Nucleo Style */
+
+.demo-iconshtml {
+  font-size: 62.5%;
+}
+
+.demo-icons body {
+  font-size: 1.6rem;
+  font-family: sans-serif;
+  color: #333333;
+  background: white;
+}
+
+.demo-icons a {
+  color: #608CEE;
+  text-decoration: none;
+}
+
+.demo-icons header {
+  text-align: center;
+  padding: 100px 0 0;
+}
+
+.demo-icons header h1 {
+  font-size: 2.8rem;
+}
+
+.demo-icons header p {
+  font-size: 1.4rem;
+  margin-top: 1em;
+}
+
+.demo-icons header a:hover {
+  text-decoration: underline;
+}
+
+.demo-icons .nc-icon {
+  font-size: 34px;
+}
+
+.demo-icons section h2 {
+  border-bottom: 1px solid #e2e2e2;
+  padding: 0 0 1em .2em;
+  margin-bottom: 1em;
+}
+
+.demo-icons ul {
+  padding-left: 0;
+}
+
+.demo-icons ul::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.demo-icons ul li {
+  width: 20%;
+  float: left;
+  padding: 16px 0;
+  text-align: center;
+  border-radius: .25em;
+  -webkit-transition: background 0.2s;
+  -moz-transition: background 0.2s;
+  transition: background 0.2s;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+.demo-icons ul li:hover {
+  background: #f4f4f4;
+}
+
+.demo-icons ul p,
+.demo-icons ul em,
+.demo-icons ul input {
+  display: inline-block;
+  font-size: 1rem;
+  color: #999999;
+  -webkit-user-select: auto;
+  -moz-user-select: auto;
+  -ms-user-select: auto;
+  user-select: auto;
+  white-space: nowrap;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.demo-icons ul p {
+  padding: 20px 0 0;
+  font-size: 12px;
+  margin: 0;
+}
+
+.demo-icons ul p::selection,
+.demo-icons ul em::selection {
+  background: #608CEE;
+  color: #efefef;
+}
+
+.demo-icons ul em {
+  font-size: 12px;
+}
+
+.demo-icons ul em::before {
+  content: '[';
+}
+
+.demo-icons ul em::after {
+  content: ']';
+}
+
+.demo-icons ul input {
+  text-align: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  display: none;
+}
+
+.p-12 {
+  font-size: 12px !important;
+}
+
+.p-13 {
+  font-size: 13px !important;
+}
+
+.p-14 {
+  font-size: 14px !important;
+}
+
+.Heading-medium {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+
+/*Button css*/
+.btn {
+  padding: 0.73rem 1rem !important;
+}
+
+.btn-primary {
+  background-color: #1563df !important;
+  border-color: #1563df !important;
+  color: #FFFFFF !important;
+  box-shadow: none !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary:active:focus,
+.btn-primary:active:hover,
+.btn-primary.active:focus,
+.btn-primary.active:hover,
+.show>.btn-primary.dropdown-toggle,
+.show>.btn-primary.dropdown-toggle:focus,
+.show>.btn-primary.dropdown-toggle:hover {
+  background-color: #0e49a6 !important;
+  border-color: #0e49a6 !important;
+  color: #FFFFFF !important;
+  box-shadow: none !important;
+}
+
+.btn-sm {
+  padding: 0.30rem 0.75rem !important;
+  font-size: 0.875rem !important;
+}
+
+.Titleheading {
+  display: block;
+  padding: 0.75rem 0;
+}
+
+.Titleheading h1,
+.Titleheading h2,
+.Titleheading h3,
+.Titleheading h4,
+.Titleheading h5 {
+  font-size: 28px;
+  font-weight: 700;
+}
+section{
+  padding: 40px 0px;
+}
+.FlatCard {
+  box-shadow: 0px 0px 35px 0px rgba(154, 161, 171, 0.15);
+  background-color: #FFF;
+}
+
+.FlatCard .header-title,
+.card .header-title {
+  margin-bottom: 0rem;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+  font-size: 1rem;
+  margin-top: 0;
+}
+
+table tbody tr:nth-child(even) td {
+  background-color: #f5f5f5 !important;
+}
+
+.gray-bg {
+  background-color: #e9ecef !important;
+}
+
+.control-search {
+  padding-left: 2rem !important;
+}
+.input-icon{
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  color: #777777;
+}
+
+/*tablet device*/
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .mob-mb1 {
+    margin-bottom: 1rem;
+  }
+}
+
+/*mobile device*/
+
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+  .mob-mb1 {
+    margin-bottom: 1rem;
+  }
+}

@@ -3,6 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: '',
+    redirectTo: 'auth/acr-admin-login',
+    pathMatch: 'full'
+  },
+  {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
@@ -17,6 +22,10 @@ const routes: Routes = [
   {
     path: 'acr-admin',
     loadChildren: () => import('./acr-admin/acr-admin.module').then(m => m.AcrAdminModule)
+  },
+  {
+    path: '**',
+    redirectTo: 'auth/acr-admin-login'
   }
 ];
 

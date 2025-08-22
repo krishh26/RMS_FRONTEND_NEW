@@ -1,16 +1,74 @@
-<div class="login-container">
-  <div class="login-card">
-    <h2>CIR User Login</h2>
-    <form>
-      <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" id="username" placeholder="Enter username">
+<div>
+  <div class="container d-flex justify-content-center align-items-center login-container">
+    <div class="row d-flex align-items-center justify-content-center mobile-login-modal"
+      style="overflow:hidden; width:100vw; height:100vh;">
+
+      <div class="col-lg-7 col-xl-7 col-md-12 col-sm-12 col-12 text-center p-0">
+        <div class="Login-leftside">
+          <div class="company-logo">
+            <img src="../../../../assets/img/Saivenlogo.png" width="200" class="mb-2" />
+            <h3>“Elevate Your Career with SaiVen: Join Public Sector IT Projects”</h3>
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter password">
+      <div class="col-lg-5 col-xl-5 col-md-12 col-sm-12 col-12">
+        <div class="login-modal">
+          <div class="login-body">
+            <h5 class="Heading-medium">Hello, Welcome to CIR Login</h5>
+            <!-- <h4 class="mb-4"><strong></strong></h4> -->
+
+            <form class="needs-validation" [formGroup]="loginForm" (ngSubmit)="login()">
+
+              <div class="form-group">
+                <label>Email id</label>
+                <input type="email" formControlName="email" required class="form-control" placeholder="Enter email id">
+                <span class="text-danger" *ngIf="
+                loginForm.controls?.['email']?.touched &&
+                loginForm.controls?.['email']?.errors?.['required']">
+                  Please enter email
+                </span>
+                <span class="text-danger" *ngIf="
+                loginForm.controls?.['email']?.touched &&
+                loginForm.controls?.['email']?.errors?.['pattern']">
+                  Please enter valid email
+                </span>
+              </div>
+
+              <div class="form-group">
+                <label>Password</label>
+                <input [type]="password" class="form-control" placeholder="Enter password" formControlName="password"
+                  required>
+                  <span *ngIf="!showPassword" class="fas fa-eye showicon" (click)="showHidePass('password')"></span>
+                  <span *ngIf="showPassword" class="fas fa-eye-slash showicon" (click)="showHidePass('password')"></span>
+                <span class="text-danger" *ngIf="
+                    loginForm.controls?.['password']?.touched &&
+                    loginForm.controls?.['password']?.errors?.['required']">
+                  Please enter password
+                </span>
+                <span class="text-danger" *ngIf="
+                    loginForm.controls?.['password']?.touched &&
+                    loginForm.controls?.['password']?.errors?.['pattern']">
+                  Password must be contain alphabet (1 capital), number and @
+                </span>
+              </div>
+
+              <div class="form-group">
+                <re-captcha (resolved)="onCaptchaResolved($event)" siteKey="6Ld9_jcrAAAAAEpv7ImSiAiLIdjRcmx8q7IIZj2H" class="mb-3">
+                </re-captcha>
+                <span class="text-danger" *ngIf="captchaError">
+                  Please complete the CAPTCHA.
+                </span>
+              </div>
+
+              <p class="p-14">Don't have an account?<a href="javascript:void(0)" routerLink="/cir/cir-register">
+                  Register Now </a> | <a href="javascript:void(0)" routerLink="/cir/cir-forgot-password">Forgot
+                  Password?</a></p>
+              <button type="submit" class="btn btn-primary w-100" [disabled]="!captchaToken">Login</button>
+            </form>
+          </div>
+        </div>
       </div>
-      <button type="submit">Login</button>
-    </form>
-  </div>
+
+    </div> <!-- Inner row -->
+  </div> <!-- Outer container -->
 </div>
