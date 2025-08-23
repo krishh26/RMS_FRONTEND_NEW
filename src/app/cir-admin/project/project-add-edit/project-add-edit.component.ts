@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -8,8 +8,12 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./project-add-edit.component.scss']
 })
 export class ProjectAddEditComponent implements OnInit {
+  @Input() projectData: any = null;
+  @Input() isEditMode: boolean = false;
+  @Output() closeModal = new EventEmitter<void>();
+  @Output() formSubmitted = new EventEmitter<any>();
+
   projectForm: FormGroup;
-  isEditMode = false;
   projectId: number | null = null;
 
   clients = [
@@ -37,35 +41,22 @@ export class ProjectAddEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.projectId = this.route.snapshot.params['id'];
-    if (this.projectId) {
-      this.isEditMode = true;
+    if (this.projectData && this.isEditMode) {
       this.loadProjectDetails();
     }
   }
 
   private loadProjectDetails(): void {
-    // Simulate API call to get project details
-    const mockProject = {
-      name: 'Project Alpha',
-      client: 'Tech Corp',
-      startDate: '2024-03-01',
-      endDate: '2024-06-30',
-      status: 'active',
-      budget: 50000,
-      teamSize: 5,
-      description: 'Project description here',
-      objectives: 'Project objectives here'
-    };
-
-    this.projectForm.patchValue(mockProject);
+    // Use the passed project data instead of mock data
+    this.projectForm.patchValue(this.projectData);
   }
 
   onSubmit(): void {
     if (this.projectForm.valid) {
       console.log('Form submitted:', this.projectForm.value);
-      // Here you would typically save the project data
-      this.router.navigate(['../'], { relativeTo: this.route });
+      // Emit the form data and close modal
+      this.formSubmitted.emit(this.projectForm.value);
+      this.closeModal.emit();
     } else {
       this.markFormGroupTouched(this.projectForm);
     }
@@ -81,6 +72,6 @@ export class ProjectAddEditComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
+    this.closeModal.emit();
   }
 }

@@ -11,15 +11,15 @@
         <nav class="d-flex align-items-center">
           <a routerLink="/acr/acr-create-job"
              class="nav-link text-decoration-none fw-medium"
-             [ngClass]="{'active': isRouteActive('/acr/acr-create-job')}">CREATE JOB</a>
+             [class.active]="isRouteActive('/acr/acr-create-job')">CREATE JOB</a>
 
           <a routerLink="/acr/acr-create-candidate"
              class="nav-link text-decoration-none fw-medium"
-             [ngClass]="{'active': isRouteActive('/acr/acr-create-candidate')}">CREATE CANDIDATE</a>
+             [class.active]="isRouteActive('/acr/acr-create-candidate')">CREATE CANDIDATE</a>
 
           <a routerLink="/acr/acr-create-contract"
              class="nav-link text-decoration-none fw-medium"
-             [ngClass]="{'active': isRouteActive('/acr/acr-create-contract')}">CREATE CONTRACT</a>
+             [class.active]="isRouteActive('/acr/acr-create-contract')">CREATE CONTRACT</a>
         </nav>
 
         <button class="btn btn-logout" (click)="logoutAcrAdmin()">LOGOUT</button>

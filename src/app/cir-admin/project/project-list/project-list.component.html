@@ -1,7 +1,7 @@
 <div class="project-list-container">
   <div class="header">
     <h2>Project Management</h2>
-    <button class="add-btn" routerLink="../add">Add New Project</button>
+    <button class="add-btn project" (click)="openAddProjectModal()">Add New Project</button>
   </div>
 
   <div class="filters">
@@ -55,7 +55,7 @@
             <button class="action-btn view" (click)="viewDetails(project.id)" title="View Details">
               View
             </button>
-            <button class="action-btn edit" (click)="editProject(project.id)" title="Edit">
+            <button class="action-btn edit" (click)="openEditProjectModal(project)" title="Edit">
               Edit
             </button>
             <button class="action-btn delete" (click)="deleteProject(project.id)" title="Delete">
@@ -73,5 +73,23 @@
     <button class="page-btn">2</button>
     <button class="page-btn">3</button>
     <button class="page-btn">&gt;</button>
+  </div>
+</div>
+
+<!-- Modal for Add New Project -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>{{ isEditMode ? 'Edit Project' : 'Add New Project' }}</h3>
+      <button class="close-btn" (click)="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <app-project-add-edit
+        [projectData]="selectedProject"
+        [isEditMode]="isEditMode"
+        (closeModal)="closeModal()"
+        (formSubmitted)="onFormSubmitted($event)">
+      </app-project-add-edit>
+    </div>
   </div>
 </div>

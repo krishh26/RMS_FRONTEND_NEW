@@ -1,7 +1,7 @@
 <div class="job-list-container">
   <div class="header">
     <h2>Job Management</h2>
-    <button class="add-btn" routerLink="../job-add">Add New Job</button>
+    <button class="add-btn" routerLink="add">Add New Job</button>
   </div>
 
   <div class="filters">
@@ -64,7 +64,7 @@
             <button class="action-btn view" (click)="viewApplications(job.id)" title="View Applications">
               Applications
             </button>
-            <button class="action-btn edit" (click)="editJob(job.id)" title="Edit">
+            <button class="action-btn edit" [routerLink]="['edit', job.id]" title="Edit">
               Edit
             </button>
             <button class="action-btn toggle" (click)="toggleJobStatus(job.id)" title="Toggle Status">

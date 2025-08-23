@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-list',
@@ -6,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./project-list.component.scss']
 })
 export class ProjectListComponent implements OnInit {
+  showModal = false;
+  isEditMode = false;
+  selectedProject: any = null;
   projects: any[] = [
     {
       id: 1,
@@ -39,7 +43,7 @@ export class ProjectListComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     // Here you would typically fetch projects from a service
@@ -54,6 +58,38 @@ export class ProjectListComponent implements OnInit {
   }
 
   viewDetails(projectId: number): void {
-    console.log('View project details:', projectId);
+    // Redirect to job list page
+    this.router.navigate(['/cir-admin/jobs']);
+  }
+
+  openAddProjectModal(): void {
+    this.isEditMode = false;
+    this.selectedProject = null;
+    this.showModal = true;
+  }
+
+  openEditProjectModal(project: any): void {
+    this.isEditMode = true;
+    this.selectedProject = project;
+    this.showModal = true;
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.isEditMode = false;
+    this.selectedProject = null;
+  }
+
+  onFormSubmitted(formData: any): void {
+    console.log('Project form submitted:', formData);
+    if (this.isEditMode) {
+      console.log('Updating project:', this.selectedProject.id, 'with data:', formData);
+      // Here you would typically update the project data
+    } else {
+      console.log('Creating new project with data:', formData);
+      // Here you would typically create a new project
+    }
+    // For now, just close the modal
+    this.closeModal();
   }
 }

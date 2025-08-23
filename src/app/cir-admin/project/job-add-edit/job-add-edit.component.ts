@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -8,8 +8,12 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./job-add-edit.component.scss']
 })
 export class JobAddEditComponent implements OnInit {
+  @Input() projectData: any = null;
+  @Input() isEditMode: boolean = false;
+  @Output() closeModal = new EventEmitter<void>();
+  @Output() formSubmitted = new EventEmitter<any>();
+
   jobForm: FormGroup;
-  isEditMode = false;
   jobId: number | null = null;
 
   departments = [
@@ -57,37 +61,36 @@ export class JobAddEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.jobId = this.route.snapshot.params['id'];
-    if (this.jobId) {
-      this.isEditMode = true;
-      this.loadJobDetails();
+    if (this.projectData && this.isEditMode) {
+      this.loadProjectDetails();
     }
   }
 
-  private loadJobDetails(): void {
-    // Simulate API call to get job details
-    const mockJob = {
-      title: 'Senior Software Engineer',
-      department: 'Engineering',
-      location: 'New York',
-      type: 'Full-time',
-      experience: '5+ years',
-      salary: '120,000 - 150,000',
-      description: 'We are looking for a Senior Software Engineer...',
-      requirements: '- Bachelor\'s degree in Computer Science\n- 5+ years of experience\n- Strong knowledge of JavaScript',
-      responsibilities: '- Design and implement new features\n- Lead technical projects\n- Mentor junior developers',
-      benefits: '- Health insurance\n- 401(k) matching\n- Remote work options',
-      status: 'active'
+  private loadProjectDetails(): void {
+    // Map project data to form fields
+    const projectFormData = {
+      title: this.projectData.name || '',
+      department: this.projectData.client || '',
+      location: 'Remote', // Default value since project doesn't have location
+      type: 'Full-time', // Default value since project doesn't have type
+      experience: `${this.projectData.team || 0}+ years`, // Map team size to experience
+      salary: `$${this.projectData.budget || 0}`, // Map budget to salary
+      description: `Project: ${this.projectData.name || ''}`,
+      requirements: `Team size: ${this.projectData.team || 0} people`,
+      responsibilities: `Project management and delivery`,
+      benefits: 'Project completion bonus',
+      status: this.projectData.status?.toLowerCase() || 'active'
     };
 
-    this.jobForm.patchValue(mockJob);
+    this.jobForm.patchValue(projectFormData);
   }
 
   onSubmit(): void {
     if (this.jobForm.valid) {
       console.log('Form submitted:', this.jobForm.value);
-      // Here you would typically save the job data
-      this.router.navigate(['../'], { relativeTo: this.route });
+      // Emit the form data and close modal
+      this.formSubmitted.emit(this.jobForm.value);
+      this.closeModal.emit();
     } else {
       this.markFormGroupTouched(this.jobForm);
     }
@@ -103,6 +106,7 @@ export class JobAddEditComponent implements OnInit {
   }
 
   onCancel(): void {
+    // Navigate back to job list page
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 }
