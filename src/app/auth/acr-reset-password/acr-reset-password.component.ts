@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AcrServiceService } from 'src/app/services/acr-service/acr-service.service';
+import { CirSericeService } from 'src/app/services/cir-service/cir-serice.service';
+import { LocalStorageService } from 'src/app/services/local-storage/local-storage.service';
+import { NotificationService } from 'src/app/services/notification/notification.service';
+import { Patterns } from 'src/app/shared/constant/validation-patterns.const';
 
 @Component({
   selector: 'app-acr-reset-password',
@@ -8,56 +13,73 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./acr-reset-password.component.scss']
 })
 export class AcrResetPasswordComponent implements OnInit {
-  resetPasswordForm: FormGroup;
-  loading = false;
-  passwordReset = false;
+
+  resetpasswordForm: FormGroup;
+  password = 'password';
+  showPassword = false;
+  confirmPassword = 'password';
+  confirmShowPassword = false;
   token: string = '';
+  loginToken: String = '';
 
   constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute
+    private router: Router,
+    private acrservice: AcrServiceService,
+    private notificationService: NotificationService,
+    private localStorageService: LocalStorageService,
+    private activatedRoute: ActivatedRoute
   ) {
-    this.resetPasswordForm = this.fb.group({
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]]
-    }, { validators: this.passwordMatchValidator });
-  }
-
-  ngOnInit(): void {
-    // Get token from route params
-    this.route.params.subscribe(params => {
-      this.token = params['token'] || '';
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.token = params['token'];
+    });
+    this.resetpasswordForm = new FormGroup({
+      password: new FormControl('', [Validators.required]),
+      confirmPassword: new FormControl('', [Validators.required])
     });
   }
 
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmPassword');
 
-    if (password && confirmPassword && password.value !== confirmPassword.value) {
-      confirmPassword.setErrors({ passwordMismatch: true });
-      return { passwordMismatch: true };
-    }
+  ngOnInit() {
+    this.loginToken = this.token ? this.token : this.localStorageService.getLoggerToken();
+    console.log(this.loginToken);
 
-    if (confirmPassword && confirmPassword.errors) {
-      delete confirmPassword.errors['passwordMismatch'];
-    }
-
-    return null;
   }
 
-  onSubmit() {
-    if (this.resetPasswordForm.valid && this.token) {
-      this.loading = true;
-      // TODO: Implement password reset logic with token
-      console.log('Form submitted:', this.resetPasswordForm.value);
-      console.log('Token:', this.token);
-
-      // Simulate API call
-      setTimeout(() => {
-        this.loading = false;
-        this.passwordReset = true;
-      }, 2000);
+  submit() {
+    if (this.resetpasswordForm.valid) {
+      const payload = {
+        password: this.resetpasswordForm.get('password')?.value,
+        // token: this.token
+      }
+      this.acrservice.resetpassword(payload, this.loginToken).subscribe((response) => {
+        if (response?.status == true) {
+          this.router.navigate(['/acr/acr-login']);
+          localStorage.removeItem('resetToken');
+        } else {
+          this.notificationService.showError(response?.message);
+        }
+      }, (error) => {
+        this.notificationService.showError(error?.error?.message || 'Something went wrong!');
+      })
     }
   }
+
+  public showHidePass(type: string): void {
+    if (type == 'password' && this.password === 'password') {
+      this.password = 'text';
+      this.showPassword = true;
+    } else {
+      this.password = 'password';
+      this.showPassword = false;
+    }
+
+    if (type !== 'password' && this.confirmPassword === 'password') {
+      this.confirmPassword = 'text';
+      this.confirmShowPassword = true;
+    } else {
+      this.confirmPassword = 'password';
+      this.confirmShowPassword = false;
+    }
+  }
+
 }
