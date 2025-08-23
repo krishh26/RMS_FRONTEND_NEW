@@ -6,26 +6,47 @@
 
   <div class="filters">
     <div class="search-box">
+      <div class="search-icon">
+        <i class="fas fa-search"></i>
+      </div>
       <input type="text" placeholder="Search jobs..." class="search-input">
     </div>
-    <div class="filter-group">
-      <select class="filter-select">
-        <option value="">All Departments</option>
-        <option value="engineering">Engineering</option>
-        <option value="product">Product</option>
-        <option value="design">Design</option>
-      </select>
-      <select class="filter-select">
-        <option value="">All Locations</option>
-        <option value="new-york">New York</option>
-        <option value="san-francisco">San Francisco</option>
-        <option value="remote">Remote</option>
-      </select>
-      <select class="filter-select">
-        <option value="">All Status</option>
-        <option value="active">Active</option>
-        <option value="closed">Closed</option>
-      </select>
+
+    <div class="filter-group" [ngClass]="{'mobile-expanded': showMobileFilters}">
+      <div class="filter-item">
+        <label class="filter-label">Department</label>
+        <select class="filter-select">
+          <option value="">All Departments</option>
+          <option value="engineering">Engineering</option>
+          <option value="product">Product</option>
+          <option value="design">Design</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Location</label>
+        <select class="filter-select">
+          <option value="">All Locations</option>
+          <option value="new-york">New York</option>
+          <option value="san-francisco">San Francisco</option>
+          <option value="remote">Remote</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Status</label>
+        <select class="filter-select">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mobile-filter-toggle" (click)="toggleMobileFilters()">
+      <i class="fas fa-filter"></i>
+      <span>Filters</span>
+      <i class="fas" [ngClass]="showMobileFilters ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
     </div>
   </div>
 

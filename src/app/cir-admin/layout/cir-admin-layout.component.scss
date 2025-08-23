@@ -1,0 +1,345 @@
+// Variables
+$sidebar-width: 280px;
+$sidebar-collapsed-width: 70px;
+$header-height: 70px;
+$primary-color: #3498db;
+$secondary-color: #2c3e50;
+$text-color: #2c3e50;
+$light-bg: #f8f9fa;
+$border-color: #e9ecef;
+$shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+// Mixins
+@mixin transition($property: all) {
+  transition: $property 0.3s ease-in-out;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+// Layout Container
+.cir-admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: $light-bg;
+}
+
+// Main Content Area
+.main-content {
+  flex: 1;
+  margin-left: $sidebar-width;
+  @include transition(margin-left);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &.sidebar-collapsed {
+    margin-left: $sidebar-collapsed-width;
+  }
+
+  &.sidebar-expanded {
+    margin-left: $sidebar-width;
+  }
+
+  @include mobile {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+}
+
+// Top Header
+.top-header {
+  height: $header-height;
+  background: white;
+  border-bottom: 1px solid $border-color;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: $shadow;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  @include mobile {
+    padding: 0 1rem 0 4rem; // Add left padding for mobile toggle button
+  }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .page-title {
+      h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: $text-color;
+        line-height: 1.2;
+
+        @include mobile {
+          font-size: 1.25rem;
+        }
+      }
+    }
+
+    .breadcrumb-nav {
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+
+        .breadcrumb-item {
+          display: flex;
+          align-items: center;
+
+          &:not(:last-child)::after {
+            content: '/';
+            margin-left: 0.5rem;
+            color: #6c757d;
+          }
+
+          a {
+            color: #6c757d;
+            text-decoration: none;
+            @include transition(color);
+
+            &:hover:not(.disabled) {
+              color: $primary-color;
+            }
+
+            &.active {
+              color: $text-color;
+              font-weight: 500;
+            }
+
+            &.disabled {
+              pointer-events: none;
+              cursor: default;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .header-right {
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      @include mobile {
+        gap: 0.5rem;
+      }
+
+      .action-btn {
+        background: none;
+        border: none;
+        color: #6c757d;
+        padding: 0.5rem;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        @include transition(all);
+
+        &:hover {
+          background: $light-bg;
+          color: $primary-color;
+        }
+
+        i {
+          font-size: 1.1rem;
+        }
+
+        .badge {
+          position: absolute;
+          top: -5px;
+          right: -5px;
+          background: #e74c3c;
+          color: white;
+          font-size: 0.75rem;
+          padding: 0.25rem 0.5rem;
+          border-radius: 10px;
+          min-width: 18px;
+          text-align: center;
+        }
+      }
+
+      .user-menu {
+        .user-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          background: none;
+          border: 1px solid $border-color;
+          padding: 0.5rem 1rem;
+          border-radius: 25px;
+          cursor: pointer;
+          @include transition(all);
+
+          &:hover {
+            background: $light-bg;
+            border-color: $primary-color;
+          }
+
+          .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+
+          .user-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: $text-color;
+
+            @include mobile {
+              display: none;
+            }
+          }
+
+          i {
+            font-size: 0.8rem;
+            color: #6c757d;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Page Content
+.page-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-x: auto;
+
+  @include mobile {
+    padding: 1rem;
+  }
+}
+
+// Responsive Adjustments
+@include mobile {
+  .top-header {
+    .header-left {
+      .breadcrumb-nav {
+        display: none; // Hide breadcrumb on mobile to save space
+      }
+    }
+
+    .header-right {
+      .header-actions {
+        .action-btn {
+          padding: 0.4rem;
+
+          i {
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Tablet Adjustments
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main-content {
+    &.sidebar-collapsed {
+      margin-left: $sidebar-collapsed-width;
+    }
+
+    &.sidebar-expanded {
+      margin-left: $sidebar-width;
+    }
+  }
+
+  .top-header {
+    padding: 0 1.5rem;
+
+    .header-left {
+      .page-title h1 {
+        font-size: 1.35rem;
+      }
+    }
+  }
+
+  .page-content {
+    padding: 1.5rem;
+  }
+}
+
+// Large Screen Optimizations
+@media (min-width: 1025px) {
+  .main-content {
+    &.sidebar-collapsed {
+      margin-left: $sidebar-collapsed-width;
+    }
+
+    &.sidebar-expanded {
+      margin-left: $sidebar-width;
+    }
+  }
+
+  .top-header {
+    padding: 0 2.5rem;
+  }
+
+  .page-content {
+    padding: 2.5rem;
+  }
+}
+
+// Print Styles
+@media print {
+  .top-header {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .page-content {
+    padding: 0;
+  }
+}
+
+// High Contrast Mode
+@media (prefers-contrast: high) {
+  .top-header {
+    border-bottom: 2px solid $text-color;
+  }
+
+  .action-btn:hover {
+    border: 2px solid $primary-color;
+  }
+
+  .user-btn {
+    border: 2px solid $text-color;
+  }
+}
+
+// Reduced Motion Support
+@media (prefers-reduced-motion: reduce) {
+  .main-content,
+  .action-btn,
+  .user-btn {
+    transition: none;
+  }
+}

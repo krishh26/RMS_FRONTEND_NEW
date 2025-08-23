@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./job-list.component.scss']
 })
 export class JobListComponent implements OnInit {
+  showMobileFilters = false;
+
   jobs: any[] = [
     {
       id: 1,
@@ -62,5 +64,9 @@ export class JobListComponent implements OnInit {
 
   toggleJobStatus(jobId: number): void {
     console.log('Toggle job status:', jobId);
+  }
+
+  toggleMobileFilters(): void {
+    this.showMobileFilters = !this.showMobileFilters;
   }
 }

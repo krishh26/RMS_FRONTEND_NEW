@@ -10,6 +10,7 @@ export class ProjectListComponent implements OnInit {
   showModal = false;
   isEditMode = false;
   selectedProject: any = null;
+  showMobileFilters = false;
   projects: any[] = [
     {
       id: 1,
@@ -91,5 +92,9 @@ export class ProjectListComponent implements OnInit {
     }
     // For now, just close the modal
     this.closeModal();
+  }
+
+  toggleMobileFilters(): void {
+    this.showMobileFilters = !this.showMobileFilters;
   }
 }

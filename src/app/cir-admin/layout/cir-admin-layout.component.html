@@ -1,0 +1,58 @@
+<div class="cir-admin-layout">
+  <!-- Sidebar -->
+  <app-cir-admin-sidebar
+    (sidebarToggle)="onSidebarToggle($event)"
+    #sidebar>
+  </app-cir-admin-sidebar>
+
+  <!-- Main Content Area -->
+  <main class="main-content" [ngClass]="{
+    'sidebar-collapsed': isSidebarCollapsed,
+    'sidebar-expanded': !isSidebarCollapsed
+  }">
+
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="page-title">
+          <h1>{{ currentPageTitle }}</h1>
+        </div>
+        <nav class="breadcrumb-nav" *ngIf="currentBreadcrumb.length > 1">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item" *ngFor="let item of currentBreadcrumb; let last = last">
+              <a [routerLink]="last ? null : '/'"
+                 [class.active]="last"
+                 [class.disabled]="last">
+                {{ item }}
+              </a>
+            </li>
+          </ol>
+        </nav>
+      </div>
+
+      <div class="header-right">
+        <div class="header-actions">
+          <button class="action-btn" title="Notifications">
+            <i class="fas fa-bell"></i>
+            <span class="badge" *ngIf="false">3</span>
+          </button>
+          <button class="action-btn" title="Help">
+            <i class="fas fa-question-circle"></i>
+          </button>
+          <div class="user-menu">
+            <button class="user-btn" title="User Menu">
+              <img src="assets/img/default-avatar.png" alt="User" class="user-avatar">
+              <span class="user-name">Admin</span>
+              <i class="fas fa-chevron-down"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

@@ -6,21 +6,49 @@
 
   <div class="filters">
     <div class="search-box">
+      <div class="search-icon">
+        <i class="fas fa-search"></i>
+      </div>
       <input type="text" placeholder="Search projects..." class="search-input">
     </div>
-    <div class="filter-group">
-      <select class="filter-select">
-        <option value="">All Status</option>
-        <option value="active">Active</option>
-        <option value="planning">Planning</option>
-        <option value="completed">Completed</option>
-      </select>
-      <select class="filter-select">
-        <option value="">All Clients</option>
-        <option value="tech-corp">Tech Corp</option>
-        <option value="innovation-inc">Innovation Inc</option>
-        <option value="design-studio">Design Studio</option>
-      </select>
+
+    <div class="filter-group" [ngClass]="{'mobile-expanded': showMobileFilters}">
+      <div class="filter-item">
+        <label class="filter-label">Status</label>
+        <select class="filter-select">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="planning">Planning</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Client</label>
+        <select class="filter-select">
+          <option value="">All Clients</option>
+          <option value="tech-corp">Tech Corp</option>
+          <option value="innovation-inc">Innovation Inc</option>
+          <option value="design-studio">Design Studio</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Budget Range</label>
+        <select class="filter-select">
+          <option value="">All Budgets</option>
+          <option value="0-25000">$0 - $25,000</option>
+          <option value="25000-50000">$25,000 - $50,000</option>
+          <option value="50000-100000">$50,000 - $100,000</option>
+          <option value="100000+">$100,000+</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mobile-filter-toggle" (click)="toggleMobileFilters()">
+      <i class="fas fa-filter"></i>
+      <span>Filters</span>
+      <i class="fas" [ngClass]="showMobileFilters ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
     </div>
   </div>
 

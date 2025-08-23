@@ -1,0 +1,77 @@
+/* Additional mobile styles to ensure proper behavior */
+@media (max-width: 768px) {
+  .cir-admin-sidebar {
+    transform: translateX(-100%);
+    z-index: 1000;
+  }
+
+  .cir-admin-sidebar:not(.collapsed) {
+    transform: translateX(0);
+  }
+
+  .mobile-toggle-btn {
+    display: block !important;
+    z-index: 1001;
+    position: fixed;
+    top: 1.2rem;
+    left: 1rem;
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-toggle-btn:hover {
+    background: #34495e;
+    transform: scale(1.05);
+  }
+
+  .mobile-toggle-btn.active {
+    background: #3498db;
+  }
+}
+
+/* Ensure sidebar is properly positioned */
+.cir-admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  z-index: 1000;
+}
+
+/* Hide mobile toggle button on desktop */
+@media (min-width: 769px) {
+  .mobile-toggle-btn {
+    display: none !important;
+  }
+}
+
+/* Ensure proper collapsing behavior */
+.cir-admin-sidebar.collapsed {
+  width: 70px !important;
+}
+
+.cir-admin-sidebar:not(.collapsed) {
+  width: 280px !important;
+}
+
+/* Remove any unwanted spacing when collapsed */
+.cir-admin-sidebar.collapsed .nav-link {
+  padding: 0.75rem !important;
+  justify-content: center !important;
+}
+
+.cir-admin-sidebar.collapsed .nav-content {
+  justify-content: center !important;
+}
+
+.cir-admin-sidebar.collapsed .nav-label,
+.cir-admin-sidebar.collapsed .submenu-arrow,
+.cir-admin-sidebar.collapsed .nav-badge {
+  display: none !important;
+}
