@@ -8,12 +8,24 @@ import { CirAdminLoginComponent } from './cir-admin-login/cir-admin-login.compon
 import { CirUserLoginComponent } from './cir-user-login/cir-user-login.component';
 import { AcrAdminLoginComponent } from './acr-admin-login/acr-admin-login.component';
 import { AcrUserLoginComponent } from './acr-user-login/acr-user-login.component';
+import { CirRegisterComponent } from './cir-register/cir-register.component';
+import { AcrRegisterComponent } from './acr-register/acr-register.component';
+import { CirForgotPasswordComponent } from './cir-forgot-password/cir-forgot-password.component';
+import { CirResetPasswordComponent } from './cir-reset-password/cir-reset-password.component';
+import { AcrForgotPasswordComponent } from './acr-forgot-password/acr-forgot-password.component';
+import { AcrResetPasswordComponent } from './acr-reset-password/acr-reset-password.component';
 
 const routes: Routes = [
   { path: 'cir-admin-login', component: CirAdminLoginComponent },
   { path: 'cir-user-login', component: CirUserLoginComponent },
   { path: 'acr-admin-login', component: AcrAdminLoginComponent },
-  { path: 'acr-user-login', component: AcrUserLoginComponent }
+  { path: 'acr-user-login', component: AcrUserLoginComponent },
+  { path: 'cir-register', component: CirRegisterComponent },
+  { path: 'acr-register', component: AcrRegisterComponent },
+  { path: 'cir-forgot-password', component: CirForgotPasswordComponent },
+  { path: 'cir-reset-password/:token', component: CirResetPasswordComponent },
+  { path: 'acr-forgot-password', component: AcrForgotPasswordComponent },
+  { path: 'acr-reset-password/:token', component: AcrResetPasswordComponent }
 ];
 
 @NgModule({
@@ -21,7 +33,13 @@ const routes: Routes = [
     CirAdminLoginComponent,
     CirUserLoginComponent,
     AcrAdminLoginComponent,
-    AcrUserLoginComponent
+    AcrUserLoginComponent,
+    CirRegisterComponent,
+    AcrRegisterComponent,
+    CirForgotPasswordComponent,
+    CirResetPasswordComponent,
+    AcrForgotPasswordComponent,
+    AcrResetPasswordComponent
   ],
   imports: [
     CommonModule,

@@ -7,7 +7,7 @@
         <div class="Login-leftside">
           <div class="company-logo">
             <img src="../../../../assets/img/Saivenlogo.png" width="200" class="mb-2" />
-            <h3>“Elevate Your Career with SaiVen: Join Public Sector IT Projects”</h3>
+            <h3>"Elevate Your Career with SaiVen: Join Public Sector IT Projects"</h3>
           </div>
         </div>
       </div>
@@ -36,12 +36,17 @@
 
               <div class="form-group">
                 <label>Password</label>
-                <div class="password-input-container">
-                  <input [type]="showPassword ? 'text' : 'password'" class="form-control" placeholder="Enter password" formControlName="password"
-                    required>
-                  <span *ngIf="!showPassword" class="fas fa-eye password-toggle-icon" (click)="showHidePass('password')"></span>
-                  <span *ngIf="showPassword" class="fas fa-eye-slash password-toggle-icon" (click)="showHidePass('password')"></span>
-                </div>
+                <input
+                  [type]="password"
+                  class="form-control"
+                  placeholder="Enter password"
+                  formControlName="password"
+                  required
+                >
+                <span
+                  [class]="!showPassword ? 'fas fa-eye showicon' : 'fas fa-eye-slash showicon'"
+                  (click)="showHidePass('password')"
+                ></span>
                 <span class="text-danger" *ngIf="
                     loginForm.controls?.['password']?.touched &&
                     loginForm.controls?.['password']?.errors?.['required']">

@@ -108,6 +108,11 @@ Login Page CSS
       font-size: 14px;
     }
   }
+
+  input[type="password"],
+  input[type="text"] {
+    padding-right: 45px !important;
+  }
 }
 
 .btn-primary {
@@ -135,16 +140,27 @@ Login Page CSS
 }
 
 .showicon {
-  position: absolute;
-  top: 50px;
-  right: 16px;
-  cursor: pointer;
-  color: #6c757d;
-  font-size: 16px;
-  transition: color 0.3s ease;
+  position: absolute !important;
+  top: 50% !important;
+  right: 16px !important;
+  transform: translateY(-50%) !important;
+  cursor: pointer !important;
+  color: #6c757d !important;
+  font-size: 18px !important;
+  z-index: 10 !important;
+  transition: all 0.3s ease !important;
+  padding: 5px !important;
+  border-radius: 3px !important;
+  background-color: transparent !important;
 
   &:hover {
-    color: #007bff;
+    color: #007bff !important;
+    background-color: rgba(0, 123, 255, 0.05) !important;
+    transform: translateY(-50%) scale(1.1) !important;
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.95) !important;
   }
 }
 
@@ -168,6 +184,28 @@ Login Page CSS
 
 .col-lg-5, .col-xl-5, .col-md-5, .col-sm-5 {
   width: 41.666667% !important;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .Login-leftside {
+    display: none;
+  }
+
+  .mobile-login-modal {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100vh;
+  }
+
+  .login-modal {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.95);
+
+    .login-body {
+      padding: 20px;
+    }
+  }
 }
 
 @media only screen and (max-width: 767px) {

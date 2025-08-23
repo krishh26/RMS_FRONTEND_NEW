@@ -27,6 +27,21 @@ Login Page CSS
   font-weight: 600;
 }
 
+.form-group {
+  position: relative;
+}
+
+.form-group input[type="password"],
+.form-group input[type="text"] {
+  padding-right: 45px !important;
+  transition: all 0.3s ease !important;
+}
+
+.form-group input:focus {
+  border-color: #007bff !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
 .login-container {
   height: 100vh;
   width: 100%;
@@ -54,85 +69,51 @@ Login Page CSS
   text-align: center;
 }
 
-// Password input container
-.password-input-container {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-
-  .form-control {
-    width: 100%;
-    padding-right: 45px; // Make space for the eye icon
-    border: 1px solid #ced4da;
-    border-radius: 0.375rem;
-    padding: 0.375rem 45px 0.375rem 0.75rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    background-color: #fff;
-    background-clip: padding-box;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-
-    &:focus {
-      border-color: #86b7fe;
-      outline: 0;
-      box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
-  }
-
-  .password-toggle-icon {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #6c757d;
-    font-size: 16px;
-    transition: color 0.3s ease;
-    z-index: 3;
-    background: transparent;
-    border: none;
-    padding: 4px;
-
-    &:hover {
-      color: #007bff;
-    }
-
-    &:active {
-      color: #0056b3;
-    }
-  }
+.showicon {
+  position: absolute !important;
+  top: 70% !important;
+  right: 15px !important;
+  transform: translateY(-50%) !important;
+  cursor: pointer !important;
+  color: #6c757d !important;
+  font-size: 18px !important;
+  z-index: 10 !important;
+  transition: all 0.3s ease !important;
+  padding: 5px !important;
+  border-radius: 3px !important;
+  background-color: transparent !important;
 }
 
-// Additional styling for better integration
-.form-group {
-  .password-input-container {
-    // Ensure the container matches other form controls
-    .form-control {
-      // Override any global form-control styles that might interfere
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-    }
+.showicon:hover {
+  color: #495057 !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  transform: translateY(-50%) scale(1.1) !important;
+}
 
-    // Add a subtle background area for the icon
-    .password-toggle-icon {
-      // Create a subtle clickable area
-      &::before {
-        content: '';
-        position: absolute;
-        top: -8px;
-        right: -8px;
-        bottom: -8px;
-        left: -8px;
-        border-radius: 4px;
-        background: transparent;
-        transition: background-color 0.2s ease;
-      }
+.showicon:active {
+  transform: translateY(-50%) scale(0.95) !important;
+}
 
-      &:hover::before {
-        background-color: rgba(0, 123, 255, 0.1);
-      }
-    }
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .Login-leftside {
+      display: none;
+  }
+
+  .mobile-login-modal {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      height: 100vh;
+  }
+
+  .login-modal {
+      padding: 0px;
+  }
+
+  .login-modal {
+      background-color: #FFF;
+      border-radius: 12px;
+      padding: 2rem;
   }
 }
 
@@ -149,18 +130,5 @@ Login Page CSS
   }
   .login-modal {
       padding: 0px;
-  }
-
-  // Mobile-specific password container adjustments
-  .password-input-container {
-    .form-control {
-      padding-right: 50px; // Slightly more space on mobile for easier tapping
-    }
-
-    .password-toggle-icon {
-      right: 15px;
-      font-size: 18px; // Slightly larger for mobile
-      padding: 6px; // Larger touch target
-    }
   }
 }

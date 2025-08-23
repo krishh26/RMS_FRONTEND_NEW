@@ -27,6 +27,21 @@ Login Page CSS
   font-weight: 600;
 }
 
+.form-group {
+  position: relative;
+}
+
+.form-group input[type="password"],
+.form-group input[type="text"] {
+  padding-right: 45px !important;
+  transition: all 0.3s ease !important;
+}
+
+.form-group input:focus {
+  border-color: #007bff !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
 .login-container {
   height: 100vh;
   width: 100%;
@@ -56,8 +71,27 @@ Login Page CSS
 
 .showicon {
   position: absolute !important;
-  top: 48px !important;
+  top: 70% !important;
   right: 15px !important;
+  transform: translateY(-50%) !important;
+  cursor: pointer !important;
+  color: #6c757d !important;
+  font-size: 18px !important;
+  z-index: 10 !important;
+  transition: all 0.3s ease !important;
+  padding: 5px !important;
+  border-radius: 3px !important;
+  background-color: transparent !important;
+}
+
+.showicon:hover {
+  color: #495057 !important;
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  transform: translateY(-50%) scale(1.1) !important;
+}
+
+.showicon:active {
+  transform: translateY(-50%) scale(0.95) !important;
 }
 
 re-captcha.is-invalid > div {
@@ -65,6 +99,28 @@ re-captcha.is-invalid > div {
   border-radius: 0.2rem;
 }
 
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+  .Login-leftside {
+      display: none;
+  }
+
+  .mobile-login-modal {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center center;
+      height: 100vh;
+  }
+
+  .login-modal {
+      padding: 0px;
+  }
+
+  .login-modal {
+      background-color: #FFF;
+      border-radius: 12px;
+      padding: 2rem;
+  }
+}
 
 @media only screen and (min-width: 320px) and (max-width: 767px) {
   .Login-leftside {
