@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, HostListener, ElementRef } from '@angular/core';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CirAdminSidebarComponent } from '../sidebar/sidebar.component';
@@ -14,10 +14,12 @@ export class CirAdminLayoutComponent implements OnInit, AfterViewInit {
   currentPageTitle = '';
   currentBreadcrumb: string[] = [];
   isSidebarCollapsed = false;
+  isUserDropdownOpen = false;
 
   constructor(
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private elementRef: ElementRef
   ) {}
 
   ngOnInit() {
@@ -74,5 +76,28 @@ export class CirAdminLayoutComponent implements OnInit, AfterViewInit {
     });
 
     return breadcrumb;
+  }
+
+  toggleUserDropdown(): void {
+    this.isUserDropdownOpen = !this.isUserDropdownOpen;
+  }
+
+  navigateToProfile(): void {
+    // TODO: Implement profile navigation
+    console.log('Navigate to profile');
+    this.isUserDropdownOpen = false;
+  }
+
+  logout(): void {
+    // Navigate to cir-admin-login page
+    this.router.navigate(['/cir-admin-login']);
+    this.isUserDropdownOpen = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.elementRef.nativeElement.contains(event.target as Node)) {
+      this.isUserDropdownOpen = false;
+    }
   }
 }

@@ -13,7 +13,6 @@ import { Patterns } from 'src/app/shared/constant/validation-patterns.const';
 })
 export class CirAdminLoginComponent {
   loginForm!: FormGroup;
-  password = 'password';
   showPassword = false;
 
   constructor(
@@ -49,12 +48,6 @@ export class CirAdminLoginComponent {
   }
 
   public showHidePass(type: string): void {
-    if (type == 'password' && this.password === 'password') {
-      this.password = 'text';
-      this.showPassword = true;
-    } else {
-      this.password = 'password';
-      this.showPassword = false;
-    }
+    this.showPassword = !this.showPassword;
   }
 }

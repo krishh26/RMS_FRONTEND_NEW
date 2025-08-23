@@ -39,12 +39,29 @@
           <button class="action-btn" title="Help">
             <i class="fas fa-question-circle"></i>
           </button>
-          <div class="user-menu">
-            <button class="user-btn" title="User Menu">
+          <div class="user-menu" #userMenu>
+            <button class="user-btn"
+                    title="User Menu"
+                    (click)="toggleUserDropdown()"
+                    [class.active]="isUserDropdownOpen">
               <img src="assets/img/default-avatar.png" alt="User" class="user-avatar">
               <span class="user-name">Admin</span>
-              <i class="fas fa-chevron-down"></i>
+              <i class="fas fa-chevron-down" [class.rotated]="isUserDropdownOpen"></i>
             </button>
+
+            <!-- User Dropdown Menu -->
+            <div class="user-dropdown"
+                 [ngClass]="{'show': isUserDropdownOpen}"
+                 *ngIf="isUserDropdownOpen">
+              <div class="dropdown-item" (click)="navigateToProfile()">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+              </div>
+              <div class="dropdown-item" (click)="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

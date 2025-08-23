@@ -36,10 +36,12 @@
 
               <div class="form-group">
                 <label>Password</label>
-                <input [type]="password" class="form-control" placeholder="Enter password" formControlName="password"
-                  required>
-                  <span *ngIf="!showPassword" class="fas fa-eye showicon" (click)="showHidePass('password')"></span>
-                  <span *ngIf="showPassword" class="fas fa-eye-slash showicon" (click)="showHidePass('password')"></span>
+                <div class="password-input-container">
+                  <input [type]="showPassword ? 'text' : 'password'" class="form-control" placeholder="Enter password" formControlName="password"
+                    required>
+                  <span *ngIf="!showPassword" class="fas fa-eye password-toggle-icon" (click)="showHidePass('password')"></span>
+                  <span *ngIf="showPassword" class="fas fa-eye-slash password-toggle-icon" (click)="showHidePass('password')"></span>
+                </div>
                 <span class="text-danger" *ngIf="
                     loginForm.controls?.['password']?.touched &&
                     loginForm.controls?.['password']?.errors?.['required']">
