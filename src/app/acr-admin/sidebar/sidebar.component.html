@@ -1,0 +1,95 @@
+<!-- Mobile Overlay -->
+<div class="sidebar-overlay" *ngIf="isMobile && !isCollapsed" (click)="closeMobileSidebar()"></div>
+
+<!-- Sidebar Container -->
+<aside class="acr-admin-sidebar" [ngClass]="{
+  'collapsed': isCollapsed,
+  'mobile': isMobile
+}">
+
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <div class="logo-container" *ngIf="!isCollapsed">
+      <img src="assets/img/saiven.png" alt="ACR Admin" class="logo">
+      <span class="brand-name">ACR Admin</span>
+    </div>
+    <div class="logo-container collapsed" *ngIf="isCollapsed">
+      <img src="assets/img/saiven.png" alt="ACR" class="logo-small">
+    </div>
+    <button class="toggle-btn" (click)="toggleSidebar()" *ngIf="!isMobile">
+      <i class="fas" [ngClass]="isCollapsed ? 'fa-angle-right' : 'fa-angle-left'"></i>
+    </button>
+    <!-- Mobile close button -->
+    <button class="mobile-close-btn" (click)="closeMobileSidebar()" *ngIf="isMobile && !isCollapsed">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <ul class="nav-menu">
+      <li class="nav-item" *ngFor="let item of menuItems">
+
+        <!-- Menu Item with Submenu -->
+        <div class="nav-link"
+             [ngClass]="{
+               'active': isActiveRoute(item.route),
+               'has-submenu': hasSubItems(item),
+               'parent-active': hasSubItems(item) && this.activeRoute.startsWith(item.route)
+             }"
+             (click)="hasSubItems(item) ? toggleSubMenu($event, item) : null">
+
+          <div class="nav-content" [routerLink]="hasSubItems(item) ? null : item.route">
+            <i class="nav-icon" [ngClass]="item.icon"></i>
+            <span class="nav-label" *ngIf="!isCollapsed">{{ item.label }}</span>
+            <i class="submenu-arrow fas fa-chevron-down"
+               *ngIf="hasSubItems(item) && !isCollapsed"
+               [ngClass]="{'rotated': item.expanded}"></i>
+          </div>
+
+          <!-- Badge -->
+          <span class="nav-badge" *ngIf="item.badge && !isCollapsed">{{ item.badge }}</span>
+        </div>
+
+        <!-- Submenu -->
+        <ul class="submenu" *ngIf="hasSubItems(item) && item.expanded && !isCollapsed">
+          <li class="submenu-item" *ngFor="let subItem of item.subItems">
+            <a class="submenu-link"
+               [routerLink]="subItem.route"
+               [ngClass]="{'active': isSubItemActive(subItem)}"
+               (click)="closeMobileSidebar()">
+              <i class="submenu-icon fas fa-circle"></i>
+              <span class="submenu-label">{{ subItem.label }}</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <!-- <div class="sidebar-footer" *ngIf="!isCollapsed">
+    <div class="user-info">
+      <div class="user-avatar">
+        <img src="assets/img/default-avatar.png" alt="User Avatar">
+      </div>
+      <div class="user-details">
+        <span class="user-name">Admin User</span>
+        <span class="user-role">Administrator</span>
+      </div>
+    </div>
+    <button class="logout-btn" title="Logout">
+      <i class="fas fa-sign-out-alt"></i>
+    </button>
+  </div> -->
+</aside>
+
+<!-- Mobile Toggle Button -->
+<button class="mobile-toggle-btn"
+        *ngIf="isMobile"
+        (click)="toggleSidebar()"
+        [ngClass]="{'active': !isCollapsed}"
+        [attr.aria-label]="isCollapsed ? 'Open menu' : 'Close menu'"
+        [attr.aria-expanded]="!isCollapsed">
+  <i class="fas" [ngClass]="isCollapsed ? 'fa-bars' : 'fa-times'"></i>
+</button>

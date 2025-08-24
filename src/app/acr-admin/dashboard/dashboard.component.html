@@ -1,0 +1,121 @@
+<div class="dashboard-container">
+  <!-- Welcome Section -->
+  <div class="welcome-section">
+    <div class="welcome-content">
+      <h1>Welcome to ACR Admin Dashboard</h1>
+      <p>Manage your projects, jobs, candidates, and contracts from one central location.</p>
+    </div>
+    <div class="welcome-actions">
+      <button class="btn btn-primary">
+        <i class="fas fa-plus"></i>
+        Quick Actions
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card" *ngFor="let stat of stats">
+      <div class="stat-icon" [style.background-color]="stat.color">
+        <i [class]="stat.icon"></i>
+      </div>
+      <div class="stat-content">
+        <h3 class="stat-value">{{ stat.value }}</h3>
+        <p class="stat-title">{{ stat.title }}</p>
+        <span class="stat-change" [ngClass]="getChangeClass(stat.changeType)">
+          {{ stat.change }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="dashboard-grid">
+    <!-- Recent Activities -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <h3>Recent Activities</h3>
+        <button class="btn btn-link">View All</button>
+      </div>
+      <div class="card-content">
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of recentActivities">
+            <div class="activity-icon" [style.background-color]="activity.color">
+              <i [class]="activity.icon"></i>
+            </div>
+            <div class="activity-content">
+              <h4 class="activity-title">{{ activity.title }}</h4>
+              <p class="activity-description">{{ activity.description }}</p>
+              <span class="activity-time">{{ activity.time }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <h3>Quick Actions</h3>
+      </div>
+      <div class="card-content">
+        <div class="quick-actions">
+          <button class="quick-action-btn">
+            <i class="fas fa-project-diagram"></i>
+            <span>New Project</span>
+          </button>
+          <button class="quick-action-btn">
+            <i class="fas fa-briefcase"></i>
+            <span>Post Job</span>
+          </button>
+          <button class="quick-action-btn">
+            <i class="fas fa-user-plus"></i>
+            <span>Add Candidate</span>
+          </button>
+          <button class="quick-action-btn">
+            <i class="fas fa-file-contract"></i>
+            <span>Create Contract</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional Info Cards -->
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-header">
+        <i class="fas fa-chart-line"></i>
+        <h4>Performance Overview</h4>
+      </div>
+      <div class="info-content">
+        <p>Your projects are performing well with an average completion rate of 85%.</p>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 85%"></div>
+        </div>
+        <span class="progress-text">85% Complete</span>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-header">
+        <i class="fas fa-calendar-alt"></i>
+        <h4>Upcoming Deadlines</h4>
+      </div>
+      <div class="info-content">
+        <div class="deadline-item">
+          <span class="deadline-date">Dec 15</span>
+          <span class="deadline-text">Project Alpha - Phase 1</span>
+        </div>
+        <div class="deadline-item">
+          <span class="deadline-date">Dec 20</span>
+          <span class="deadline-text">Job Applications Review</span>
+        </div>
+        <div class="deadline-item">
+          <span class="deadline-date">Dec 25</span>
+          <span class="deadline-text">Contract Renewal</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

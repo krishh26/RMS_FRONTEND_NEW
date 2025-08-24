@@ -1,0 +1,557 @@
+// Variables
+$sidebar-width: 280px;
+$sidebar-collapsed-width: 70px;
+$sidebar-bg: #2c3e50;
+$sidebar-hover-bg: #34495e;
+$sidebar-active-bg: #3498db;
+$sidebar-text: #ecf0f1;
+$sidebar-border: #34495e;
+$transition-speed: 0.3s;
+$mobile-breakpoint: 768px;
+
+// Mixins
+@mixin transition($property: all) {
+  transition: $property $transition-speed ease-in-out;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin mobile {
+  @media (max-width: $mobile-breakpoint) {
+    @content;
+  }
+}
+
+// Sidebar Container
+.acr-admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: $sidebar-width;
+  background: $sidebar-bg;
+  color: $sidebar-text;
+  z-index: 1000;
+  @include transition(width);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  &.collapsed {
+    width: $sidebar-collapsed-width;
+  }
+
+  &.mobile {
+    transform: translateX(-100%);
+    @include transition(transform);
+
+    &:not(.collapsed) {
+      transform: translateX(0);
+    }
+  }
+}
+
+// Sidebar Header
+.sidebar-header {
+  padding: 1rem;
+  border-bottom: 1px solid $sidebar-border;
+  position: relative;
+  min-height: 70px;
+  @include flex-center;
+  justify-content: space-between;
+
+  .logo-container {
+    @include flex-center;
+    gap: 0.75rem;
+
+    &.collapsed {
+      justify-content: center;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .logo-small {
+      width: 35px;
+      height: 35px;
+      object-fit: contain;
+    }
+
+    .brand-name {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: $sidebar-text;
+    }
+  }
+
+  .toggle-btn {
+    background: none;
+    border: none;
+    color: $sidebar-text;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    @include transition(background-color);
+
+    &:hover {
+      background: $sidebar-hover-bg;
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+
+  .mobile-close-btn {
+    background: none;
+    border: none;
+    color: $sidebar-text;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    @include transition(background-color);
+    margin-left: auto;
+
+    &:hover {
+      background: $sidebar-hover-bg;
+    }
+
+    i {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+// Navigation Menu
+.sidebar-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 0;
+
+  .nav-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    .nav-item {
+      margin: 0.25rem 0;
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        color: $sidebar-text;
+        text-decoration: none;
+        cursor: pointer;
+        @include transition(background-color);
+        border-radius: 0 25px 25px 0;
+        margin-right: 1rem;
+
+        &:hover {
+          background: $sidebar-hover-bg;
+        }
+
+        &.active {
+          background: $sidebar-active-bg;
+          color: white;
+          box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+        }
+
+        &.parent-active {
+          background: rgba(52, 152, 219, 0.1);
+          color: $sidebar-text;
+          border-left: 3px solid $sidebar-active-bg;
+        }
+
+        .nav-content {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          flex: 1;
+          cursor: pointer;
+
+          .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+          }
+
+          .nav-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+          }
+
+          .submenu-arrow {
+            margin-left: auto;
+            @include transition(transform);
+
+            &.rotated {
+              transform: rotate(180deg);
+            }
+          }
+        }
+
+        .nav-badge {
+          background: #e74c3c;
+          color: white;
+          padding: 0.25rem 0.5rem;
+          border-radius: 12px;
+          font-size: 0.75rem;
+          font-weight: 600;
+        }
+      }
+
+      // Submenu
+      .submenu {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        background: rgba(0, 0, 0, 0.1);
+        margin-left: 1rem;
+        border-radius: 0 0 8px 8px;
+        overflow: hidden;
+
+        .submenu-item {
+          .submenu-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            color: $sidebar-text;
+            text-decoration: none;
+            font-size: 0.85rem;
+            @include transition(all);
+            border-radius: 0 8px 8px 0;
+            margin-left: 0.5rem;
+
+            &:hover {
+              background: $sidebar-hover-bg;
+            }
+
+            &.active {
+              background: $sidebar-active-bg;
+              color: white;
+              box-shadow: 0 2px 6px rgba(52, 152, 219, 0.4);
+              transform: translateX(8px);
+              border-radius: 0 8px 8px 0;
+            }
+
+            .submenu-icon {
+              font-size: 0.5rem;
+              color: #95a5a6;
+            }
+
+            .submenu-label {
+              font-weight: 400;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Sidebar Footer
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid $sidebar-border;
+  background: rgba(0, 0, 0, 0.1);
+
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .user-details {
+      display: flex;
+      flex-direction: column;
+
+      .user-name {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: $sidebar-text;
+      }
+
+      .user-role {
+        font-size: 0.75rem;
+        color: #95a5a6;
+      }
+    }
+  }
+
+  .logout-btn {
+    width: 100%;
+    background: #e74c3c;
+    border: none;
+    color: white;
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    @include transition(background-color);
+
+    &:hover {
+      background: #c0392b;
+    }
+
+    i {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+// Mobile Overlay
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  @include transition(opacity);
+}
+
+// Mobile Toggle Button
+.mobile-toggle-btn {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  background: $sidebar-bg;
+  border: none;
+  color: $sidebar-text;
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  @include transition(all);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: none;
+
+  &:hover {
+    background: $sidebar-hover-bg;
+    transform: scale(1.05);
+  }
+
+  &.active {
+    background: $sidebar-active-bg;
+    transform: translateX(0);
+  }
+
+  i {
+    font-size: 1.2rem;
+  }
+
+  @include mobile {
+    display: block !important;
+  }
+}
+
+// Responsive Design
+@include mobile {
+  .acr-admin-sidebar {
+    width: 100vw;
+    max-width: 300px;
+    transform: translateX(-100%);
+    @include transition(transform);
+
+    &:not(.collapsed) {
+      transform: translateX(0);
+    }
+
+    &.collapsed {
+      transform: translateX(-100%);
+    }
+  }
+
+  .toggle-btn {
+    display: none;
+  }
+
+  .sidebar-header {
+    justify-content: flex-start;
+    padding: 1rem;
+  }
+
+  .sidebar-nav {
+    padding: 0.5rem 0;
+  }
+
+  .nav-link {
+    margin-right: 0;
+    border-radius: 0;
+    padding: 1rem;
+
+    &:hover {
+      background: $sidebar-hover-bg;
+    }
+  }
+}
+
+// Collapsed State Styles
+.acr-admin-sidebar.collapsed {
+  .nav-link {
+    justify-content: center;
+    padding: 0.75rem;
+
+    .nav-content {
+      justify-content: center;
+
+      .nav-icon {
+        margin: 0;
+      }
+
+      .nav-label,
+      .submenu-arrow {
+        display: none;
+      }
+    }
+
+    .nav-badge {
+      display: none;
+    }
+  }
+
+  .submenu {
+    display: none;
+  }
+
+  .sidebar-footer {
+    padding: 0.5rem;
+
+    .user-info {
+      justify-content: center;
+      margin-bottom: 0.5rem;
+
+      .user-details {
+        display: none;
+      }
+    }
+
+    .logout-btn {
+      padding: 0.5rem;
+
+      i {
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Scrollbar Styling
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+// Animation Classes
+.nav-link {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    @include transition(left);
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+
+  // Active state indicator
+  &.active::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: white;
+    border-radius: 2px 0 0 2px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+
+  &.parent-active::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    background: $sidebar-active-bg;
+    border-radius: 2px 0 0 2px;
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+  }
+}
+
+// Focus States for Accessibility
+.nav-link:focus,
+.submenu-link:focus,
+.toggle-btn:focus,
+.logout-btn:focus,
+.mobile-toggle-btn:focus {
+  outline: 2px solid $sidebar-active-bg;
+  outline-offset: 2px;
+}
+
+// High Contrast Mode Support
+@media (prefers-contrast: high) {
+  .acr-admin-sidebar {
+    border-right: 2px solid $sidebar-text;
+  }
+
+  .nav-link.active {
+    border: 2px solid $sidebar-text;
+  }
+}
+
+// Reduced Motion Support
+@media (prefers-reduced-motion: reduce) {
+  .acr-admin-sidebar,
+  .nav-link,
+  .submenu-arrow,
+  .sidebar-overlay,
+  .mobile-toggle-btn {
+    transition: none;
+  }
+}
