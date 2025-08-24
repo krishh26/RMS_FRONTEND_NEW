@@ -1,0 +1,16 @@
+.card {
+  margin-top: 20px;
+
+  .card-header {
+    background-color: #f8f9fa;
+
+    .card-title {
+      margin: 0;
+      color: #333;
+    }
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+}

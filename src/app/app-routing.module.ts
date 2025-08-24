@@ -24,6 +24,10 @@ const routes: Routes = [
     loadChildren: () => import('./acr-admin/acr-admin.module').then(m => m.AcrAdminModule)
   },
   {
+    path: 'acr-user',
+    loadChildren: () => import('./acr-user/acr-user.module').then(m => m.AcrUserModule)
+  },
+  {
     path: '**',
     redirectTo: 'auth/acr-admin-login'
   }
