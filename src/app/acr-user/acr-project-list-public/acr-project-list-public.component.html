@@ -1,14 +1,72 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-title">ACR Project List Public</h4>
+<div class="public-projects-container">
+  <div class="header">
+    <h2>Public Projects</h2>
+    <div class="view-options">
+      <button class="view-btn active">Grid</button>
+      <button class="view-btn">List</button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="search-bar">
+      <input type="text" placeholder="Search public projects..." class="search-input">
+    </div>
+    <div class="category-filters">
+      <button class="category-btn active">All</button>
+      <button class="category-btn">Community</button>
+      <button class="category-btn">Environment</button>
+      <button class="category-btn">Education</button>
+      <button class="category-btn">Technology</button>
+    </div>
+  </div>
+
+  <div class="projects-grid">
+    <div class="project-card" *ngFor="let project of publicProjects">
+      <div class="project-header">
+        <span class="category-tag">{{ project.category }}</span>
+        <h3>{{ project.name }}</h3>
+      </div>
+
+      <div class="project-description">
+        {{ project.description }}
+      </div>
+
+      <div class="project-stats">
+        <div class="stat">
+          <span class="stat-label">Status</span>
+          <span class="stat-value status-badge" [ngClass]="project.status.toLowerCase()">
+            {{ project.status }}
+          </span>
         </div>
-        <div class="card-body">
-          <p>ACR Project List Public component content goes here.</p>
+        <div class="stat">
+          <span class="stat-label">Started</span>
+          <span class="stat-value">{{ project.startDate }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Participants</span>
+          <span class="stat-value">{{ project.participants }}</span>
         </div>
       </div>
+
+      <div class="project-actions">
+        <button class="action-btn view" (click)="viewProjectDetails(project.id)">
+          View Details
+        </button>
+        <button class="action-btn join" (click)="joinProject(project.id)">
+          Join Project
+        </button>
+        <button class="action-btn share" (click)="shareProject(project.id)">
+          Share
+        </button>
+      </div>
     </div>
+  </div>
+
+  <div class="pagination">
+    <button class="page-btn">&lt;</button>
+    <button class="page-btn active">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <button class="page-btn">&gt;</button>
   </div>
 </div>
