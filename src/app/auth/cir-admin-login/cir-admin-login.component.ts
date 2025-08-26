@@ -38,7 +38,7 @@ export class CirAdminLoginComponent {
         if (response?.status == true) {
           this.localStorageService.setLoginToken(response?.data);
           this.localStorageService.setLogger(response?.data?.user);
-          this.router.navigate(['/cir/cir-create-job']);
+          this.router.navigate(['/cir-admin/projects']);
         } else {
           this.notificationService.showError(response?.message);
         }

@@ -51,7 +51,7 @@ export class CirUserLoginComponent {
           localStorage.setItem("DecodedToken", JSON.stringify(this.DecodedToken));
           this.localStorageService.setLoginToken(response?.data);
           this.localStorageService.setLogger(response?.data?.user);
-          this.router.navigate(['/cir/cir-active-roles']);
+          this.router.navigate(['/cir-user/projects']);
           this.notificationService.showSuccess(response?.message);
         } else {
           this.notificationService.showError(response?.message);
