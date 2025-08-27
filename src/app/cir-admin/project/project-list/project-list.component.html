@@ -17,11 +17,10 @@
     <div class="filter-group" [ngClass]="{'mobile-expanded': showMobileFilters}">
       <div class="filter-item">
         <label class="filter-label">Status</label>
-        <select class="filter-select">
-          <option value="">All Status</option>
-          <option value="active">Active</option>
-          <option value="planning">Planning</option>
-          <option value="completed">Completed</option>
+        <select class="filter-select" [(ngModel)]="selectedStatus" (change)="onStatusChange(selectedStatus)">
+          <option *ngFor="let option of statusOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
         </select>
       </div>
 
@@ -95,42 +94,44 @@
         <tr>
           <th>Project Name</th>
           <th>Client</th>
-          <th>Start Date</th>
-          <th>End Date</th>
+          <th>Published Date</th>
+          <th>Location</th>
           <th>Status</th>
-          <th>Budget</th>
-          <th>Team Size</th>
+          <th>Day Rates Range</th>
+          <th>Positions</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
 
         <tr>
-          <td *ngIf="!projectlist?.length" colspan="5">
+          <td *ngIf="!projectlist?.length" colspan="8">
               <app-no-record-found></app-no-record-found>
           </td>
       </tr>
 
         <tr *ngFor="let project of projectlist">
-          <td>{{ project.name }}</td>
+          <td>{{ project.projectName }}</td>
           <td>{{ project.client }}</td>
-          <td>{{ project.startDate }}</td>
-          <td>{{ project.endDate }}</td>
+          <td>{{ project.publishedDate | date:'mediumDate' }}</td>
+          <td>{{ project.clientLocation }}</td>
           <td>
-            <span class="status-badge" [ngClass]="project.status.toLowerCase()">
+            <span class="status-badge" [ngClass]="project.status?.toLowerCase()">
               {{ project.status }}
             </span>
           </td>
-          <td>${{ project.budget | number }}</td>
-          <td>{{ project.team }}</td>
+          <td>
+            ${{ project.dayRatesRange?.min | number }} - ${{ project.dayRatesRange?.max | number }}
+          </td>
+          <td>{{ project.noOfPositions }}</td>
           <td class="actions">
-            <button class="action-btn view" (click)="viewDetails(project.id)" title="View Details">
+            <button class="action-btn view" (click)="viewDetails(project._id)" title="View Details">
               View
             </button>
             <button class="action-btn edit" (click)="openEditProjectModal(project)" title="Edit">
               Edit
             </button>
-            <button class="action-btn delete" (click)="deleteProject(project.id)" title="Delete">
+            <button class="action-btn delete" (click)="deleteProject(project._id)" title="Delete">
               Delete
             </button>
           </td>

@@ -58,6 +58,74 @@
         }
       }
 
+      .range-inputs {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        input {
+          flex: 1;
+        }
+
+        span {
+          color: #495057;
+          font-weight: 500;
+        }
+      }
+
+      .certifications-list {
+        margin-top: 10px;
+
+        .certification-item {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 10px;
+
+          input {
+            flex: 1;
+          }
+
+          .remove-btn {
+            padding: 8px;
+            border: none;
+            background: #dc3545;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background: #c82333;
+            }
+
+            i {
+              font-size: 12px;
+            }
+          }
+        }
+
+        .add-btn {
+          padding: 8px 16px;
+          border: 1px dashed #007bff;
+          background: transparent;
+          color: #007bff;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          &:hover {
+            background: rgba(0, 123, 255, 0.1);
+          }
+
+          i {
+            font-size: 12px;
+          }
+        }
+      }
+
       textarea {
         resize: vertical;
         min-height: 100px;

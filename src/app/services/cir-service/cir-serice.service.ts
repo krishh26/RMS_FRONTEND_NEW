@@ -176,7 +176,7 @@ export class CirSericeService {
       .get<any>(this.baseUrl + CirEndPoint.JOB_ROLE_LIST + id, { params: params });
   }
 
-  getProjectsList(params?: { page?: number, limit?: number, startDate?: string, endDate?: string }): Observable<any> {
+  getProjectsList(params?: { page?: number, limit?: number, startDate?: string, endDate?: string, status?: 'Active' | 'Future Role' | 'Expired' | 'All' }): Observable<any> {
     let queryParams = new HttpParams();
     if (params?.page) {
       queryParams = queryParams.set('page', params.page.toString());
@@ -190,8 +190,57 @@ export class CirSericeService {
     if (params?.endDate) {
       queryParams = queryParams.set('endDate', params.endDate);
     }
+    if (params?.status && params.status !== 'All') {
+      queryParams = queryParams.set('status', params.status);
+    }
     return this.httpClient
       .get<any>(this.baseUrl + CirEndPoint.GET_PROJECTS, { headers: this.getHeader(), params: queryParams });
+  }
+
+  getProjectDetails(projectId: string): Observable<any> {
+    return this.httpClient
+      .get<any>(`${this.baseUrl}${CirEndPoint.GET_PROJECTS}/${projectId}`, { headers: this.getHeader() });
+  }
+
+  updateProject(projectId: string, payload: {
+    projectName?: string;
+    publishedDate?: string;
+    client?: string;
+    clientLocation?: string;
+    workType?: string;
+    dayRatesRange?: {
+      min: number;
+      max: number;
+    };
+    noOfPositions?: number;
+    clearanceOrCertifications?: string[];
+    status?: string;
+    type?: string;
+    updatedBy: string;
+  }): Observable<any> {
+    return this.httpClient
+      .put<any>(`${this.baseUrl}${CirEndPoint.GET_PROJECTS}/${projectId}`, payload, { headers: this.getHeader() });
+  }
+
+  createProject(payload: {
+    projectName: string;
+    publishedDate: string;
+    client: string;
+    clientLocation: string;
+    workType: string;
+    dayRatesRange: {
+      min: number;
+      max: number;
+    };
+    noOfPositions: number;
+    clearanceOrCertifications: string[];
+    status: string;
+    type: string;
+    createdBy: string;
+    updatedBy: string;
+  }): Observable<any> {
+    return this.httpClient
+      .post<any>(this.baseUrl + CirEndPoint.GET_PROJECTS, payload, { headers: this.getHeader() });
   }
 
 }

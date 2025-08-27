@@ -19,6 +19,14 @@ export class ProjectListComponent implements OnInit {
   totalRecords: number = 0;
   currentPage: number = 1;
   itemsPerPage: number = 10;
+  selectedStatus: 'Active' | 'Future Role' | 'Expired' | 'All' = 'All';
+
+  statusOptions = [
+    { value: 'All', label: 'All Status' },
+    { value: 'Active', label: 'Active' },
+    { value: 'Future Role', label: 'Future Role' },
+    { value: 'Expired', label: 'Expired' }
+  ];
   Math = Math; // Make Math available in template
 
   // Date filter properties
@@ -88,7 +96,8 @@ export class ProjectListComponent implements OnInit {
     this.showLoader = true;
     const params: any = {
       page: this.currentPage,
-      limit: this.itemsPerPage
+      limit: this.itemsPerPage,
+      status: this.selectedStatus
     };
 
     // Add date filters if selected
@@ -99,34 +108,55 @@ export class ProjectListComponent implements OnInit {
       params.endDate = `${this.endDate.year}-${this.padNumber(this.endDate.month)}-${this.padNumber(this.endDate.day)}`;
     }
 
-    this.cirService.getProjectsList(params).subscribe((response: any) => {
-      this.projectlist = []; // Initialize projectlist as an array
-      this.totalRecords = response?.data?.meta_data?.items;
-      if (response?.status == true) {
-        this.showLoader = false;
-        // Assuming response.data[0] is an array of projects
-        this.projectlist = response?.data;
-      } else {
-        this.notificationService.showError(response?.message);
+    this.cirService.getProjectsList(params).subscribe({
+      next: (response: any) => {
+        if (response?.status === true) {
+          this.projectlist = response.data || [];
+          this.totalRecords = response.meta_data?.items || 0;
+          this.showLoader = false;
+        } else {
+          this.projectlist = [];
+          this.totalRecords = 0;
+          this.notificationService.showError(response?.message || 'Failed to fetch projects');
+          this.showLoader = false;
+        }
+      },
+      error: (error) => {
+        this.projectlist = [];
+        this.totalRecords = 0;
+        this.notificationService.showError(error?.error?.message || error?.message || 'Failed to fetch projects');
         this.showLoader = false;
       }
-    }, (error) => {
-      this.notificationService.showError(error?.error?.message || error?.message);
-      this.showLoader = false;
     });
   }
 
-  editProject(projectId: number): void {
+  editProject(projectId: string): void {
     console.log('Edit project:', projectId);
   }
 
-  deleteProject(projectId: number): void {
+  deleteProject(projectId: string): void {
     console.log('Delete project:', projectId);
   }
 
-  viewDetails(projectId: number): void {
-    // Redirect to job list page
-    this.router.navigate(['/cir-admin/jobs']);
+  viewDetails(projectId: string): void {
+    this.showLoader = true;
+    this.cirService.getProjectDetails(projectId).subscribe({
+      next: (response: any) => {
+        if (response?.status === true) {
+          // Store project details and navigate to details page
+          this.router.navigate(['/cir-admin/jobs'], {
+            state: { projectDetails: response.data }
+          });
+        } else {
+          this.notificationService.showError(response?.message || 'Failed to fetch project details');
+        }
+        this.showLoader = false;
+      },
+      error: (error) => {
+        this.notificationService.showError(error?.error?.message || error?.message || 'Failed to fetch project details');
+        this.showLoader = false;
+      }
+    });
   }
 
   openAddProjectModal(): void {
@@ -201,6 +231,12 @@ export class ProjectListComponent implements OnInit {
     this.startDate = null;
     this.endDate = null;
     this.currentPage = 1; // Reset to first page when filters are cleared
+    this.getProjectList();
+  }
+
+  onStatusChange(status: 'Active' | 'Future Role' | 'Expired' | 'All'): void {
+    this.selectedStatus = status;
+    this.currentPage = 1; // Reset to first page when filter changes
     this.getProjectList();
   }
 }
