@@ -1,0 +1,127 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { LocalStorageService } from 'src/app/services/local-storage/local-storage.service';
+
+@Component({
+  selector: 'app-cir-profile',
+  templateUrl: './cir-profile.component.html',
+  styleUrls: ['./cir-profile.component.scss']
+})
+export class CirProfileComponent implements OnInit {
+  activeTab = 'profile';
+  profileForm!: FormGroup;
+  passwordForm!: FormGroup;
+  loginDetails: any = {
+    profile: {
+      url: ''
+    }
+  };
+  file: any = null;
+
+  // Password visibility flags
+  currentShowPassword = false;
+  showPassword = false;
+  confirmShowPassword = false;
+
+  constructor(
+    private fb: FormBuilder,
+    private localStorageService: LocalStorageService
+  ) {
+    this.initializeForms();
+  }
+
+  ngOnInit(): void {
+    const userDetails = this.localStorageService.getLogger();
+    if (userDetails) {
+      this.loginDetails = userDetails;
+      this.profileForm.patchValue({
+        name: userDetails.name || '',
+        email: userDetails.email || '',
+        phoneNumber: userDetails.phoneNumber || '',
+        nationality: userDetails.nationality || '',
+        postalCode: userDetails.postalCode || ''
+      });
+    }
+  }
+
+  private initializeForms(): void {
+    // Profile form initialization
+    this.profileForm = this.fb.group({
+      name: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]],
+      email: ['', [Validators.required, Validators.email]],
+      phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      nationality: ['', Validators.required],
+      postalCode: ['', [Validators.required, Validators.pattern('^[0-9]{6}$')]]
+    });
+
+    // Password form initialization
+    this.passwordForm = this.fb.group({
+      currentPassword: ['', [Validators.required, Validators.pattern('^(?=.*[A-Z])(?=.*[0-9])(?=.*[@])[a-zA-Z0-9@]+$')]],
+      password: ['', [Validators.required, Validators.pattern('^(?=.*[A-Z])(?=.*[0-9])(?=.*[@])[a-zA-Z0-9@]+$')]],
+      confirmPassword: ['', [Validators.required, Validators.pattern('^(?=.*[A-Z])(?=.*[0-9])(?=.*[@])[a-zA-Z0-9@]+$')]]
+    });
+  }
+
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
+  }
+
+  fileUpload(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.file = {
+        url: URL.createObjectURL(file),
+        file: file
+      };
+    }
+  }
+
+  showHidePass(field: string): void {
+    switch (field) {
+      case 'currentPassword':
+        this.currentShowPassword = !this.currentShowPassword;
+        break;
+      case 'password':
+        this.showPassword = !this.showPassword;
+        break;
+      case 'confirmPassword':
+        this.confirmShowPassword = !this.confirmShowPassword;
+        break;
+    }
+  }
+
+  submitProfile(): void {
+    if (this.profileForm.valid) {
+      console.log('Profile form submitted:', this.profileForm.value);
+      // Here you would typically call a service to update the profile
+      this.loginDetails = { ...this.loginDetails, ...this.profileForm.value };
+      this.localStorageService.setLogger(this.loginDetails);
+    } else {
+      Object.keys(this.profileForm.controls).forEach(key => {
+        const control = this.profileForm.get(key);
+        if (control?.invalid) {
+          control.markAsTouched();
+        }
+      });
+    }
+  }
+
+  submitPassword(): void {
+    if (this.passwordForm.valid) {
+      const { password, confirmPassword } = this.passwordForm.value;
+      if (password !== confirmPassword) {
+        // Handle password mismatch
+        return;
+      }
+      console.log('Password form submitted:', this.passwordForm.value);
+      // Here you would typically call a service to update the password
+    } else {
+      Object.keys(this.passwordForm.controls).forEach(key => {
+        const control = this.passwordForm.get(key);
+        if (control?.invalid) {
+          control.markAsTouched();
+        }
+      });
+    }
+  }
+}

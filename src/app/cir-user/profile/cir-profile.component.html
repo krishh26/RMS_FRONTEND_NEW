@@ -1,0 +1,223 @@
+<section>
+  <div class="container">
+    <div class="Titleheading">
+      <h1>Profile Setup</h1>
+    </div>
+    <div class="FlatCard mt-4 mb-3">
+      <ul class="nav nav-tabs pt-3" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="activeTab === 'profile'" id="Profile-tab"
+            (click)="setActiveTab('profile')" type="button" role="tab" aria-controls="Profile"
+            aria-selected="true">Profile</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" [class.active]="activeTab === 'password'" id="ChangePassword-tab"
+            (click)="setActiveTab('password')" type="button" role="tab" aria-controls="ChangePassword"
+            aria-selected="false">Change Password</button>
+        </li>
+      </ul>
+      <div class="row">
+        <!-- Left Panel (Personal Details Form) -->
+        <div class="col-lg-7 col-xl-7 col-12">
+          <div class="FormRight-panel">
+            <div class="tab-content" id="myTabContent">
+              <!-- Profile Tab Content -->
+              <div class="tab-pane fade" [class.show]="activeTab === 'profile'" [class.active]="activeTab === 'profile'"
+                id="Profile" role="tabpanel">
+                <form [formGroup]="profileForm" (ngSubmit)="submitProfile()">
+                  <div class="row mb-3">
+                    <div class="col-12">
+                      <div class="profile-image mt-4 mb-4">
+                        <img *ngIf="file?.url || loginDetails.profile.url"
+                          [src]="file?.url || loginDetails.profile.url || 'assets/img/default-avatar.png'" />
+                        <div class="input--file">
+                          <i class="bi bi-camera-fill"></i>
+                          <input name="Select File" type="file" (change)="fileUpload($event)"
+                            accept="image/png, image/gif, image/jpeg">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-4">
+                      <label for="name">Your Name:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="name" type="text" class="form-control" placeholder="Your Name" formControlName="name"
+                        readonly>
+                      <span class="text-danger" *ngIf="
+                    profileForm?.controls?.['name']?.touched &&
+                    profileForm?.controls?.['name']?.errors?.['required']">
+                        Please enter your name.
+                      </span>
+                      <span class="text-danger" *ngIf="
+                    profileForm?.controls?.['name']?.touched &&
+                    profileForm?.controls?.['name']?.errors?.['pattern']">
+                        Please enter a valid format of your name.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-4">
+                      <label for="email">Your Email:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="email" type="email" class="form-control" placeholder="Your Email"
+                        formControlName="email" readonly>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-4">
+                      <label for="phoneNumber">Your Phone Number:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="phoneNumber" type="tel" class="form-control" placeholder="Your Phone Number"
+                        [maxlength]="10" formControlName="phoneNumber">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-4">
+                      <label for="nationality">Nationality:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="nationality" type="text" class="form-control" placeholder="Nationality"
+                        formControlName="nationality">
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-4">
+                      <label for="postalCode">Postal Code:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="postalCode" type="text" class="form-control" placeholder="Postal Code"
+                        formControlName="postalCode">
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 update">
+                      <button style="float: right!important" type="submit" class="btn btn-primary btn-round">Update
+                        Profile</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Change Password Tab Content -->
+              <div class="tab-pane fade" [class.show]="activeTab === 'password'"
+                [class.active]="activeTab === 'password'" id="ChangePassword" role="tabpanel">
+                <form [formGroup]="passwordForm" (ngSubmit)="submitPassword()">
+                  <div class="form-group">
+                    <div class="row mb-3">
+                      <div class="col-md-4">
+                        <label for="password">Current Password:</label>
+                      </div>
+                      <div class="col-md-8">
+                        <input id="password" [type]="currentShowPassword ? 'text' : 'password'" class="form-control"
+                          placeholder="Current Password" formControlName="currentPassword">
+                        <span *ngIf="!currentShowPassword" class="fas fa-eye showicon"
+                          (click)="showHidePass('currentPassword')"></span>
+                        <span *ngIf="currentShowPassword" class="fas fa-eye-slash showicon"
+                          (click)="showHidePass('currentPassword')"></span>
+                        <span class="text-danger"
+                          *ngIf="passwordForm?.controls?.['currentPassword']?.touched && passwordForm?.controls?.['currentPassword']?.errors?.['required']">
+                          Please enter a password.
+                        </span>
+                        <span class="text-danger"
+                          *ngIf="passwordForm?.controls?.['currentPassword']?.touched && passwordForm?.controls?.['currentPassword']?.errors?.['pattern']">
+                          Password must contain a capital letter, a number, and '&#64;'.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="row mb-3">
+                      <div class="col-md-4">
+                        <label for="password">New Password:</label>
+                      </div>
+                      <div class="col-md-8">
+                        <input id="password" [type]="showPassword ? 'text' : 'password'" class="form-control"
+                          placeholder="New Password" formControlName="password">
+                        <span *ngIf="!showPassword" class="fas fa-eye showicon"
+                          (click)="showHidePass('password')"></span>
+                        <span *ngIf="showPassword" class="fas fa-eye-slash showicon"
+                          (click)="showHidePass('password')"></span>
+                        <span class="text-danger"
+                          *ngIf="passwordForm?.controls?.['password']?.touched && passwordForm?.controls?.['password']?.errors?.['required']">
+                          Please enter a password.
+                        </span>
+                        <span class="text-danger"
+                          *ngIf="passwordForm?.controls?.['password']?.touched && passwordForm?.controls?.['password']?.errors?.['pattern']">
+                          Password must contain a capital letter, a number, and '&#64;'.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="row mb-3">
+                      <div class="col-md-4">
+                        <label for="confirmPassword">Confirm Password:</label>
+                      </div>
+                      <div class="col-md-8">
+                        <input id="confirmPassword" [type]="confirmShowPassword ? 'text' : 'password'"
+                          class="form-control" placeholder="Confirm Password" formControlName="confirmPassword">
+                        <span *ngIf="!confirmShowPassword" class="fas fa-eye showicon"
+                          (click)="showHidePass('confirmPassword')"></span>
+                        <span *ngIf="confirmShowPassword" class="fas fa-eye-slash showicon"
+                          (click)="showHidePass('confirmPassword')"></span>
+                        <span class="text-danger"
+                          *ngIf="passwordForm?.controls?.['confirmPassword']?.touched && passwordForm?.controls?.['confirmPassword']?.errors?.['required']">
+                          Please confirm your password.
+                        </span>
+                        <span class="text-danger"
+                          *ngIf="passwordForm?.controls?.['confirmPassword']?.touched && passwordForm?.controls?.['confirmPassword']?.errors?.['pattern']">
+                          Password must contain a capital letter, a number, and '&#64;'.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-12 update">
+                      <button style="float: right!important" type="submit" class="btn btn-primary btn-round">Update
+                        Password</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="col-lg-5 col-xl-5 col-12">
+          <div class="FormLeft-panel">
+            <div class="text-center">
+              <img src="../../../../assets/img/Saivenlogo.png" width="200" class="mb-5" />
+            </div>
+            <h3><strong>"Elevate Your Career with SaiVen: Join Public Sector IT Projects"</strong></h3>
+            <p class="mb-5 textfont">SaiVen, is an emerging IT QA lead business with 40+ business collaborations
+              across UK and India. We are a dedicated business to lead the governance of all public sector QA projects
+              signed by the group and we are the driving force for client relationship management, project governance,
+              and people/delivery management.<br><br>
+              Our job is to ensure seamless execution for exceptional results, through bringing our industry expertise
+              added with right skills at right time - enabling quick and cost-effective resource augmentation, for
+              benefit of our clients.<br><br>Partner with us for exciting contract opportunities and be a part of our
+              success story</p>
+            <p><strong>SaiVen Technology Solutions Limited</strong><br>
+              1-04, Focal Point, <br>27-35 Fleet Street, <br>Swindon SN1 1RQ
+            </p>
+            <p>Company Registration Number: 8856876</p>
+            <p>Email: Info&#64;saivensolutions.co.uk</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
