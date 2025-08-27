@@ -1,7 +1,9 @@
 <div class="project-list-container">
   <div class="header">
     <h2>Project Management</h2>
-    <button class="add-btn project" (click)="openAddProjectModal()">Add New Project</button>
+    <div class="header-buttons">
+      <button class="add-btn project" (click)="openAddProjectModal()">Add New Project</button>
+    </div>
   </div>
 
   <div class="filters">
@@ -34,14 +36,49 @@
       </div>
 
       <div class="filter-item">
-        <label class="filter-label">Budget Range</label>
-        <select class="filter-select">
-          <option value="">All Budgets</option>
-          <option value="0-25000">$0 - $25,000</option>
-          <option value="25000-50000">$25,000 - $50,000</option>
-          <option value="50000-100000">$50,000 - $100,000</option>
-          <option value="100000+">$100,000+</option>
-        </select>
+        <label class="filter-label">Start Date</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="yyyy-mm-dd"
+            name="startDate"
+            [maxDate]="maxDate"
+            [(ngModel)]="startDate"
+            ngbDatepicker
+            #startDatePicker="ngbDatepicker"
+            (dateSelect)="onStartDateSelect($event)"
+          />
+          <button class="btn btn-outline-secondary calendar" (click)="startDatePicker.toggle()" type="button">
+            <i class="fas fa-calendar-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">End Date</label>
+        <div class="input-group">
+          <input
+            class="form-control"
+            placeholder="yyyy-mm-dd"
+            name="endDate"
+            [maxDate]="maxDate"
+            [minDate]="minEndDate"
+            [(ngModel)]="endDate"
+            ngbDatepicker
+            #endDatePicker="ngbDatepicker"
+            (dateSelect)="onEndDateSelect($event)"
+          />
+          <button class="btn btn-outline-secondary calendar" (click)="endDatePicker.toggle()" type="button">
+            <i class="fas fa-calendar-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">&nbsp;</label>
+        <button class="btn btn-outline-secondary clear-filters" (click)="clearDateFilters()">
+          Clear Filters
+        </button>
       </div>
     </div>
 
@@ -67,7 +104,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let project of projects">
+
+        <tr>
+          <td *ngIf="!projectlist?.length" colspan="5">
+              <app-no-record-found></app-no-record-found>
+          </td>
+      </tr>
+
+        <tr *ngFor="let project of projectlist">
           <td>{{ project.name }}</td>
           <td>{{ project.client }}</td>
           <td>{{ project.startDate }}</td>
@@ -95,12 +139,14 @@
     </table>
   </div>
 
-  <div class="pagination">
-    <button class="page-btn">&lt;</button>
-    <button class="page-btn active">1</button>
-    <button class="page-btn">2</button>
-    <button class="page-btn">3</button>
-    <button class="page-btn">&gt;</button>
+  <div class="pagination" *ngIf="totalRecords > 0">
+    <button class="page-btn" [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">&lt;</button>
+    <button class="page-btn" *ngFor="let page of [].constructor(Math.ceil(totalRecords / itemsPerPage)); let i = index"
+      [class.active]="currentPage === i + 1"
+      (click)="onPageChange(i + 1)">
+      {{ i + 1 }}
+    </button>
+    <button class="page-btn" [disabled]="currentPage === Math.ceil(totalRecords / itemsPerPage)" (click)="onPageChange(currentPage + 1)">&gt;</button>
   </div>
 </div>
 

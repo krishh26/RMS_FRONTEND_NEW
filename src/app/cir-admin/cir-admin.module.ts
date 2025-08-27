@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Layout components
 import { CirAdminLayoutComponent } from './layout/cir-admin-layout.component';
@@ -26,6 +27,7 @@ import { JobListComponent } from './project/job-list/job-list.component';
 import { JobAddEditComponent } from './project/job-add-edit/job-add-edit.component';
 import { JobApplicationComponent } from './project/job-application/job-application.component';
 import { SendJobComponent } from './project/send-job/send-job.component';
+import { NoRecordFoundComponent } from '../shared/common/no-record-found/no-record-found.component';
 
 const routes: Routes = [
   {
@@ -83,13 +85,16 @@ const routes: Routes = [
            SendJobComponent,
 
            // Settings component
-           SettingsComponent
+           SettingsComponent,
+           NoRecordFoundComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)
+    NgbModule,
+    RouterModule.forChild(routes),
+    DecimalPipe
   ]
 })
 export class CirAdminModule { }

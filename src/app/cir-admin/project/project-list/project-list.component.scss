@@ -18,6 +18,41 @@
       font-weight: 600;
     }
 
+    .header-buttons {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .refresh-btn {
+      background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      box-shadow: 0 2px 4px rgba(23, 162, 184, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      i {
+        font-size: 14px;
+      }
+    }
+
     .add-btn {
       background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
       color: white;
@@ -119,7 +154,8 @@
           letter-spacing: 0.5px;
         }
 
-        .filter-select {
+        .filter-select,
+        .form-control {
           padding: 10px 12px;
           border: 1px solid #ddd;
           border-radius: 6px;
@@ -137,6 +173,50 @@
 
           &:hover {
             border-color: #007bff;
+          }
+        }
+
+        .input-group {
+          display: flex;
+          gap: 5px;
+
+          .form-control {
+            flex: 1;
+            border-radius: 6px;
+          }
+
+          .calendar {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background-color: #f8f9fa;
+              border-color: #007bff;
+            }
+
+            i {
+              color: #6c757d;
+            }
+          }
+        }
+
+        .clear-filters {
+          width: 100%;
+          padding: 10px;
+          margin-top: 5px;
+          border: 1px solid #dc3545;
+          color: #dc3545;
+          background: white;
+          border-radius: 6px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: #dc3545;
+            color: white;
           }
         }
       }
@@ -345,8 +425,18 @@
       background-color: white;
       cursor: pointer;
       transition: all 0.2s;
+      min-width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-      &:hover {
+      &:hover:not(:disabled) {
+        background-color: #f8f9fa;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
         background-color: #f8f9fa;
       }
 
@@ -493,4 +583,10 @@
   padding: 25px;
   max-height: 60vh;
   overflow-y: auto;
+}
+
+// Loading spinner animation
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

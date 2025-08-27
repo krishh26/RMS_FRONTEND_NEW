@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CirSericeService } from '../../../services/cir-service/cir-serice.service';
+import { NotificationService } from '../../../services/notification/notification.service';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-project-list',
@@ -11,6 +14,33 @@ export class ProjectListComponent implements OnInit {
   isEditMode = false;
   selectedProject: any = null;
   showMobileFilters = false;
+  showLoader = false;
+  projectlist: any[] = [];
+  totalRecords: number = 0;
+  currentPage: number = 1;
+  itemsPerPage: number = 10;
+  Math = Math; // Make Math available in template
+
+  // Date filter properties
+  startDate: NgbDateStruct | null = null;
+  endDate: NgbDateStruct | null = null;
+
+  // Date validation
+  maxDate: NgbDateStruct = {
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+    day: new Date().getDate()
+  };
+
+  // Computed property for minDate
+  get minEndDate(): NgbDateStruct {
+    return this.startDate || {
+      year: 2000,
+      month: 1,
+      day: 1
+    };
+  }
+
   projects: any[] = [
     {
       id: 1,
@@ -44,10 +74,46 @@ export class ProjectListComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    private cirService: CirSericeService,
+    private notificationService: NotificationService
+  ) { }
 
   ngOnInit(): void {
-    // Here you would typically fetch projects from a service
+    this.getProjectList();
+  }
+
+  getProjectList() {
+    this.showLoader = true;
+    const params: any = {
+      page: this.currentPage,
+      limit: this.itemsPerPage
+    };
+
+    // Add date filters if selected
+    if (this.startDate) {
+      params.startDate = `${this.startDate.year}-${this.padNumber(this.startDate.month)}-${this.padNumber(this.startDate.day)}`;
+    }
+    if (this.endDate) {
+      params.endDate = `${this.endDate.year}-${this.padNumber(this.endDate.month)}-${this.padNumber(this.endDate.day)}`;
+    }
+
+    this.cirService.getProjectsList(params).subscribe((response: any) => {
+      this.projectlist = []; // Initialize projectlist as an array
+      this.totalRecords = response?.data?.meta_data?.items;
+      if (response?.status == true) {
+        this.showLoader = false;
+        // Assuming response.data[0] is an array of projects
+        this.projectlist = response?.data;
+      } else {
+        this.notificationService.showError(response?.message);
+        this.showLoader = false;
+      }
+    }, (error) => {
+      this.notificationService.showError(error?.error?.message || error?.message);
+      this.showLoader = false;
+    });
   }
 
   editProject(projectId: number): void {
@@ -96,5 +162,45 @@ export class ProjectListComponent implements OnInit {
 
   toggleMobileFilters(): void {
     this.showMobileFilters = !this.showMobileFilters;
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.getProjectList();
+  }
+
+  // Helper method to pad single digit numbers with leading zero
+  private padNumber(num: number): string {
+    return num < 10 ? `0${num}` : num.toString();
+  }
+
+  // Date filter methods
+  onStartDateSelect(date: NgbDateStruct): void {
+    this.startDate = date;
+    if (this.endDate && this.compareDates(date, this.endDate) > 0) {
+      this.endDate = null;
+    }
+    this.currentPage = 1; // Reset to first page when filter changes
+    this.getProjectList();
+  }
+
+  onEndDateSelect(date: NgbDateStruct): void {
+    this.endDate = date;
+    this.currentPage = 1; // Reset to first page when filter changes
+    this.getProjectList();
+  }
+
+  // Helper method to compare dates
+  private compareDates(date1: NgbDateStruct, date2: NgbDateStruct): number {
+    const d1 = new Date(date1.year, date1.month - 1, date1.day);
+    const d2 = new Date(date2.year, date2.month - 1, date2.day);
+    return d1.getTime() - d2.getTime();
+  }
+
+  clearDateFilters(): void {
+    this.startDate = null;
+    this.endDate = null;
+    this.currentPage = 1; // Reset to first page when filters are cleared
+    this.getProjectList();
   }
 }

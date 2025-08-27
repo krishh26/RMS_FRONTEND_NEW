@@ -19,7 +19,8 @@ export enum CirEndPoint {
   FUTURE_CARD = '/futures/card/',
   PUBLIC_FUTURE_CARD = '/futures/card/public',
   JOB_ROLE = '/futures/card/',
-  JOB_ROLE_LIST = '/futures/card/'
+  JOB_ROLE_LIST = '/futures/card/',
+  GET_PROJECTS = '/project/projects'
 }
 
 @Injectable({
@@ -29,7 +30,7 @@ export class CirSericeService {
 
   baseUrl!: string;
 
-  constructor(  
+  constructor(
     private httpClient: HttpClient,
   ) {
     this.baseUrl = environment.baseUrl;
@@ -169,6 +170,24 @@ export class CirSericeService {
   getJobRoleList(params: any, id: any): Observable<any> {
     return this.httpClient
       .get<any>(this.baseUrl + CirEndPoint.JOB_ROLE_LIST + id, { params: params });
+  }
+
+  getProjectsList(params?: { page?: number, limit?: number, startDate?: string, endDate?: string }): Observable<any> {
+    let queryParams = new HttpParams();
+    if (params?.page) {
+      queryParams = queryParams.set('page', params.page.toString());
+    }
+    if (params?.limit) {
+      queryParams = queryParams.set('limit', params.limit.toString());
+    }
+    if (params?.startDate) {
+      queryParams = queryParams.set('startDate', params.startDate);
+    }
+    if (params?.endDate) {
+      queryParams = queryParams.set('endDate', params.endDate);
+    }
+    return this.httpClient
+      .get<any>(this.baseUrl + CirEndPoint.GET_PROJECTS, { headers: this.getHeader(), params: queryParams });
   }
 
 }
