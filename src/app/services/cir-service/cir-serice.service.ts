@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { LocalStorageService } from '../local-storage/local-storage.service';
 
 export enum CirEndPoint {
   LOGIN_USER = '/user/login',
@@ -30,15 +31,18 @@ export class CirSericeService {
 
   baseUrl!: string;
 
-  constructor(
+    constructor(
     private httpClient: HttpClient,
+    private localStorageService: LocalStorageService
   ) {
     this.baseUrl = environment.baseUrl;
   }
 
   getHeader(): HttpHeaders {
+    const token = this.localStorageService.getLoggerToken();
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
     });
     return headers;
   }
