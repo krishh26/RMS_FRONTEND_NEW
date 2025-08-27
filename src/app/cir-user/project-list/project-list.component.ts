@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-list',
@@ -12,15 +13,15 @@ export class ProjectListComponent implements OnInit {
     { id: 3, name: 'Project 3', status: 'Completed', startDate: '2024-02-01', endDate: '2024-05-31' }
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     // Here you would typically fetch projects from a service
   }
 
   viewProject(projectId: number): void {
-    // Implement project view logic
-    console.log('Viewing project:', projectId);
+    // Navigate to jobs page
+    this.router.navigate(['/cir-user/jobs']);
   }
 
   editProject(projectId: number): void {
