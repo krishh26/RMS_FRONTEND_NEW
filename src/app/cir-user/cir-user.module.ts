@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { ProjectListComponent } from './project-list/project-list.component';
 import { JobListComponent } from './job-list/job-list.component';
@@ -32,8 +32,7 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
+    NgbModule,
     RouterModule.forChild(routes)
   ]
 })
