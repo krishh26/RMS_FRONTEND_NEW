@@ -62,7 +62,7 @@ export class AcrUserLoginComponent {
             if (response?.data?.user?.password_reset === false) {
               this.router.navigate(['/acr/acr-reset-password']);
             } else {
-              this.router.navigate(['/acr/acr-all-jobs']);
+              this.router.navigate(['/acr-user/project-list']);
             }
           } else {
             this.notificationService.showError(response?.message);
