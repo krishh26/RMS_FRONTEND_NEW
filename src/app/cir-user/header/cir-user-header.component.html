@@ -10,14 +10,15 @@
       <div class="d-flex align-items-center gap-4">
         <span class="future-roles">FUTURE ROLES</span>
 
-        <div class="user-dropdown" ngbDropdown>
-          <button class="user-dropdown-toggle" ngbDropdownToggle>
+        <div class="dropdown">
+          <button class="user-dropdown-toggle" type="button" (click)="toggleDropdown()" [class.show]="isDropdownOpen">
             {{ loginUser?.name?.toUpperCase() || 'AYUSH' }}
-            <i class="fas fa-chevron-down ms-1"></i>
+            <i class="fas fa-chevron-down ms-1" [class.rotated]="isDropdownOpen"></i>
           </button>
-          <div ngbDropdownMenu class="dropdown-menu">
-            <a ngbDropdownItem routerLink="/cir-user/profile">Profile</a>
-            <a ngbDropdownItem (click)="logout()">LogOut</a>
+          <div class="dropdown-menu" [class.show]="isDropdownOpen">
+            <a class="dropdown-item" routerLink="/cir-user/profile">Profile</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" (click)="logout()">LogOut</a>
           </div>
         </div>
       </div>
