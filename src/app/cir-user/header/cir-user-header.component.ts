@@ -47,6 +47,6 @@ export class CirUserHeaderComponent implements OnInit {
 
   logout() {
     this.localStorageService.clearStorage();
-    this.router.navigateByUrl('/cir/cir-user-login');
+    this.router.navigateByUrl('/auth/cir-user-login');
   }
 }
