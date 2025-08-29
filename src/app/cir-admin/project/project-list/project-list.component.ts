@@ -174,6 +174,11 @@ export class ProjectListComponent implements OnInit {
     this.router.navigate(['/cir-admin/projects', projectId]);
   }
 
+  viewJobs(projectId: string): void {
+    // Navigate to job list page for the specific project
+    this.router.navigate(['/cir-admin/jobs'], { queryParams: { projectId: projectId } });
+  }
+
   openAddProjectModal(): void {
     // Navigate to add page instead of opening modal
     this.router.navigate(['/cir-admin/projects/add']);

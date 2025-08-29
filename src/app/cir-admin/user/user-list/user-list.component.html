@@ -50,6 +50,9 @@
           </td>
           <td>{{ user.lastLogin }}</td>
           <td class="actions">
+            <button class="action-btn view" (click)="viewDetails(user.id)" title="View Details">
+              View Details
+            </button>
             <button class="action-btn edit" (click)="editUser(user.id)" title="Edit">
               Edit
             </button>

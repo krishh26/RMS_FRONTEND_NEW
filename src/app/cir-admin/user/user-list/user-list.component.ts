@@ -39,6 +39,12 @@ export class UserListComponent implements OnInit {
     // Here you would typically fetch users from a service
   }
 
+  viewDetails(userId: number): void {
+    console.log('View user details:', userId);
+    // Navigate to user details page
+    // this.router.navigate(['/cir-admin/users', userId]);
+  }
+
   editUser(userId: number): void {
     console.log('Edit user:', userId);
   }

@@ -7,10 +7,10 @@
     </div>
     <h2>Project Management</h2>
     <div class="header-buttons">
-      <button class="refresh-btn" (click)="refreshProjects()" title="Refresh Projects">
+      <!-- <button class="refresh-btn" (click)="refreshProjects()" title="Refresh Projects">
         <i class="fas fa-sync-alt"></i>
         Refresh
-      </button>
+      </button> -->
       <button class="add-btn project" (click)="openAddProjectModal()">Add New Project</button>
     </div>
   </div>
@@ -20,18 +20,9 @@
       <div class="search-icon">
         <i class="fas fa-search"></i>
       </div>
-      <input
-        type="text"
-        placeholder="Search projects..."
-        class="search-input"
-        [(ngModel)]="searchKeyword"
-        (input)="onSearchInput()"
-        (keyup.enter)="onSearchEnter()">
-      <button
-        *ngIf="searchKeyword"
-        class="clear-search-btn"
-        (click)="clearSearch()"
-        title="Clear search">
+      <input type="text" placeholder="Search projects..." class="search-input" [(ngModel)]="searchKeyword"
+        (input)="onSearchInput()" (keyup.enter)="onSearchEnter()">
+      <button *ngIf="searchKeyword" class="clear-search-btn" (click)="clearSearch()" title="Clear search">
         <i class="fas fa-times"></i>
       </button>
     </div>
@@ -57,16 +48,9 @@
       <div class="filter-item">
         <label class="filter-label">Start Date</label>
         <div class="input-group">
-          <input
-            class="form-control"
-            placeholder="yyyy-mm-dd"
-            name="startDate"
-            [maxDate]="maxDate"
-            [(ngModel)]="startDate"
-            ngbDatepicker
-            #startDatePicker="ngbDatepicker"
-            (dateSelect)="onStartDateSelect($event)"
-          />
+          <input class="form-control" placeholder="yyyy-mm-dd" name="startDate" [maxDate]="maxDate"
+            [(ngModel)]="startDate" ngbDatepicker #startDatePicker="ngbDatepicker"
+            (dateSelect)="onStartDateSelect($event)" />
           <button class="btn btn-outline-secondary calendar" (click)="startDatePicker.toggle()" type="button">
             <i class="fas fa-calendar-alt"></i>
           </button>
@@ -76,17 +60,8 @@
       <div class="filter-item">
         <label class="filter-label">End Date</label>
         <div class="input-group">
-          <input
-            class="form-control"
-            placeholder="yyyy-mm-dd"
-            name="endDate"
-            [maxDate]="maxDate"
-            [minDate]="minEndDate"
-            [(ngModel)]="endDate"
-            ngbDatepicker
-            #endDatePicker="ngbDatepicker"
-            (dateSelect)="onEndDateSelect($event)"
-          />
+          <input class="form-control" placeholder="yyyy-mm-dd" name="endDate" [maxDate]="maxDate" [minDate]="minEndDate"
+            [(ngModel)]="endDate" ngbDatepicker #endDatePicker="ngbDatepicker" (dateSelect)="onEndDateSelect($event)" />
           <button class="btn btn-outline-secondary calendar" (click)="endDatePicker.toggle()" type="button">
             <i class="fas fa-calendar-alt"></i>
           </button>
@@ -135,9 +110,9 @@
 
         <tr>
           <td *ngIf="!projectlist?.length" colspan="8">
-              <app-no-record-found></app-no-record-found>
+            <app-no-record-found></app-no-record-found>
           </td>
-      </tr>
+        </tr>
 
         <tr *ngFor="let project of projectlist">
           <td>{{ project.projectName }}</td>
@@ -155,7 +130,10 @@
           <td>{{ project.noOfPositions }}</td>
           <td class="actions">
             <button class="action-btn view" (click)="viewDetails(project._id)" title="View Details">
-              View
+              View Details
+            </button>
+            <button class="action-btn primary" (click)="viewJobs(project._id)" title="View Jobs">
+              View Jobs
             </button>
             <button class="action-btn edit" (click)="openEditProjectModal(project)" title="Edit">
               Edit
@@ -172,12 +150,10 @@
   <div class="pagination" *ngIf="totalRecords > 0">
     <button class="page-btn" [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">&lt;</button>
     <button class="page-btn" *ngFor="let page of [].constructor(Math.ceil(totalRecords / itemsPerPage)); let i = index"
-      [class.active]="currentPage === i + 1"
-      (click)="onPageChange(i + 1)">
+      [class.active]="currentPage === i + 1" (click)="onPageChange(i + 1)">
       {{ i + 1 }}
     </button>
-    <button class="page-btn" [disabled]="currentPage === Math.ceil(totalRecords / itemsPerPage)" (click)="onPageChange(currentPage + 1)">&gt;</button>
+    <button class="page-btn" [disabled]="currentPage === Math.ceil(totalRecords / itemsPerPage)"
+      (click)="onPageChange(currentPage + 1)">&gt;</button>
   </div>
 </div>
-
-
