@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { LocalStorageService } from '../local-storage/local-storage.service';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -44,13 +45,16 @@ export class AcrServiceService {
 
   constructor(
     private httpClient: HttpClient,
+    private localStorageService: LocalStorageService
   ) {
     this.baseUrl = environment.baseUrl;
   }
 
   getHeader(): HttpHeaders {
+    const token = this.localStorageService.getLoggerToken();
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
     });
     return headers;
   }
@@ -100,7 +104,10 @@ export class AcrServiceService {
     queryParams = queryParams.set('limit', params?.limit);
     queryParams = queryParams.set('keyword', params?.keyword);
     queryParams = queryParams.set('status', params?.status);
-    return this.httpClient.get<any>(url, { params: queryParams });
+    return this.httpClient.get<any>(url, {
+      headers: this.getHeader(),
+      params: queryParams
+    });
   }
 
   getCirJobList(params: { page: string | number, limit: string | number, keyword?: string, status?: string, job_type?: string }): Observable<any> {
@@ -115,7 +122,10 @@ export class AcrServiceService {
     if (params?.job_type) {
       queryParams = queryParams.set('job_type', params?.job_type);
     }
-    return this.httpClient.get<any>(url, { params: queryParams });
+    return this.httpClient.get<any>(url, {
+      headers: this.getHeader(),
+      params: queryParams
+    });
   }
 
 

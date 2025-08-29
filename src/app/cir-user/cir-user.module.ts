@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ProjectListComponent } from './project-list/project-list.component';
 import { JobListComponent } from './job-list/job-list.component';
@@ -10,6 +10,7 @@ import { ProjectListPublicComponent } from './project-list-public/project-list-p
 import { CirUserHeaderComponent } from './header/cir-user-header.component';
 import { CirUserLayoutComponent } from './layout/cir-user-layout.component';
 import { CirProfileComponent } from './profile/cir-profile.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 const routes: Routes = [
   {
@@ -37,8 +38,10 @@ const routes: Routes = [
   imports: [
     CommonModule,
     NgbModule,
+    FormsModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    NgxPaginationModule
   ]
 })
 export class CirUserModule { }
