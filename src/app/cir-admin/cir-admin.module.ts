@@ -45,20 +45,21 @@ const routes: Routes = [
       // Project routes
       { path: 'projects', component: ProjectListComponent },
       { path: 'projects/add', component: ProjectAddEditComponent },
+      { path: 'projects/:id', component: ProjectAddEditComponent },
       { path: 'projects/edit/:id', component: ProjectAddEditComponent },
 
-                   // Job routes
-             { path: 'jobs', component: JobListComponent },
-             { path: 'jobs/add', component: JobAddEditComponent },
-             { path: 'jobs/edit/:id', component: JobAddEditComponent },
-             { path: 'jobs/applications', component: JobApplicationComponent },
-             { path: 'jobs/applications/:id', component: JobApplicationComponent },
-             { path: 'jobs/send/:id', component: SendJobComponent },
+      // Job routes
+      { path: 'jobs', component: JobListComponent },
+      { path: 'jobs/add', component: JobAddEditComponent },
+      { path: 'jobs/edit/:id', component: JobAddEditComponent },
+      { path: 'jobs/applications', component: JobApplicationComponent },
+      { path: 'jobs/applications/:id', component: JobApplicationComponent },
+      { path: 'jobs/send/:id', component: SendJobComponent },
 
-             // Settings route
-             { path: 'settings', component: SettingsComponent }
-    ]
-  }
+      // Settings route
+      { path: 'settings', component: SettingsComponent },
+    ],
+  },
 ];
 
 @NgModule({
@@ -78,15 +79,15 @@ const routes: Routes = [
     ProjectListComponent,
     ProjectAddEditComponent,
 
-               // Job components
-           JobListComponent,
-           JobAddEditComponent,
-           JobApplicationComponent,
-           SendJobComponent,
+    // Job components
+    JobListComponent,
+    JobAddEditComponent,
+    JobApplicationComponent,
+    SendJobComponent,
 
-           // Settings component
-           SettingsComponent,
-           NoRecordFoundComponent
+    // Settings component
+    SettingsComponent,
+    NoRecordFoundComponent,
   ],
   imports: [
     CommonModule,
@@ -94,7 +95,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     NgbModule,
     RouterModule.forChild(routes),
-    DecimalPipe
-  ]
+    DecimalPipe,
+  ],
 })
-export class CirAdminModule { }
+export class CirAdminModule {}

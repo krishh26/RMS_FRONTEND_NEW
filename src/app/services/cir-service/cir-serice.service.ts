@@ -202,6 +202,11 @@ export class CirSericeService {
       .get<any>(`${this.baseUrl}${CirEndPoint.GET_PROJECTS}/${projectId}`, { headers: this.getHeader() });
   }
 
+  getProjectById(projectId: string): Observable<any> {
+    return this.httpClient
+      .get<any>(`${this.baseUrl}${CirEndPoint.GET_PROJECTS}/${projectId}`, { headers: this.getHeader() });
+  }
+
   updateProject(projectId: string, payload: {
     projectName?: string;
     publishedDate?: string;
@@ -241,6 +246,11 @@ export class CirSericeService {
   }): Observable<any> {
     return this.httpClient
       .post<any>(this.baseUrl + CirEndPoint.GET_PROJECTS, payload, { headers: this.getHeader() });
+  }
+
+  deleteProject(projectId: string): Observable<any> {
+    return this.httpClient
+      .delete<any>(`${this.baseUrl}${CirEndPoint.GET_PROJECTS}/${projectId}`, { headers: this.getHeader() });
   }
 
 }

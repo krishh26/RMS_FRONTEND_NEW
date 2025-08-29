@@ -8,7 +8,7 @@ import { LocalStorageService } from '../../../services/local-storage/local-stora
 @Component({
   selector: 'app-project-add-edit',
   templateUrl: './project-add-edit.component.html',
-  styleUrls: ['./project-add-edit.component.scss']
+  styleUrls: ['./project-add-edit.component.scss'],
 })
 export class ProjectAddEditComponent implements OnInit {
   @Input() projectData: any = null;
@@ -18,6 +18,7 @@ export class ProjectAddEditComponent implements OnInit {
 
   projectForm: FormGroup;
   projectId: number | null = null;
+  isViewMode: boolean = false;
 
   workTypes = ['Remote', 'Onsite', 'Hybrid'];
   statusTypes = ['Active', 'Inactive', 'Completed'];
@@ -38,25 +39,51 @@ export class ProjectAddEditComponent implements OnInit {
       workType: ['Remote', [Validators.required]],
       dayRatesRange: this.fb.group({
         min: ['', [Validators.required, Validators.min(0)]],
-        max: ['', [Validators.required, Validators.min(0)]]
+        max: ['', [Validators.required, Validators.min(0)]],
       }),
       noOfPositions: ['', [Validators.required, Validators.min(1)]],
       clearanceOrCertifications: this.fb.array([]),
       status: ['Active', [Validators.required]],
-      type: ['CIR']
+      type: ['CIR'],
     });
   }
 
   ngOnInit(): void {
+    // Check if we're in edit mode based on route
+    this.route.params.subscribe(params => {
+      const projectId = params['id'];
+      if (projectId) {
+        // Check if this is edit route or view route
+        if (this.route.snapshot.url.some(segment => segment.path === 'edit')) {
+          this.isEditMode = true;
+          this.isViewMode = false;
+        } else {
+          this.isEditMode = false;
+          this.isViewMode = true;
+        }
+        this.projectId = projectId;
+        this.loadProjectById(projectId);
+      } else {
+        this.isEditMode = false;
+        this.isViewMode = false;
+      }
+    });
+
+    // If projectData is passed as input (for modal usage), use it
     if (this.projectData && this.isEditMode) {
       this.loadProjectDetails();
     }
   }
 
-    private loadProjectDetails(): void {
+  private loadProjectDetails(): void {
     if (!this.projectData) return;
 
     let formData = { ...this.projectData };
+
+    // Disable form in view mode
+    if (this.isViewMode) {
+      this.projectForm.disable();
+    }
 
     // Handle date conversion
     if (this.projectData.publishedDate) {
@@ -69,7 +96,7 @@ export class ProjectAddEditComponent implements OnInit {
           formData.publishedDate = {
             year: date.getFullYear(),
             month: date.getMonth() + 1,
-            day: date.getDate()
+            day: date.getDate(),
           };
         } else {
           // If date is invalid, set to today's date
@@ -77,7 +104,7 @@ export class ProjectAddEditComponent implements OnInit {
           formData.publishedDate = {
             year: today.getFullYear(),
             month: today.getMonth() + 1,
-            day: today.getDate()
+            day: today.getDate(),
           };
         }
       } catch (error) {
@@ -87,7 +114,7 @@ export class ProjectAddEditComponent implements OnInit {
         formData.publishedDate = {
           year: today.getFullYear(),
           month: today.getMonth() + 1,
-          day: today.getDate()
+          day: today.getDate(),
         };
       }
     }
@@ -108,6 +135,22 @@ export class ProjectAddEditComponent implements OnInit {
     this.projectForm.patchValue(formData);
   }
 
+  private loadProjectById(projectId: string): void {
+    this.cirService.getProjectById(projectId).subscribe({
+      next: (response: any) => {
+        if (response?.status === true) {
+          this.projectData = response.data;
+          this.loadProjectDetails();
+        } else {
+          this.notificationService.showError(response?.message || 'Failed to fetch project details');
+        }
+      },
+      error: (error) => {
+        this.notificationService.showError(error?.error?.message || error?.message || 'Failed to fetch project details');
+      }
+    });
+  }
+
   // Helper methods for certifications
   get certifications() {
     return this.projectForm.get('clearanceOrCertifications') as FormArray;
@@ -125,41 +168,12 @@ export class ProjectAddEditComponent implements OnInit {
     if (this.projectForm.valid) {
       const formData = this.projectForm.value;
 
-      // Convert date to required format (YYYY-MM-DD)
-      if (formData.publishedDate) {
-        try {
-          // Validate date parts
-          const { year, month, day } = formData.publishedDate;
-          if (!year || !month || !day || isNaN(year) || isNaN(month) || isNaN(day)) {
-            throw new Error('Invalid date values');
-          }
-
-          // Create date at noon to avoid timezone issues
-          const date = new Date(year, month - 1, day, 12, 0, 0);
-
-          // Validate if date is valid
-          if (isNaN(date.getTime())) {
-            throw new Error('Invalid date');
-          }
-
-          // Format date manually to avoid timezone issues
-          const formattedYear = String(year).padStart(4, '0');
-          const formattedMonth = String(month).padStart(2, '0');
-          const formattedDay = String(day).padStart(2, '0');
-          formData.publishedDate = `${formattedYear}-${formattedMonth}-${formattedDay}`;
-        } catch (error) {
-          console.error('Date formatting error:', error);
-          this.notificationService.showError('Please select a valid date');
-          return;
-        }
-      }
-
       // Get logged in user ID
       const loggedInUser = this.localStorageService.getLogger();
       const userId = loggedInUser?._id || loggedInUser?.id;
 
       if (!userId) {
-        this.notificationService.showError('User ID not found. Please login again.');
+        this.notificationService.showError( 'User ID not found. Please login again.');
         return;
       }
 
@@ -173,7 +187,7 @@ export class ProjectAddEditComponent implements OnInit {
 
       // Create or update project
       const apiCall = this.isEditMode
-        ? this.cirService.updateProject(this.projectData._id, formData)
+        ? this.cirService.updateProject(this.projectId || this.projectData?._id, formData)
         : this.cirService.createProject(formData);
 
       apiCall.subscribe({
@@ -182,19 +196,16 @@ export class ProjectAddEditComponent implements OnInit {
             this.notificationService.showSuccess(
               this.isEditMode ? 'Project updated successfully' : 'Project created successfully'
             );
-            this.formSubmitted.emit(formData);
-            this.closeModal.emit();
+            this.projectForm.reset();
+            // Navigate back to projects list
+            this.router.navigate(['/cir-admin/projects']);
           } else {
-            this.notificationService.showError(
-              response?.message || `Failed to ${this.isEditMode ? 'update' : 'create'} project`
-            );
+            this.notificationService.showError( response?.message || `Failed to ${this.isEditMode ? 'update' : 'create'} project`);
           }
         },
         error: (error) => {
-          this.notificationService.showError(
-            error?.error?.message || `Failed to ${this.isEditMode ? 'update' : 'create'} project`
-          );
-        }
+          this.notificationService.showError(error?.error?.message || `Failed to ${this.isEditMode ? 'update' : 'create'} project`);
+        },
       });
     } else {
       this.markFormGroupTouched(this.projectForm);
@@ -203,7 +214,7 @@ export class ProjectAddEditComponent implements OnInit {
   }
 
   private markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach(control => {
+    Object.values(formGroup.controls).forEach((control) => {
       control.markAsTouched();
       if (control instanceof FormGroup) {
         this.markFormGroupTouched(control);
@@ -212,6 +223,24 @@ export class ProjectAddEditComponent implements OnInit {
   }
 
   onCancel(): void {
-    this.closeModal.emit();
+    if (this.closeModal.observed) {
+      // If modal is being used, emit close event
+      this.closeModal.emit();
+    } else {
+      // If not in modal mode, navigate back
+      if (this.isViewMode && this.projectId) {
+        // If in view mode, go back to projects list
+        this.router.navigate(['/cir-admin/projects']);
+      } else {
+        // If in add/edit mode, go back to projects list
+        this.router.navigate(['/cir-admin/projects']);
+      }
+    }
+  }
+
+  editProject(): void {
+    if (this.projectId) {
+      this.router.navigate(['/cir-admin/projects/edit', this.projectId]);
+    }
   }
 }

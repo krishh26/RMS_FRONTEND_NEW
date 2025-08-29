@@ -1,9 +1,25 @@
 <div class="project-form-container">
   <div class="header">
-    <h2>{{ isEditMode ? 'Edit Project' : 'Add New Project' }}</h2>
+    <div class="breadcrumb">
+      <a routerLink="/cir-admin/projects">Projects</a>
+      <span class="separator">/</span>
+      <span class="current">{{ isViewMode ? 'View' : (isEditMode ? 'Edit' : 'Add') }}</span>
+    </div>
+    <h2>{{ isViewMode ? 'View Project' : (isEditMode ? 'Edit Project' : 'Add New Project') }}</h2>
   </div>
 
-  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="project-form">
+  <!-- Loading state -->
+  <div *ngIf="isEditMode && !projectData" class="loading-container">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span>Loading project details...</span>
+    </div>
+  </div>
+
+  <!-- Form content -->
+  <div *ngIf="!isEditMode || projectData">
+
+      <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="project-form" [class.view-mode]="isViewMode">
     <div class="form-row">
       <div class="form-group">
         <label for="projectName">Project Name</label>
@@ -138,10 +154,16 @@
     </div>
 
     <div class="form-actions">
-      <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
-      <button type="submit" class="submit-btn">
+      <button type="button" class="cancel-btn" (click)="onCancel()">
+        {{ isViewMode ? 'Back' : 'Cancel' }}
+      </button>
+      <button *ngIf="!isViewMode" type="submit" class="submit-btn">
         {{ isEditMode ? 'Update' : 'Create' }} Project
+      </button>
+      <button *ngIf="isViewMode" type="button" class="edit-btn" (click)="editProject()">
+        Edit Project
       </button>
     </div>
   </form>
+  </div>
 </div>

@@ -1,7 +1,16 @@
 <div class="project-list-container">
   <div class="header">
+    <div class="breadcrumb">
+      <a routerLink="/cir-admin">Dashboard</a>
+      <span class="separator">/</span>
+      <span class="current">Projects</span>
+    </div>
     <h2>Project Management</h2>
     <div class="header-buttons">
+      <button class="refresh-btn" (click)="refreshProjects()" title="Refresh Projects">
+        <i class="fas fa-sync-alt"></i>
+        Refresh
+      </button>
       <button class="add-btn project" (click)="openAddProjectModal()">Add New Project</button>
     </div>
   </div>
@@ -11,7 +20,20 @@
       <div class="search-icon">
         <i class="fas fa-search"></i>
       </div>
-      <input type="text" placeholder="Search projects..." class="search-input">
+      <input
+        type="text"
+        placeholder="Search projects..."
+        class="search-input"
+        [(ngModel)]="searchKeyword"
+        (input)="onSearchInput()"
+        (keyup.enter)="onSearchEnter()">
+      <button
+        *ngIf="searchKeyword"
+        class="clear-search-btn"
+        (click)="clearSearch()"
+        title="Clear search">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
 
     <div class="filter-group" [ngClass]="{'mobile-expanded': showMobileFilters}">
@@ -26,11 +48,9 @@
 
       <div class="filter-item">
         <label class="filter-label">Client</label>
-        <select class="filter-select">
+        <select class="filter-select" [(ngModel)]="selectedClient" (change)="onClientChange(selectedClient)">
           <option value="">All Clients</option>
-          <option value="tech-corp">Tech Corp</option>
-          <option value="innovation-inc">Innovation Inc</option>
-          <option value="design-studio">Design Studio</option>
+          <option *ngFor="let client of uniqueClients" [value]="client">{{ client }}</option>
         </select>
       </div>
 
@@ -76,7 +96,7 @@
       <div class="filter-item">
         <label class="filter-label">&nbsp;</label>
         <button class="btn btn-outline-secondary clear-filters" (click)="clearDateFilters()">
-          Clear Filters
+          Clear All Filters
         </button>
       </div>
     </div>
@@ -89,7 +109,16 @@
   </div>
 
   <div class="table-container">
-    <table class="projects-table">
+    <!-- Loading state -->
+    <div *ngIf="showLoader" class="loading-container">
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>Loading projects...</span>
+      </div>
+    </div>
+
+    <!-- Table content -->
+    <table *ngIf="!showLoader" class="projects-table">
       <thead>
         <tr>
           <th>Project Name</th>
@@ -151,20 +180,4 @@
   </div>
 </div>
 
-<!-- Modal for Add New Project -->
-<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h3>{{ isEditMode ? 'Edit Project' : 'Add New Project' }}</h3>
-      <button class="close-btn" (click)="closeModal()">&times;</button>
-    </div>
-    <div class="modal-body">
-      <app-project-add-edit
-        [projectData]="selectedProject"
-        [isEditMode]="isEditMode"
-        (closeModal)="closeModal()"
-        (formSubmitted)="onFormSubmitted($event)">
-      </app-project-add-edit>
-    </div>
-  </div>
-</div>
+

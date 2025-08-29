@@ -10,9 +10,6 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./project-list.component.scss']
 })
 export class ProjectListComponent implements OnInit {
-  showModal = false;
-  isEditMode = false;
-  selectedProject: any = null;
   showMobileFilters = false;
   showLoader = false;
   projectlist: any[] = [];
@@ -20,6 +17,10 @@ export class ProjectListComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 10;
   selectedStatus: 'Active' | 'Future Role' | 'Expired' | 'All' = 'All';
+  selectedClient: string = '';
+  searchKeyword: string = '';
+  searchTimeout: any;
+  uniqueClients: string[] = [];
 
   statusOptions = [
     { value: 'All', label: 'All Status' },
@@ -100,6 +101,16 @@ export class ProjectListComponent implements OnInit {
       status: this.selectedStatus
     };
 
+    // Add search keyword if provided
+    if (this.searchKeyword && this.searchKeyword.trim()) {
+      params.keyword = this.searchKeyword.trim();
+    }
+
+    // Add client filter if selected
+    if (this.selectedClient && this.selectedClient.trim()) {
+      params.client = this.selectedClient.trim();
+    }
+
     // Add date filters if selected
     if (this.startDate) {
       params.startDate = `${this.startDate.year}-${this.padNumber(this.startDate.month)}-${this.padNumber(this.startDate.day)}`;
@@ -114,6 +125,9 @@ export class ProjectListComponent implements OnInit {
           this.projectlist = response.data || [];
           this.totalRecords = response.meta_data?.items || 0;
           this.showLoader = false;
+
+          // Populate unique clients for filter
+          this.populateUniqueClients();
         } else {
           this.projectlist = [];
           this.totalRecords = 0;
@@ -135,60 +149,42 @@ export class ProjectListComponent implements OnInit {
   }
 
   deleteProject(projectId: string): void {
-    console.log('Delete project:', projectId);
+    if (confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+      this.showLoader = true;
+      this.cirService.deleteProject(projectId).subscribe({
+        next: (response: any) => {
+          if (response?.status === true) {
+            this.notificationService.showSuccess('Project deleted successfully');
+            this.getProjectList();
+          } else {
+            this.notificationService.showError(response?.message || 'Failed to delete project');
+            this.showLoader = false;
+          }
+        },
+        error: (error) => {
+          this.notificationService.showError(error?.error?.message || error?.message || 'Failed to delete project');
+          this.showLoader = false;
+        }
+      });
+    }
   }
 
   viewDetails(projectId: string): void {
-    this.showLoader = true;
-    this.cirService.getProjectDetails(projectId).subscribe({
-      next: (response: any) => {
-        if (response?.status === true) {
-          // Store project details and navigate to details page
-          this.router.navigate(['/cir-admin/jobs'], {
-            state: { projectDetails: response.data }
-          });
-        } else {
-          this.notificationService.showError(response?.message || 'Failed to fetch project details');
-        }
-        this.showLoader = false;
-      },
-      error: (error) => {
-        this.notificationService.showError(error?.error?.message || error?.message || 'Failed to fetch project details');
-        this.showLoader = false;
-      }
-    });
+    // Navigate to project details page or jobs page
+    this.router.navigate(['/cir-admin/projects', projectId]);
   }
 
   openAddProjectModal(): void {
-    this.isEditMode = false;
-    this.selectedProject = null;
-    this.showModal = true;
+    // Navigate to add page instead of opening modal
+    this.router.navigate(['/cir-admin/projects/add']);
   }
 
   openEditProjectModal(project: any): void {
-    this.isEditMode = true;
-    this.selectedProject = project;
-    this.showModal = true;
+    // Navigate to edit page instead of opening modal
+    this.router.navigate(['/cir-admin/projects/edit', project._id]);
   }
 
-  closeModal(): void {
-    this.showModal = false;
-    this.isEditMode = false;
-    this.selectedProject = null;
-  }
 
-  onFormSubmitted(formData: any): void {
-    console.log('Project form submitted:', formData);
-    if (this.isEditMode) {
-      console.log('Updating project:', this.selectedProject.id, 'with data:', formData);
-      // Here you would typically update the project data
-    } else {
-      console.log('Creating new project with data:', formData);
-      // Here you would typically create a new project
-    }
-    // For now, just close the modal
-    this.closeModal();
-  }
 
   toggleMobileFilters(): void {
     this.showMobileFilters = !this.showMobileFilters;
@@ -230,6 +226,9 @@ export class ProjectListComponent implements OnInit {
   clearDateFilters(): void {
     this.startDate = null;
     this.endDate = null;
+    this.searchKeyword = '';
+    this.selectedStatus = 'All';
+    this.selectedClient = '';
     this.currentPage = 1; // Reset to first page when filters are cleared
     this.getProjectList();
   }
@@ -238,5 +237,44 @@ export class ProjectListComponent implements OnInit {
     this.selectedStatus = status;
     this.currentPage = 1; // Reset to first page when filter changes
     this.getProjectList();
+  }
+
+  onClientChange(client: string): void {
+    this.selectedClient = client;
+    this.currentPage = 1; // Reset to first page when filter changes
+    this.getProjectList();
+  }
+
+  refreshProjects(): void {
+    this.currentPage = 1;
+    this.showLoader = true;
+    this.getProjectList();
+  }
+
+  onSearchInput(): void {
+    // Debounce search input
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+    this.searchTimeout = setTimeout(() => {
+      this.currentPage = 1;
+      this.getProjectList();
+    }, 500);
+  }
+
+  onSearchEnter(): void {
+    this.currentPage = 1;
+    this.getProjectList();
+  }
+
+  clearSearch(): void {
+    this.searchKeyword = '';
+    this.currentPage = 1;
+    this.getProjectList();
+  }
+
+  private populateUniqueClients(): void {
+    const clients = this.projectlist.map(project => project.client).filter(Boolean);
+    this.uniqueClients = [...new Set(clients)];
   }
 }

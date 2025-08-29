@@ -6,9 +6,63 @@
   .header {
     margin-bottom: 20px;
 
+    .breadcrumb {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #6c757d;
+
+      a {
+        color: #007bff;
+        text-decoration: none;
+        transition: color 0.2s;
+
+        &:hover {
+          color: #0056b3;
+          text-decoration: underline;
+        }
+      }
+
+      .separator {
+        margin: 0 8px;
+        color: #6c757d;
+      }
+
+      .current {
+        color: #495057;
+        font-weight: 500;
+      }
+    }
+
     h2 {
       margin: 0;
       color: #333;
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    .loading-spinner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      color: #007bff;
+
+      i {
+        font-size: 2rem;
+      }
+
+      span {
+        font-size: 1rem;
+        color: #495057;
+      }
     }
   }
 
@@ -55,6 +109,30 @@
 
         &.error {
           border-color: #dc3545;
+        }
+      }
+
+      &.view-mode {
+        input, select, textarea {
+          background-color: #f8f9fa;
+          border-color: #e9ecef;
+          cursor: not-allowed;
+          color: #495057;
+
+          &:focus {
+            border-color: #e9ecef;
+            box-shadow: none;
+          }
+        }
+
+        .certifications-list {
+          .add-btn {
+            display: none;
+          }
+
+          .remove-btn {
+            display: none;
+          }
         }
       }
 
@@ -172,6 +250,15 @@
           &:disabled {
             background-color: #b3d7ff;
             cursor: not-allowed;
+          }
+        }
+
+        &.edit-btn {
+          background-color: #28a745;
+          color: white;
+
+          &:hover {
+            background-color: #218838;
           }
         }
       }
