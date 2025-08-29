@@ -93,7 +93,7 @@ export class AcrServiceService {
 
   supplyjob(payload: any): Observable<any> {
     return this.httpClient
-      .patch<any>(this.baseUrl + AcrEndPoint.SUPPLY_JOB, payload);
+      .patch<any>(this.baseUrl + AcrEndPoint.SUPPLY_JOB, payload, { headers: this.getHeader() });
   }
 
   getJobList(params: { page: string, limit: string, keyword: string, status: string }): Observable<any> {
@@ -131,32 +131,32 @@ export class AcrServiceService {
 
   getAgencyList(): Observable<any> {
     return this.httpClient
-      .get<any>(this.baseUrl + AcrEndPoint.GET_AGENCY_LIST);
+      .get<any>(this.baseUrl + AcrEndPoint.GET_AGENCY_LIST, { headers: this.getHeader() });
   }
 
   getjobidList(): Observable<any> {
     return this.httpClient
-      .get<any>(this.baseUrl + AcrEndPoint.GET_JOBID_LIST);
+      .get<any>(this.baseUrl + AcrEndPoint.GET_JOBID_LIST, { headers: this.getHeader() });
   }
 
   getCirJobIdList(): Observable<any> {
     return this.httpClient
-      .get<any>(this.baseUrl + AcrEndPoint.GET_CIR_JOBID_LIST);
+      .get<any>(this.baseUrl + AcrEndPoint.GET_CIR_JOBID_LIST, { headers: this.getHeader() });
   }
 
   getCandidateList(id: any): Observable<any> {
     return this.httpClient
-      .get<any>(this.baseUrl + AcrEndPoint.GET_CANDIDATE_LIST + id);
+      .get<any>(this.baseUrl + AcrEndPoint.GET_CANDIDATE_LIST + id, { headers: this.getHeader() });
   }
 
   createjob(payload: any): Observable<any> {
     return this.httpClient
-      .post<any>(this.baseUrl + AcrEndPoint.CREATE_JOB, payload);
+      .post<any>(this.baseUrl + AcrEndPoint.CREATE_JOB, payload, { headers: this.getHeader() });
   }
 
   createCandidate(payload: any): Observable<any> {
     return this.httpClient
-      .post<any>(this.baseUrl + AcrEndPoint.CREATE_CANDIDATE, payload);
+      .post<any>(this.baseUrl + AcrEndPoint.CREATE_CANDIDATE, payload, { headers: this.getHeader() });
   }
 
   updateregister(user_id: string, payload: any): Observable<any> {
@@ -172,17 +172,17 @@ export class AcrServiceService {
 
   sendResume(payload: any) {
     return this.httpClient
-      .post<any>(this.baseUrl + AcrEndPoint.SEND_DATA, payload);
+      .post<any>(this.baseUrl + AcrEndPoint.SEND_DATA, payload, { headers: this.getHeader() });
   }
 
   fileUpload(payload: any) {
     return this.httpClient
-      .post<any>(this.baseUrl + AcrEndPoint.FILE_UPLOAD, payload);
+      .post<any>(this.baseUrl + AcrEndPoint.FILE_UPLOAD, payload, { headers: this.getHeader() });
   }
 
   applyJob(payload: any) {
     return this.httpClient
-      .post<any>(this.baseUrl + AcrEndPoint.APPLY_JOBS, payload);
+      .post<any>(this.baseUrl + AcrEndPoint.APPLY_JOBS, payload, { headers: this.getHeader() });
   }
 
   updateApplication(payload: any) {
@@ -191,58 +191,61 @@ export class AcrServiceService {
   }
 
   acrapplyJob(payload: any, jobId: string) {
-    return this.httpClient.post<any>(this.baseUrl + AcrEndPoint.ACR_APPLY_JOBS + '/' + jobId, payload);
+    return this.httpClient.post<any>(this.baseUrl + AcrEndPoint.ACR_APPLY_JOBS + '/' + jobId, payload, { headers: this.getHeader() });
   }
 
   deleteJob(id: any): Observable<any> {
     return this.httpClient
-      .delete<any>(this.baseUrl + AcrEndPoint.DELETE_JOB + id);
+      .delete<any>(this.baseUrl + AcrEndPoint.DELETE_JOB + id, { headers: this.getHeader() });
   }
 
   deleteCIRJob(id: any): Observable<any> {
     return this.httpClient
-      .delete<any>(this.baseUrl + AcrEndPoint.DELETE_CIR_JOB + id);
+      .delete<any>(this.baseUrl + AcrEndPoint.DELETE_CIR_JOB + id, { headers: this.getHeader() });
   }
 
   createContract(payload: any): Observable<any> {
     return this.httpClient
-      .post<any>(this.baseUrl + AcrEndPoint.CREATE_CONTRACT, payload);
+      .post<any>(this.baseUrl + AcrEndPoint.CREATE_CONTRACT, payload, { headers: this.getHeader() });
   }
 
   updateContract(id: string, payload: any): Observable<any> {
     return this.httpClient
-      .put<any>(this.baseUrl + AcrEndPoint.UPDATE_CONTRACT + '/' + id, payload);
+      .put<any>(this.baseUrl + AcrEndPoint.UPDATE_CONTRACT + '/' + id, payload, { headers: this.getHeader() });
   }
 
   deleteContract(id: string): Observable<any> {
     return this.httpClient
-      .delete<any>(this.baseUrl + AcrEndPoint.DELETE_CONTRACT + '/' + id);
+      .delete<any>(this.baseUrl + AcrEndPoint.DELETE_CONTRACT + '/' + id, { headers: this.getHeader() });
   }
 
   getContractList(): Observable<any> {
     return this.httpClient
-      .get<any>(this.baseUrl + AcrEndPoint.GET_CONTRACT_LIST);
+      .get<any>(this.baseUrl + AcrEndPoint.GET_CONTRACT_LIST, { headers: this.getHeader() });
   }
 
   getContractDetails(contractId: string): Observable<any> {
     const params = new HttpParams().set('contractId', contractId);
 
     return this.httpClient
-      .get<any>(this.baseUrl + AcrEndPoint.GET_CONTRACT_DETAILS, { params });
+      .get<any>(this.baseUrl + AcrEndPoint.GET_CONTRACT_DETAILS, {
+        headers: this.getHeader(),
+        params
+      });
   }
 
   createContractDetails(payload: any): Observable<any> {
     return this.httpClient
-      .post<any>(this.baseUrl + AcrEndPoint.CREATE_CONTRACT_DETAILS, payload);
+      .post<any>(this.baseUrl + AcrEndPoint.CREATE_CONTRACT_DETAILS, payload, { headers: this.getHeader() });
   }
 
   updateContractDetails(id: string, payload: any): Observable<any> {
     return this.httpClient
-      .put<any>(this.baseUrl + AcrEndPoint.UPDATE_CONTRACT_DETAILS + '/' + id, payload);
+      .put<any>(this.baseUrl + AcrEndPoint.UPDATE_CONTRACT_DETAILS + '/' + id, payload, { headers: this.getHeader() });
   }
 
   deleteContractDetails(id: string): Observable<any> {
     return this.httpClient
-      .delete<any>(this.baseUrl + AcrEndPoint.DELETE_CONTRACT_DETAILS + '/' + id);
+      .delete<any>(this.baseUrl + AcrEndPoint.DELETE_CONTRACT_DETAILS + '/' + id, { headers: this.getHeader() });
   }
 }

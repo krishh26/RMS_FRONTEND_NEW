@@ -1,160 +1,246 @@
-<section class="job-form-section">
-  <div class="job-form-container">
-    <div class="header">
-      <h2>{{ isEditMode ? 'Edit Job' : 'Add New Job' }}</h2>
+<section>
+  <div class="container">
+    <div class="Titleheading">
+      <h1>Create Job Post</h1>
     </div>
+    <div class="FlatCard">
+      <div class="row">
+        <div class="col-lg-7 col-xl-7 col-12">
+          <div class="FormRight-panel">
+            <form [formGroup]="jobForm" (ngSubmit)="submit()">
 
-    <form [formGroup]="jobForm" (ngSubmit)="onSubmit()" class="job-form">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="title">Job Title</label>
-          <input
-            type="text"
-            id="title"
-            formControlName="title"
-            placeholder="Enter job title"
-            [class.error]="jobForm.get('title')?.invalid && jobForm.get('title')?.touched">
-          <div class="error-message" *ngIf="jobForm.get('title')?.invalid && jobForm.get('title')?.touched">
-            Job title is required
+              <div class="row">
+                <div class="col-md-5">
+                  <label>Status<span style="color: red;">*</span>:</label>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <select class="form-control" formControlName="status">
+                      <option value="" disabled selected hidden>Select Status</option>
+                      <option value="Active">Active</option>
+                      <option value="Inactive">Inactive</option>
+                    </select>
+                    <span class="text-danger"
+                      *ngIf="jobForm.get('status')?.touched && jobForm.get('status')?.errors?.['required']">
+                      Please select a status.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Conditionally display Job ID when status is 'Active' -->
+              <div class="row" *ngIf="jobForm.get('status')?.value === 'Active'">
+                <div class="col-md-5">
+                  <label>Job ID :</label>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Job ID" formControlName="job_id" readonly
+                      value="{{jobID}}">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-5">
+                  <label>Job Type<span style="color: red;">*</span>:</label>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <select class="form-control" formControlName="job_type">
+                      <option value="" disabled selected hidden>Select Job type</option>
+                      <option value="QA">QA</option>
+                      <option value="Non-QA">Non-QA</option>
+                    </select>
+                    <span class="text-danger"
+                      *ngIf="jobForm.get('job_type')?.touched && jobForm.get('job_type')?.errors?.['required']">
+                      Please select a job type.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-md-5">
+                  <label>Job Title<span style="color: red;">*</span>:</label>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Enter Job Title" formControlName="job_title">
+                    <span class="text-danger"
+                      *ngIf="jobForm.get('job_title')?.touched && jobForm.get('job_title')?.errors?.['required']">
+                      Please enter the job title.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-5">
+                  <label>No. of Roles<span style="color: red;">*</span>:</label>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Enter no of roles"
+                      formControlName="no_of_roles">
+                    <span class="text-danger"
+                      *ngIf="jobForm.get('no_of_roles')?.touched && jobForm.get('no_of_roles')?.errors?.['required']">
+                      Please select no of roles.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-5">
+                  <label>Position Start Date<span style="color: red;">*</span> :</label>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <input type="date" class="form-control" formControlName="start_date"
+                      placeholder="Position Start Date">
+                    <span class="text-danger"
+                      *ngIf="jobForm.get('start_date')?.touched && jobForm.get('start_date')?.errors?.['required']">
+                      Please select position start date.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-5">
+                  <label>Job Expire Date<span style="color: red;">*</span> :</label>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <input type="date" class="form-control" formControlName="jobExpireDate"
+                      placeholder="Job Expire Date">
+                    <span class="text-danger"
+                      *ngIf="jobForm.get('jobExpireDate')?.touched && jobForm.get('jobExpireDate')?.errors?.['required']">
+                      Please select job expire date.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-5">
+                  <label>Published Date<span style="color: red;">*</span> :</label>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <input type="text" class="form-control" formControlName="publish_date"
+                      placeholder="Auto Detect System Calendar" readonly>
+                    <span class="text-danger"
+                      *ngIf="jobForm.get('publish_date')?.touched && jobForm.get('publish_date')?.errors?.['required']">
+                      Please select published date.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-5">
+                  <label>Client Name<span style="color: red;">*</span>
+                    :</label>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Client Name" formControlName="client_name">
+                    <span class="text-danger"
+                      *ngIf="jobForm.get('client_name')?.touched && jobForm.get('client_name')?.errors?.['required']">
+                      Please enter the client name.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-5">
+                  <label>Location<span style="color: red;">*</span>
+                    :</label>
+                </div>
+                <div class="col-md-7">
+                  <input type="text" class="form-control" placeholder="Enter Location" formControlName="location">
+                  <!-- <select class="form-control" formControlName="location">
+                    <option value="" disabled selected hidden>Select Location</option>
+                    <option value="client_locations">Client Locations</option>
+                    <option value="work_from_home">Work From Home</option>
+                    <option value="swindon_office">Swindon Office</option>
+                  </select> -->
+                  <span class="text-danger"
+                    *ngIf="jobForm.get('location')?.touched && jobForm.get('location')?.errors?.['required']">
+                    Please select the location.
+                  </span>
+                </div>
+              </div>
+              <br />
+              <div class="row">
+                <div class="col-md-5">
+                  <label>Day Rate<span style="color: red;">*</span>:</label>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Day Rate" formControlName="day_rate">
+                    <span class="text-danger"
+                      *ngIf="jobForm.get('day_rate')?.touched && jobForm.get('day_rate')?.errors?.['required']">
+                      Please enter the day rate.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-5">
+                  <label>Upload Read me Doc<span style="color: red;">*</span> :</label>
+                </div>
+                <div class="col-md-7">
+                  <div class="form-group">
+                    <input type="file" (change)="fileUpload($event)" class="form-control"
+                      style="height: 45px !important; opacity: 1;" accept=".doc,.docx,.pdf" formControlName="upload">
+                    <span class="text-danger"
+                      *ngIf="jobForm.get('upload')?.touched && jobForm.get('upload')?.errors?.['required']">
+                      Please Upload file.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="update ml-auto mr-auto"><br>
+                  <button type="submit" style="float: right !important;" class="btn btn-primary btn-round"
+                    [disabled]="jobForm.invalid || !fileUploadProcess "> Post Job
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div><br><br><br>
+          <!-- <h4 class="p-14 text-center" routerLink="/acr/acr-create-candidate">Create Candidate Page</h4> -->
+        </div>
+        <div class="col-lg-5 col-xl-5 col-12">
+          <div class="FormLeft-panel">
+            <div class="text-center">
+              <img src="../../../../assets/img/Saivenlogo.png" width="200" class="mb-5" />
+            </div>
+            <h1 class="HeadingLarge">“Elevate Your Career with SaiVen: Join Public Sector IT Projects”</h1>
+            <p class="mb-5 textfont">SaiVen, is an emerging IT QA lead business with 40+ business collaborations
+              across UK and India. We are a dedicated business to lead the governance of all public sector QA projects
+              signed by the group and we are the driving force for client relationship management, project governance,
+              and people/delivery management.<br><br>
+              Our job is to ensure seamless execution for exceptional results, through bringing our industry expertise
+              added with right skills at right time - enabling quick and cost-effective resource augmentation, for
+              benefit of our clients.<br><br>Partner with us for exciting contract opportunities and be a part of our
+              success
+              story</p>
+            <p><strong>SaiVen Technology Solutions Limited</strong><br>
+              1-04, Focal Point, <br>27-35 Fleet Street, <br>Swindon SN1 1RQ
+            </p>
+            <p>Company Registration Number: 8856876</p>
+            <p>Email: Info&#64;saivensolutions.co.uk</p>
           </div>
         </div>
-
-        <div class="form-group">
-          <label for="department">Department</label>
-          <select
-            id="department"
-            formControlName="department"
-            [class.error]="jobForm.get('department')?.invalid && jobForm.get('department')?.touched">
-            <option value="">Select Department</option>
-            <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
-          </select>
-          <div class="error-message" *ngIf="jobForm.get('department')?.invalid && jobForm.get('department')?.touched">
-            Department is required
-          </div>
-        </div>
       </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="location">Location</label>
-          <select
-            id="location"
-            formControlName="location"
-            [class.error]="jobForm.get('location')?.invalid && jobForm.get('location')?.touched">
-            <option value="">Select Location</option>
-            <option *ngFor="let loc of locations" [value]="loc">{{ loc }}</option>
-          </select>
-          <div class="error-message" *ngIf="jobForm.get('location')?.invalid && jobForm.get('location')?.touched">
-            Location is required
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="type">Job Type</label>
-          <select
-            id="type"
-            formControlName="type"
-            [class.error]="jobForm.get('type')?.invalid && jobForm.get('type')?.touched">
-            <option *ngFor="let type of jobTypes" [value]="type">{{ type }}</option>
-          </select>
-          <div class="error-message" *ngIf="jobForm.get('type')?.invalid && jobForm.get('type')?.touched">
-            Job type is required
-          </div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="experience">Required Experience</label>
-          <input
-            type="text"
-            id="experience"
-            formControlName="experience"
-            placeholder="e.g., 3+ years"
-            [class.error]="jobForm.get('experience')?.invalid && jobForm.get('experience')?.touched">
-          <div class="error-message" *ngIf="jobForm.get('experience')?.invalid && jobForm.get('experience')?.touched">
-            Experience is required
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="salary">Salary Range (Optional)</label>
-          <input
-            type="text"
-            id="salary"
-            formControlName="salary"
-            placeholder="e.g., $80,000 - $100,000">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="description">Job Description</label>
-        <textarea
-          id="description"
-          formControlName="description"
-          rows="4"
-          placeholder="Enter detailed job description"
-          [class.error]="jobForm.get('description')?.invalid && jobForm.get('description')?.touched"></textarea>
-        <div class="error-message" *ngIf="jobForm.get('description')?.invalid && jobForm.get('description')?.touched">
-          Job description is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="requirements">Requirements</label>
-        <textarea
-          id="requirements"
-          formControlName="requirements"
-          rows="4"
-          placeholder="Enter job requirements"
-          [class.error]="jobForm.get('requirements')?.invalid && jobForm.get('requirements')?.touched"></textarea>
-        <div class="error-message" *ngIf="jobForm.get('requirements')?.invalid && jobForm.get('requirements')?.touched">
-          Requirements are required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="responsibilities">Responsibilities</label>
-        <textarea
-          id="responsibilities"
-          formControlName="responsibilities"
-          rows="4"
-          placeholder="Enter job responsibilities"
-          [class.error]="jobForm.get('responsibilities')?.invalid && jobForm.get('responsibilities')?.touched"></textarea>
-        <div class="error-message" *ngIf="jobForm.get('responsibilities')?.invalid && jobForm.get('responsibilities')?.touched">
-          Responsibilities are required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="benefits">Benefits (Optional)</label>
-        <textarea
-          id="benefits"
-          formControlName="benefits"
-          rows="4"
-          placeholder="Enter job benefits"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="status">Status</label>
-        <select
-          id="status"
-          formControlName="status"
-          [class.error]="jobForm.get('status')?.invalid && jobForm.get('status')?.touched">
-          <option value="active">Active</option>
-          <option value="closed">Closed</option>
-        </select>
-        <div class="error-message" *ngIf="jobForm.get('status')?.invalid && jobForm.get('status')?.touched">
-          Status is required
-        </div>
-      </div>
-
-      <div class="form-actions">
-        <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
-        <button type="submit" class="submit-btn" [disabled]="jobForm.invalid">
-          {{ isEditMode ? 'Update' : 'Post' }} Job
-        </button>
-      </div>
-    </form>
+    </div>
   </div>
 </section>
