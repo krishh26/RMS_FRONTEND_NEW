@@ -1,218 +1,173 @@
-<section>
-  <div class="container">
-    <div class="Titleheading">
-      <h1>All Jobs</h1>
-    </div>
-    <div class="alert alert-warning" role="alert">
-     <i class="bi bi-exclamation-octagon-fill"></i> ⁠It is important for you read the <span style="color: #1563df !important;">Read me </span>document for each job
-      title before you take action.
-    </div>
-
-
-    <div class="FlatCard mt-4 mb-3">
-      <div class="card-header">
-        <!-- <h4 class="header-title">All Opened Job List View</h4> -->
-        <div class="row align-items-center">
-          <div class="col-lg-6 col-xl-6 col-12 mob-mb1">
-            <div class="form-group mb-0">
-              <span class="input-icon"><i class="bi bi-search"></i></span>
-              <input class="form-control control-search" placeholder="Search by Job Title" type="text"
-                [(ngModel)]="searchText" (input)="searchtext()">
-            </div>
-          </div>
-          <div class="col-lg-3 col-xl-3 col-12 mob-mb1">
-            <div class="form-group mb-0 position-relative">
-              <span class="input-icon"><i class="bi bi-briefcase"></i></span>
-              <select class="form-control custom-select" [(ngModel)]="selectedStatus" (change)="searchtext()">
-                <option value="" disabled>Select Job Type</option>
-                <option *ngFor="let status of statusList" [value]="status">{{status}}</option>
-              </select>
-              <!-- <span class="select-arrow"><i class="bi bi-chevron-down"></i></span> -->
-            </div>
-          </div>
-          <div class="col-lg-3 col-xl-3 col-12 mob-mb1">
-            <div class="form-group mb-0 position-relative">
-              <span class="input-icon"><i class="bi bi-funnel"></i></span>
-              <select class="form-control custom-select" [(ngModel)]="selectedFilterStatus"
-                (change)="applyStatusFilter()">
-                <option value="">All Status</option>
-                <option value="Applied">Applied</option>
-                <option value="Expired">Expired</option>
-                <option value="Active">Active</option>
-              </select>
-              <!-- <span class="select-arrow"><i class="bi bi-chevron-down"></i></span> -->
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table table-stripped">
-            <thead>
-              <tr>
-                <th style="text-transform: none; text-align: center;">Job ID</th>
-                <th style="text-transform: none; text-align: center;" scope="col">Job Title</th>
-                <th style="text-transform: none; text-align: center;" scope="col">No. of Roles</th>
-                <th style="text-transform: none; text-align: center;" scope="col">Publish Date</th>
-                <th style="text-transform: none; text-align: center;" [width]="100" scope="col">Role Details</th>
-                <th style="text-transform: none; text-align: center;" [width]="200" scope="col">Apply Job</th>
-                <th style="text-transform: none; text-align: center;" [width]="200" scope="col">Apply By</th>
-                <th style="text-transform: none; text-align: center;" [width]="100" scope="col">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              <tr>
-                <td *ngIf="joblist.length == 0" class="text-center" colspan="10">
-                  No Record Found.
-                </td>
-              </tr>
-
-              <tr
-                *ngFor="let job of joblist  |  paginate: { itemsPerPage: pagesize , currentPage: page, totalItems: totalRecords } ; let i = index">
-                <td>{{job.job_id}}</td>
-                <td>{{job.job_title}}</td>
-                <td>{{job.no_of_roles}}</td>
-                <td>{{job.publish_date | date:'dd/MM/yyyy'}}</td>
-                <td>
-                  <a href="{{job?.upload?.url}}" target="_blank">
-                    Read me
-                  </a>
-                </td>
-                <td class="text-center">
-                  <ng-container *ngIf="job.status !== 'Under Review'; else emailMessage">
-                    <div *ngIf="!job.applied">
-                      <button class="btn btn-primary btn-sm"
-                        [ngClass]="{'enabled-text': !(job.status === 'Actioned' || job.status === 'Expired' || job.status === 'Inactive'), 'disabled-text': job.status === 'Actioned' || job.status === 'Expired' || job.status === 'Inactive'}"
-                        [disabled]="job.status === 'Applied' || job.status === 'Expired' || job.status === 'Inactive'"
-                        (click)="openModal(job)">
-                        apply
-                      </button>
-                    </div>
-                    <div *ngIf="job.applied == true">
-                      <div class="row">
-                        <div class="ml-auto mr-auto">
-                          <button (click)="openCVModal(job)" type="submit" class="btn btn-primary btn-round"
-                            [disabled]="job.status === 'Not Submitted'">Upload
-                            CV</button>
-                        </div>
-                      </div>
-                    </div>
-                  </ng-container>
-                  <ng-template #emailMessage>
-                    <span> If you have got more CV's email to : (jamie.thompson@saivensolutions.co.uk)</span>
-                  </ng-template>
-                </td>
-                <td>
-                  <ng-container *ngIf="!job?.cirextendJobDetails?.job_expire_date">
-                    {{job?.jobExpireDate | date:'dd/MM/yyyy'}}
-                  </ng-container>
-                   <ng-container *ngIf="job?.cirextendJobDetails?.job_expire_date">
-                    {{job?.cirextendJobDetails?.job_expire_date | date:'dd/MM/yyyy'}}
-                  </ng-container>
-                </td>
-                <td>{{job?.status}}</td>
-
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="row mt-3 align-items-center">
-          <div class="row">
-            <div class="pagination">
-              <pagination-controls (pageChange)="paginate($event)"></pagination-controls>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+<div class="job-list-container">
+  <div class="header">
+    <h2>Jobs</h2>
+    <!-- <button class="add-button">Add New Job</button> -->
   </div>
-</section>
 
+  <div class="search-filter">
+    <input type="text" placeholder="Search jobs..." class="search-input" [(ngModel)]="searchText" (input)="searchtext()">
+    <select class="filter-select" [(ngModel)]="selectedStatus" (change)="searchtext()">
+      <option value="">All Job Types</option>
+      <option *ngFor="let status of statusList" [value]="status">{{status}}</option>
+    </select>
+    <select class="filter-select" [(ngModel)]="selectedFilterStatus" (change)="applyStatusFilter()">
+      <option value="">All Status</option>
+      <option value="Applied">Applied</option>
+      <option value="Expired">Expired</option>
+      <option value="Active">Active</option>
+      <option value="Under Review">Under Review</option>
+      <option value="Actioned">Actioned</option>
+      <option value="Inactive">Inactive</option>
+    </select>
+  </div>
 
-<ng-template class="modal" #loginDetailModal id="loginDetailModal" tabindex="-1" aria-labelledby="ViewLogin"
-  aria-hidden="true">
-      <div class="modal-header">
-        <h5 class="modal-title" id="ViewLogin">Upload Details</h5>
-        <button type="button" class="btn-close" (click)="closeModal()"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="resourcesForm">
+  <div class="table-container">
+    <table class="jobs-table">
+      <thead>
+        <tr>
+          <th>Job ID</th>
+          <th>Job Title</th>
+          <th>No. of Roles</th>
+          <th>Publish Date</th>
+          <th>Apply By</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngIf="joblist.length == 0">
+          <td colspan="7" class="text-center">No Record Found.</td>
+        </tr>
+        <tr *ngFor="let job of joblist | paginate: { itemsPerPage: pagesize, currentPage: page, totalItems: totalRecords }">
+          <td>{{job.job_id}}</td>
+          <td>{{job.job_title}}</td>
+          <td>{{job.no_of_roles}}</td>
+          <td>{{job.publish_date | date:'dd/MM/yyyy'}}</td>
+          <td>
+            <ng-container *ngIf="!job?.cirextendJobDetails?.job_expire_date">
+              {{job?.jobExpireDate | date:'dd/MM/yyyy'}}
+            </ng-container>
+            <ng-container *ngIf="job?.cirextendJobDetails?.job_expire_date">
+              {{job?.cirextendJobDetails?.job_expire_date | date:'dd/MM/yyyy'}}
+            </ng-container>
+          </td>
+          <td>
+            <span class="status-badge" [ngClass]="job.status?.toLowerCase().replace(' ', '-')">
+              {{job.status}}
+            </span>
+          </td>
+          <td class="actions">
+            <a href="{{job?.upload?.url}}" target="_blank" class="action-btn read-me">Read Me</a>
+            <ng-container *ngIf="job.status !== 'Under Review'; else emailMessage">
+              <div *ngIf="!job.applied">
+                <button class="action-btn apply"
+                  [disabled]="job.status === 'Applied' || job.status === 'Expired' || job.status === 'Inactive'"
+                  (click)="openModal(job)">
+                  Apply
+                </button>
+              </div>
+              <div *ngIf="job.applied == true">
+                <button class="action-btn upload"
+                  [disabled]="job.status === 'Not Submitted'"
+                  (click)="openCVModal(job)">
+                  Upload CV
+                </button>
+              </div>
+            </ng-container>
+            <ng-template #emailMessage>
+              <span class="email-message">Email CVs to: jamie.thompson@saivensolutions.co.uk</span>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
+  <div class="pagination">
+    <pagination-controls (pageChange)="paginate($event)"></pagination-controls>
+  </div>
+</div>
+
+<!-- Apply Job Modal -->
+<ng-template class="modal" #loginDetailModal id="loginDetailModal" tabindex="-1" aria-labelledby="ViewLogin" aria-hidden="true">
+  <div class="modal-header">
+    <h5 class="modal-title" id="ViewLogin">Upload Details</h5>
+    <button type="button" class="btn-close" (click)="closeModal()"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="resourcesForm">
+      <div class="row">
+        <div class="row mt-3">
+          <div class="col-md-4">
+            <label>Choose CV option: <span style="color: red;"> *</span></label>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group d-flex align-items-center">
+              <label class="me-3">
+                <input type="radio" id="1" name="currentWork" value="existing-cv" formControlName="currentWork"
+                  (change)="onSelectExistingCV()">&nbsp;
+                <span style="font-weight: normal;">USE EXISTING CV</span>
+              </label>
+              <label>
+                <input type="radio" id="2" name="currentWork" value="upload-cv" formControlName="currentWork"
+                  (change)="newselectedCv()">&nbsp;
+                <span style="font-weight: normal;">UPLOAD NEW CV</span>
+              </label>
+            </div>
+
+            <div *ngIf="selectedCV">
+              <h5>Existing CV Details</h5>
+              <p><strong>CV Name:</strong> {{selectedCV?.name}}</p>
+              <a [href]="selectedCV?.url" target="_blank" class="btn btn-info">Download CV</a>
+            </div>
+            <div *ngIf="newCV" class="form-file">
+              <h5>Upload new CV :</h5>
+              <input type="file" aria-label="file example" class="form-control" (change)="fileUpload($event)"
+                accept=".doc, .docx,.pdf">
+            </div>
+            <br>
+          </div>
+
+          <!-- Work Preferences -->
           <div class="row">
-            <div class="row mt-3">
-              <div class="col-md-4">
-                <label>Choose CV option: <span style="color: red;"> *</span></label>
-              </div>
-              <div class="col-md-8">
-                <div class="form-group d-flex align-items-center">
-
-                  <label class="me-3">
-                    <input type="radio" id="1" name="currentWork" value="existing-cv" formControlName="currentWork"
-                      (change)="onSelectExistingCV()">&nbsp;
-                    <span style="font-weight: normal;">USE EXISTING CV</span>
-                  </label>
-
-                  <label>
-                    <input type="radio" id="2" name="currentWork" value="upload-cv" formControlName="currentWork"
-                      (change)="newselectedCv()">&nbsp;
-                    <span style="font-weight: normal;">UPLOAD NEW CV</span>
-                  </label>
-                </div>
-
-                <div *ngIf="selectedCV">
-                  <h5>Existing CV Details</h5>
-                  <p><strong>CV Name:</strong> {{selectedCV?.name}}</p>
-                  <a [href]="selectedCV?.url" target="_blank" class="btn btn-info">Download CV</a>
-                </div>
-                <div *ngIf="newCV" class="form-file">
-                  <h5>Upload new CV :</h5>
-                  <input type="file" aria-label="file example" class="form-control" (change)="fileUpload($event)"
-                    accept=".doc, .docx,.pdf">
-                </div>
-                <br>
-              </div>
-              <!-- Work Preferences -->
-              <div class="row">
-                <div class="col-md-4">
-                  <label>Work Preferences<span style="color: red">*</span> :</label>
-                </div>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <label>
-                      <input type="checkbox" name="roles" value="Remote Only with Informed client travel"
-                        (change)="onCheckboxWorkPReference($event)"
-                        [checked]="selectedWorkPreference('Remote Only with Informed client travel')" />&nbsp;
-                      <span style="font-weight: normal">
-                        Remote Only with Informed client travel</span> </label><br />
-                    <label>
-                      <input type="checkbox" name="roles" value="Remote only - No client tavel"
-                        (change)="onCheckboxWorkPReference($event)"
-                        [checked]="selectedWorkPreference('Remote only - No client tavel')" />&nbsp;
-                      <span style="font-weight: normal">
-                        Remote only - No client tavel</span> </label><br />
-                    <label>
-                      <input type="checkbox" name="roles" value="Full time at client site"
-                        (change)="onCheckboxWorkPReference($event)"
-                        [checked]="selectedWorkPreference('Full time at client site')" />&nbsp;
-                      <span style="font-weight: normal">
-                        Full time at client site</span> </label><br />
-                    <label>
-                      <input type="checkbox" name="roles" value="Hybrid" (change)="onCheckboxWorkPReference($event)"
-                        [checked]="selectedWorkPreference('Hybrid')" />&nbsp;
-                      <span style="font-weight: normal"> Hybrid </span>
-                    </label>
-                  </div>
-                </div>
+            <div class="col-md-4">
+              <label>Work Preferences<span style="color: red">*</span> :</label>
+            </div>
+            <div class="col-md-8">
+              <div class="form-group">
+                <label>
+                  <input type="checkbox" name="roles" value="Remote Only with Informed client travel"
+                    (change)="onCheckboxWorkPReference($event)"
+                    [checked]="selectedWorkPreference('Remote Only with Informed client travel')" />&nbsp;
+                  <span style="font-weight: normal">Remote Only with Informed client travel</span>
+                </label><br />
+                <label>
+                  <input type="checkbox" name="roles" value="Remote only - No client tavel"
+                    (change)="onCheckboxWorkPReference($event)"
+                    [checked]="selectedWorkPreference('Remote only - No client tavel')" />&nbsp;
+                  <span style="font-weight: normal">Remote only - No client tavel</span>
+                </label><br />
+                <label>
+                  <input type="checkbox" name="roles" value="Full time at client site"
+                    (change)="onCheckboxWorkPReference($event)"
+                    [checked]="selectedWorkPreference('Full time at client site')" />&nbsp;
+                  <span style="font-weight: normal">Full time at client site</span>
+                </label><br />
+                <label>
+                  <input type="checkbox" name="roles" value="Hybrid" (change)="onCheckboxWorkPReference($event)"
+                    [checked]="selectedWorkPreference('Hybrid')" />&nbsp;
+                  <span style="font-weight: normal">Hybrid</span>
+                </label>
               </div>
             </div>
           </div>
-          <div class="col-3" style="float: right;">
-            <div class="d-flex align-items-center justify-content-between" *ngIf="!submitRes">
-              <button type="button" (click)="submitResources()" class="btn btn-primary w-50">Submit</button>
-            </div>
-          </div>
-        </form>
+        </div>
       </div>
+      <div class="col-3" style="float: right;">
+        <div class="d-flex align-items-center justify-content-between" *ngIf="!submitRes">
+          <button type="button" (click)="submitResources()" class="btn btn-primary w-50">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </ng-template>

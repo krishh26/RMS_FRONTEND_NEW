@@ -9,22 +9,22 @@ import { NotificationService } from 'src/app/services/notification/notification.
 import { pagination } from 'src/app/shared/constant/pagination.constant';
 import { Payload } from 'src/app/shared/constant/payload.const';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-job-list',
   templateUrl: './job-list.component.html',
   styleUrls: ['./job-list.component.scss']
 })
 export class JobListComponent implements OnInit {
-  agencyForm!: FormGroup;
-  file: any;
   resourcesForm!: FormGroup;
-  candidateForm!: FormGroup;
+  file: any;
   joblist: any = [];
   jobDetails: any;
   cvDetails: any;
   @ViewChild('loginDetailModal') loginDetailModal: any;
   @ViewChild('uploadcvModal') uploadcvModal: any;
-  public timerSubscription: Subscription = new Subscription()
+
+  public timerSubscription: Subscription = new Subscription();
   selectedCV: any = null;
   newCVData: any = null;
   page: number = pagination.page;
@@ -36,8 +36,9 @@ export class JobListComponent implements OnInit {
   selectedStatus: string = '';
   loginData: any;
   statusList: string[] = ['QA', "Non-QA", "All"];
-  myControl = new FormControl(); searchText: any;
+  searchText: any;
   selectedFilterStatus: string = '';
+
   constructor(
     private router: Router,
     private notificationService: NotificationService,
@@ -45,7 +46,6 @@ export class JobListComponent implements OnInit {
     private acrservice: AcrServiceService,
     private fb: FormBuilder,
     private modalService: NgbModal,
-
   ) {
     this.loginData = localStorage.getItem('loginUser');
     this.resourcesForm = this.fb.group({
@@ -55,21 +55,15 @@ export class JobListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.myControl.valueChanges.subscribe((res: any) => {
-      let storeTest = res;
-      this.searchText = res.toLowerCase();
-    });
     this.loginData = JSON.parse(localStorage.getItem('loginUser') || '{}');
     this.getProjectList();
   }
 
   onSelectExistingCV() {
     const storedCV = this.loginData?.cv;
-    console.log(storedCV);
     this.newCV = false;
     if (storedCV) {
       this.selectedCV = storedCV;
-      console.log(this.selectedCV);
     } else {
       this.selectedCV = null;
       this.notificationService.showError('No CV data found in local storage.');
@@ -110,7 +104,7 @@ export class JobListComponent implements OnInit {
       user_id: loginData._id,
       job_id: this.jobDetails.job_id,
       applied: true,
-      resources: this.resourcesForm.controls['howmanyresources'].value, // optional,
+      resources: this.resourcesForm.controls['howmanyresources'].value,
       cvDetails: this.resourcesForm.value?.candidates?.filter((element: any) => delete element['howmanyresources'])
     }
     let errorCounter: number = 0;
@@ -134,7 +128,6 @@ export class JobListComponent implements OnInit {
       this.modalService.dismissAll();
       this.notificationService.showError(error?.error?.message || 'Something went wrong.')
     })
-
   }
 
   workPreferenceSelection: string[] = [];
@@ -157,14 +150,13 @@ export class JobListComponent implements OnInit {
   }
 
   submitResources() {
-
     if (this.workPreferenceSelection?.length == 0) {
-      return this.notificationService.showError('Please select data.');
+      return this.notificationService.showError('Please select work preferences.');
     }
 
     const loginData = this.localStorageService.getLogger();
     this.submitRes = false;
-    // Initialize CV object
+
     let cvData = {
       key: '',
       url: '',
@@ -199,35 +191,9 @@ export class JobListComponent implements OnInit {
         this.notificationService.showSuccess(response?.message);
       }
     }, (error) => {
-      console.log('error', error);
       this.newCV = false;
       this.modalService.dismissAll();
       this.notificationService.showError(error?.error?.message || 'Something went wrong.');
-    });
-  }
-
-  noApplyjob(job: any) {
-    const loginData = this.localStorageService.getLogger();
-    let params = {
-      user_id: loginData._id,
-      job_id: job.job_id,
-      "applied": false,
-    }
-    Swal.fire({
-      title: 'You have selected No !',
-      text: `Are you sure?`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#00B96F',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes !'
-    }).then((result) => {
-      if (result.value) {
-        this.acrservice.applyJob(params).subscribe((res: any) => {
-          this.notificationService.showSuccess('', 'Notification successfully deleted');
-          window.location.reload();
-        });
-      }
     });
   }
 
@@ -243,26 +209,18 @@ export class JobListComponent implements OnInit {
       candidate_location: ['', Validators.required]
     });
   }
+
   openModal(role: any) {
-    this.jobDetails = ''
-    this.jobDetails = role
-    this.modalService.dismissAll()
-    this.modalService.open(this.loginDetailModal, { size: 'xl', backdrop: 'static' })
+    this.jobDetails = role;
+    this.modalService.dismissAll();
+    this.modalService.open(this.loginDetailModal, { size: 'xl', backdrop: 'static' });
   }
 
   closeModal() {
-    this.modalService.dismissAll()
+    this.modalService.dismissAll();
     this.newCV = false;
     this.selectedCV = null;
     this.submitRes = false;
-  }
-
-  NumberOnly(event: any): boolean {
-    const charCode = event.which ? event.which : event.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-      return false;
-    }
-    return true;
   }
 
   fileUpload(event: any): void {
@@ -274,10 +232,7 @@ export class JobListComponent implements OnInit {
     this.acrservice.fileUpload(data).subscribe((response) => {
       if (response?.status) {
         this.newCVData = response?.data;
-        console.log(this.file);
         this.submitRes = false;
-        // this.candidates.at(index).get('cv').setValue(this.file)
-
         this.notificationService.showSuccess(response?.message || 'File successfully uploaded.')
       } else {
         this.submitRes = false;
@@ -287,10 +242,7 @@ export class JobListComponent implements OnInit {
       this.submitRes = false;
       this.notificationService.showError(error?.error?.message || 'File not uploaded.')
     })
-
-
   }
-
 
   getProjectList(records?: number) {
     Payload.projectList.page = String(this.page);
@@ -373,5 +325,4 @@ export class JobListComponent implements OnInit {
       this.timerSubscription.unsubscribe();
     }
   }
-
 }
