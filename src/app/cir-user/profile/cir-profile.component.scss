@@ -123,6 +123,59 @@ h1, h2, h3, h4, h5, h6 {
   &:disabled {
     background-color: #e9ecef;
   }
+
+  // Read-only field styles
+  &[readonly] {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    color: #495057;
+    cursor: not-allowed;
+
+    &:focus {
+      border-color: #dee2e6;
+      box-shadow: none;
+    }
+  }
+}
+
+// Read-only field specific styles
+.readonly-field {
+  .form-control[readonly] {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    color: #6c757d;
+    font-weight: 500;
+  }
+}
+
+// Info alert styles
+.alert-info {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  color: #0c5460;
+  border-radius: 8px;
+  padding: 15px 20px;
+
+  i {
+    margin-right: 8px;
+    color: #17a2b8;
+  }
+}
+
+// Field labels for read-only fields
+label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 8px;
+}
+
+// Textarea styles for read-only fields
+textarea.form-control[readonly] {
+  resize: none;
+  min-height: 80px;
+  background-color: #f8f9fa;
+  border-color: #e9ecef;
+  color: #6c757d;
 }
 
 // Buttons

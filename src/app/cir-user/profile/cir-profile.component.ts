@@ -23,6 +23,9 @@ export class CirProfileComponent implements OnInit {
   showPassword = false;
   confirmShowPassword = false;
 
+  // Additional clients display flag
+  showAdditionalClients = false;
+
   constructor(
     private fb: FormBuilder,
     private localStorageService: LocalStorageService
@@ -123,5 +126,17 @@ export class CirProfileComponent implements OnInit {
         }
       });
     }
+  }
+
+  // Helper method to check if there are additional clients (6-10)
+  hasAdditionalClients(): boolean {
+    return !!(this.loginDetails.client6 || this.loginDetails.client7 ||
+              this.loginDetails.client8 || this.loginDetails.client9 ||
+              this.loginDetails.client10);
+  }
+
+  // Toggle additional clients section
+  toggleAdditionalClients(): void {
+    this.showAdditionalClients = !this.showAdditionalClients;
   }
 }
