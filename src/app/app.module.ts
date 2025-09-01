@@ -6,6 +6,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NgxEditorModule } from 'ngx-editor';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { AppComponent } from './app.component';
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),
-    AppRoutingModule
+    AppRoutingModule,
+    NgxEditorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

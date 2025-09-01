@@ -1,12 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Editor, Toolbar } from 'ngx-editor';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
   activeTab = 'general';
+  mandatoryDetailsForm: FormGroup;
+  mandatoryDetailsEditor: Editor = new Editor();
+  toolbar: Toolbar = [
+    ['bold', 'italic'],
+    ['underline', 'strike'],
+    ['code', 'blockquote'],
+    ['ordered_list', 'bullet_list'],
+    [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
+    ['link', 'image'],
+    ['text_color', 'background_color'],
+    ['align_left', 'align_center', 'align_right', 'align_justify'],
+  ];
   settings = {
     general: {
       companyName: 'CIR Admin',
@@ -33,10 +47,18 @@ export class SettingsComponent implements OnInit {
     }
   };
 
-  constructor() { }
+  constructor(private fb: FormBuilder) {
+    this.mandatoryDetailsForm = this.fb.group({
+      details: ['', Validators.required]
+    });
+  }
 
   ngOnInit(): void {
     // Load settings from service or localStorage
+  }
+
+  ngOnDestroy(): void {
+    this.mandatoryDetailsEditor.destroy();
   }
 
   switchTab(tab: string): void {
