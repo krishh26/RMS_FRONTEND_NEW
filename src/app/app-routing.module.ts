@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth/acr-admin-login',
+    redirectTo: 'auth/cir-admin-login',
     pathMatch: 'full'
   },
   {
@@ -29,7 +29,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'auth/acr-admin-login'
+    redirectTo: 'auth/cir-admin-login'
   }
 ];
 
