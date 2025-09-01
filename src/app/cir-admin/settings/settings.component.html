@@ -218,15 +218,15 @@
         <h3>Banner Settings</h3>
         <form [formGroup]="mandatoryDetailsForm">
           <div class="form-group mb-3">
-            <label for="mandatoryDetails" class="form-label">Mandatory Details:</label>
+            <label for="mandatoryDetails" class="form-label">Banner Details:</label>
             <div class="NgxEditor__Wrapper">
               <ngx-editor-menu [editor]="mandatoryDetailsEditor" [toolbar]="toolbar" style="padding: 15px !important;">
               </ngx-editor-menu>
               <ngx-editor [editor]="mandatoryDetailsEditor" rows="8" formControlName="details" [disabled]="false"
-                [placeholder]="'Enter mandatory details here...'"></ngx-editor>
+                [placeholder]="'Enter Banner Details here...'"></ngx-editor>
             </div>
             <div *ngIf="mandatoryDetailsForm.get('details')?.touched && mandatoryDetailsForm.get('details')?.invalid" class="text-danger">
-              Mandatory details are required.
+              Banner Details are required.
             </div>
           </div>
         </form>
