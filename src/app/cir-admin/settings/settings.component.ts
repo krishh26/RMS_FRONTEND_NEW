@@ -8,7 +8,7 @@ import { Editor, Toolbar } from 'ngx-editor';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit, OnDestroy {
-  activeTab = 'general';
+  activeTab = 'banner';
   mandatoryDetailsForm: FormGroup;
   mandatoryDetailsEditor: Editor = new Editor();
   toolbar: Toolbar = [
