@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { CirSericeService } from '../../../services/cir-service/cir-serice.service';
 import { NotificationService } from '../../../services/notification/notification.service';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-project-list',
@@ -150,24 +151,47 @@ export class ProjectListComponent implements OnInit {
   }
 
   deleteProject(projectId: string): void {
-    if (confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
-      this.showLoader = true;
-      this.cirService.deleteProject(projectId).subscribe({
-        next: (response: any) => {
-          if (response?.status === true) {
-            this.notificationService.showSuccess('Project deleted successfully');
-            this.getProjectList();
-          } else {
-            this.notificationService.showError(response?.message || 'Failed to delete project');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this! This action will permanently delete the project.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.showLoader = true;
+        this.cirService.deleteProject(projectId).subscribe({
+          next: (response: any) => {
             this.showLoader = false;
+            if (response?.status === true) {
+              Swal.fire(
+                'Deleted!',
+                'Project has been permanently deleted.',
+                'success'
+              );
+              this.getProjectList();
+            } else {
+              Swal.fire(
+                'Error!',
+                response?.message || 'Failed to delete project',
+                'error'
+              );
+            }
+          },
+          error: (error) => {
+            this.showLoader = false;
+            Swal.fire(
+              'Error!',
+              error?.error?.message || error?.message || 'Failed to delete project',
+              'error'
+            );
           }
-        },
-        error: (error) => {
-          this.notificationService.showError(error?.error?.message || error?.message || 'Failed to delete project');
-          this.showLoader = false;
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   viewDetails(projectId: string): void {

@@ -250,7 +250,7 @@ export class CirSericeService {
 
   deleteProject(projectId: string): Observable<any> {
     return this.httpClient
-      .delete<any>(`${this.baseUrl}${CirEndPoint.GET_PROJECTS}/${projectId}`, { headers: this.getHeader() });
+      .delete<any>(`${this.baseUrl}${CirEndPoint.GET_PROJECTS}/${projectId}/permanent`, { headers: this.getHeader() });
   }
 
 }
