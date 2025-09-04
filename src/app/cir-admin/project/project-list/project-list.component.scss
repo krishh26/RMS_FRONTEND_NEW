@@ -713,3 +713,32 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+// Datepicker specific styles
+::ng-deep .ngb-dp-header {
+  .ngb-dp-arrow {
+    .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  .ngb-dp-month-name {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+}
+
+::ng-deep .ngb-dp-navigation-arrow {
+  .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+::ng-deep .ngb-dp-month {
+  .ngb-dp-weekday {
+    font-weight: 600;
+    color: #495057;
+  }
+}

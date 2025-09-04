@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CirSericeService } from '../../../services/cir-service/cir-serice.service';
 import { NotificationService } from '../../../services/notification/notification.service';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -41,6 +41,14 @@ export class ProjectListComponent implements OnInit {
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
     day: new Date().getDate()
+  };
+
+  // Datepicker configuration
+  datepickerConfig = {
+    displayMonths: 1,
+    navigation: 'arrows',
+    outsideDays: 'visible',
+    firstDayOfWeek: 1
   };
 
   // Computed property for minDate
@@ -88,7 +96,8 @@ export class ProjectListComponent implements OnInit {
   constructor(
     private router: Router,
     private cirService: CirSericeService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private calendar: NgbCalendar
   ) { }
 
   ngOnInit(): void {

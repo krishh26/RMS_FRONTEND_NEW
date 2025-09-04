@@ -50,7 +50,9 @@
         <div class="input-group">
           <input class="form-control" placeholder="yyyy-mm-dd" name="startDate" [maxDate]="maxDate"
             [(ngModel)]="startDate" ngbDatepicker #startDatePicker="ngbDatepicker"
-            (dateSelect)="onStartDateSelect($event)" />
+            (dateSelect)="onStartDateSelect($event)" [displayMonths]="datepickerConfig.displayMonths"
+            [navigation]="datepickerConfig.navigation" [outsideDays]="datepickerConfig.outsideDays"
+            [firstDayOfWeek]="datepickerConfig.firstDayOfWeek" />
           <button class="btn btn-outline-secondary calendar" (click)="startDatePicker.toggle()" type="button">
             <i class="fas fa-calendar-alt"></i>
           </button>
@@ -61,7 +63,9 @@
         <label class="filter-label">End Date</label>
         <div class="input-group">
           <input class="form-control" placeholder="yyyy-mm-dd" name="endDate" [maxDate]="maxDate" [minDate]="minEndDate"
-            [(ngModel)]="endDate" ngbDatepicker #endDatePicker="ngbDatepicker" (dateSelect)="onEndDateSelect($event)" />
+            [(ngModel)]="endDate" ngbDatepicker #endDatePicker="ngbDatepicker" (dateSelect)="onEndDateSelect($event)"
+            [displayMonths]="datepickerConfig.displayMonths" [navigation]="datepickerConfig.navigation"
+            [outsideDays]="datepickerConfig.outsideDays" [firstDayOfWeek]="datepickerConfig.firstDayOfWeek" />
           <button class="btn btn-outline-secondary calendar" (click)="endDatePicker.toggle()" type="button">
             <i class="fas fa-calendar-alt"></i>
           </button>
