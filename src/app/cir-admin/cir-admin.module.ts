@@ -27,8 +27,9 @@ import { JobListComponent } from './project/job-list/job-list.component';
 import { JobAddEditComponent } from './project/job-add-edit/job-add-edit.component';
 import { JobApplicationComponent } from './project/job-application/job-application.component';
 import { SendJobComponent } from './project/send-job/send-job.component';
-import { NoRecordFoundComponent } from '../shared/common/no-record-found/no-record-found.component';
 import { NgxEditorModule } from 'ngx-editor';
+import { SharedModule } from '../shared/shared.module';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 const routes: Routes = [
   {
@@ -88,7 +89,6 @@ const routes: Routes = [
 
     // Settings component
     SettingsComponent,
-    NoRecordFoundComponent,
   ],
   imports: [
     CommonModule,
@@ -98,7 +98,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     DecimalPipe,
     HttpClientModule,
-    NgxEditorModule
+    NgxEditorModule,
+    NgxPaginationModule,
+    SharedModule
   ],
 })
 export class CirAdminModule {}

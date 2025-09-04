@@ -16,7 +16,7 @@ export class ProjectListComponent implements OnInit {
   totalRecords: number = 0;
   currentPage: number = 1;
   itemsPerPage: number = 10;
-  selectedStatus: 'Active' | 'Future Role' | 'Expired' | 'All' = 'All';
+  selectedStatus: 'Active' | 'Future Role' | 'Expired' | 'Completed' | 'All' = 'All';
   selectedClient: string = '';
   searchKeyword: string = '';
   searchTimeout: any;
@@ -26,7 +26,8 @@ export class ProjectListComponent implements OnInit {
     { value: 'All', label: 'All Status' },
     { value: 'Active', label: 'Active' },
     { value: 'Future Role', label: 'Future Role' },
-    { value: 'Expired', label: 'Expired' }
+    { value: 'Expired', label: 'Expired' },
+    { value: 'Completed', label: 'Completed' }
   ];
   Math = Math; // Make Math available in template
 
@@ -238,7 +239,7 @@ export class ProjectListComponent implements OnInit {
     this.getProjectList();
   }
 
-  onStatusChange(status: 'Active' | 'Future Role' | 'Expired' | 'All'): void {
+  onStatusChange(status: 'Active' | 'Future Role' | 'Expired' | 'Completed' | 'All'): void {
     this.selectedStatus = status;
     this.currentPage = 1; // Reset to first page when filter changes
     this.getProjectList();
@@ -281,5 +282,26 @@ export class ProjectListComponent implements OnInit {
   private populateUniqueClients(): void {
     const clients = this.projectlist.map(project => project.client).filter(Boolean);
     this.uniqueClients = [...new Set(clients)];
+  }
+
+  getStatusClass(status: string): string {
+    if (!status) return '';
+
+    // Convert status to lowercase and handle special cases
+    const statusLower = status.toLowerCase().replace(/\s+/g, '-');
+
+    // Map status values to CSS classes
+    switch (statusLower) {
+      case 'active':
+        return 'active';
+      case 'future-role':
+        return 'future-role';
+      case 'expired':
+        return 'expired';
+      case 'completed':
+        return 'completed';
+      default:
+        return statusLower;
+    }
   }
 }

@@ -21,7 +21,7 @@ export class ProjectAddEditComponent implements OnInit {
   isViewMode: boolean = false;
 
   workTypes = ['Remote', 'Onsite', 'Hybrid'];
-  statusTypes = ['Active', 'Inactive', 'Completed'];
+  statusTypes = ['Active' , 'Future Role' , 'Expired', 'Completed'];
 
   constructor(
     private fb: FormBuilder,

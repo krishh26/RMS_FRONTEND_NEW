@@ -110,7 +110,7 @@ export class AcrServiceService {
     });
   }
 
-  getCirJobList(params: { page: string | number, limit: string | number, keyword?: string, status?: string, job_type?: string }): Observable<any> {
+  getCirJobList(params: { page: string | number, limit: string | number, keyword?: string, status?: string, job_type?: string, project_id?: string }): Observable<any> {
 
     const url = `${this.baseUrl}${AcrEndPoint.GET_CIR_JOB_LIST}`;
     let queryParams = new HttpParams();
@@ -121,6 +121,9 @@ export class AcrServiceService {
     }
     if (params?.job_type) {
       queryParams = queryParams.set('job_type', params?.job_type);
+    }
+    if (params?.project_id) {
+      queryParams = queryParams.set('project_id', params?.project_id);
     }
     return this.httpClient.get<any>(url, {
       headers: this.getHeader(),

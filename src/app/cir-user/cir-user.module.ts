@@ -11,6 +11,7 @@ import { CirUserHeaderComponent } from './header/cir-user-header.component';
 import { CirUserLayoutComponent } from './layout/cir-user-layout.component';
 import { CirProfileComponent } from './profile/cir-profile.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { SharedModule } from '../shared/shared.module';
 
 const routes: Routes = [
   {
@@ -41,7 +42,8 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    NgxPaginationModule
+    NgxPaginationModule,
+    SharedModule
   ]
 })
 export class CirUserModule { }

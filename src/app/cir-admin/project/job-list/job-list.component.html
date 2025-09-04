@@ -1,110 +1,101 @@
 <div class="job-list-container">
-  <div class="header">
-    <h2>Job Management</h2>
-    <button class="add-btn" routerLink="add">Create Job</button>
-  </div>
-
-  <div class="filters">
-    <div class="search-box">
-      <div class="search-icon">
-        <i class="fas fa-search"></i>
-      </div>
-      <input type="text" placeholder="Search jobs..." class="search-input">
-    </div>
-
-    <div class="filter-group" [ngClass]="{'mobile-expanded': showMobileFilters}">
-      <div class="filter-item">
-        <label class="filter-label">Department</label>
-        <select class="filter-select">
-          <option value="">All Departments</option>
-          <option value="engineering">Engineering</option>
-          <option value="product">Product</option>
-          <option value="design">Design</option>
-        </select>
-      </div>
-
-      <div class="filter-item">
-        <label class="filter-label">Location</label>
-        <select class="filter-select">
-          <option value="">All Locations</option>
-          <option value="new-york">New York</option>
-          <option value="san-francisco">San Francisco</option>
-          <option value="remote">Remote</option>
-        </select>
-      </div>
-
-      <div class="filter-item">
-        <label class="filter-label">Status</label>
-        <select class="filter-select">
-          <option value="">All Status</option>
-          <option value="active">Active</option>
-          <option value="closed">Closed</option>
-        </select>
+  <div class="job-list-container">
+      <div class="header">
+    <div class="header-content">
+      <h2>{{projectName ? projectName + ' - Jobs' : 'Job Management'}}</h2>
+      <div class="project-info" *ngIf="projectDetails">
+        <div class="project-details">
+          <span class="project-client">{{projectDetails.client}}</span>
+          <span class="project-location">{{projectDetails.clientLocation}}</span>
+          <span class="project-type">{{projectDetails.workType}}</span>
+        </div>
       </div>
     </div>
+    <button class="add-button" [routerLink]="['add']" [queryParams]="{projectId: projectId}">Add New Job</button>
+  </div>
 
-    <div class="mobile-filter-toggle" (click)="toggleMobileFilters()">
-      <i class="fas fa-filter"></i>
-      <span>Filters</span>
-      <i class="fas" [ngClass]="showMobileFilters ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+    <div class="search-filter">
+      <input type="text" placeholder="Search jobs..." class="search-input" [(ngModel)]="searchText" (input)="searchtext()">
+      <select class="filter-select" [(ngModel)]="selectedStatus" (change)="searchtext()">
+        <option value="">All Job Types</option>
+        <option *ngFor="let status of statusList" [value]="status">{{status}}</option>
+      </select>
+      <select class="filter-select" [(ngModel)]="selectedFilterStatus" (change)="applyStatusFilter()">
+        <option value="">All Status</option>
+        <option value="Applied">Applied</option>
+        <option value="Expired">Expired</option>
+        <option value="Active">Active</option>
+        <option value="Under Review">Under Review</option>
+        <option value="Actioned">Actioned</option>
+        <option value="Inactive">Inactive</option>
+      </select>
     </div>
-  </div>
 
-  <div class="table-container">
-    <table class="jobs-table">
-      <thead>
-        <tr>
-          <th>Job Title</th>
-          <th>Department</th>
-          <th>Location</th>
-          <th>Type</th>
-          <th>Experience</th>
-          <th>Posted Date</th>
-          <th>Status</th>
-          <th>Applications</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let job of jobs">
-          <td>{{ job.title }}</td>
-          <td>{{ job.department }}</td>
-          <td>{{ job.location }}</td>
-          <td>{{ job.type }}</td>
-          <td>{{ job.experience }}</td>
-          <td>{{ job.postedDate }}</td>
-          <td>
-            <span class="status-badge" [ngClass]="job.status.toLowerCase()">
-              {{ job.status }}
-            </span>
-          </td>
-          <td>
-            <span class="applications-count">{{ job.applications }}</span>
-          </td>
-          <td class="actions">
-            <button class="action-btn view" (click)="viewApplications(job.id)" title="View Applications">
-              Applications
-            </button>
-            <button class="action-btn edit" [routerLink]="['edit', job.id]" title="Edit">
-              Edit
-            </button>
-            <button class="action-btn toggle" (click)="toggleJobStatus(job.id)" title="Toggle Status">
-              {{ job.status === 'Active' ? 'Close' : 'Reopen' }}
-            </button>
-            <button class="action-btn delete" (click)="deleteJob(job.id)" title="Delete">
-              Delete
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="table-container">
+      <table class="jobs-table">
+        <thead>
+          <tr>
+            <th>Job ID</th>
+            <th>Job Title</th>
+            <th>No. of Roles</th>
+            <th>Publish Date</th>
+            <th>Apply By</th>
+            <th>Status</th>
+            <th>Role Details</th>
+            <!-- <th>Apply Job</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="joblist.length == 0">
+            <td colspan="7" class="text-center">No Record Found.</td>
+          </tr>
+          <tr *ngFor="let job of joblist | paginate: { itemsPerPage: pagesize, currentPage: page, totalItems: totalRecords }">
+            <td>{{job.job_id}}</td>
+            <td>{{job.job_title}}</td>
+            <td>{{job.no_of_roles}}</td>
+            <td>{{job.publish_date | date:'dd/MM/yyyy'}}</td>
+            <td>
+              <ng-container *ngIf="!job?.cirextendJobDetails?.job_expire_date">
+                {{job?.jobExpireDate | date:'dd/MM/yyyy'}}
+              </ng-container>
+              <ng-container *ngIf="job?.cirextendJobDetails?.job_expire_date">
+                {{job?.cirextendJobDetails?.job_expire_date | date:'dd/MM/yyyy'}}
+              </ng-container>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="job.status?.toLowerCase().replace(' ', '-')">
+                {{job.status}}
+              </span>
+            </td>
+            <td> <a href="{{job?.upload?.url}}" target="_blank" class="action-btn read-me">Read Me</a></td>
+            <!-- <td class="actions">
+              <ng-container *ngIf="job.status !== 'Under Review'; else emailMessage">
+                <div *ngIf="!job.applied">
+                  <button class="action-btn apply"
+                    [disabled]="job.status === 'Applied' || job.status === 'Expired' || job.status === 'Inactive'"
+                    (click)="openModal(job)">
+                    Apply
+                  </button>
+                </div>
+                <div *ngIf="job.applied == true">
+                  <button class="action-btn upload"
+                    [disabled]="job.status === 'Not Submitted'"
+                    (click)="openCVModal(job)">
+                    Upload CV
+                  </button>
+                </div>
+              </ng-container>
+              <ng-template #emailMessage>
+                <span class="email-message">Email CVs to: jamie.thompson@saivensolutions.co.uk</span>
+              </ng-template>
+            </td> -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="pagination">
-    <button class="page-btn">&lt;</button>
-    <button class="page-btn active">1</button>
-    <button class="page-btn">2</button>
-    <button class="page-btn">3</button>
-    <button class="page-btn">&gt;</button>
+    <div class="pagination">
+      <pagination-controls (pageChange)="paginate($event)"></pagination-controls>
+    </div>
   </div>
 </div>

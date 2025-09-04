@@ -5,7 +5,8 @@ export const Payload = {
         page: '1',
         limit: '10',
         status: "",
-        job_type: ''
+        job_type: '',
+        project_id: ''
     },
 
     mailSSList: {

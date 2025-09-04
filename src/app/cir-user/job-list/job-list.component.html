@@ -1,6 +1,15 @@
 <div class="job-list-container">
   <div class="header">
-    <h2>Jobs</h2>
+    <div class="header-content">
+      <h2>{{projectName ? projectName + ' - Jobs' : 'Jobs'}}</h2>
+      <div class="project-info" *ngIf="projectDetails">
+        <div class="project-details">
+          <span class="project-client">{{projectDetails.client}}</span>
+          <span class="project-location">{{projectDetails.clientLocation}}</span>
+          <span class="project-type">{{projectDetails.workType}}</span>
+        </div>
+      </div>
+    </div>
     <!-- <button class="add-button">Add New Job</button> -->
   </div>
 
@@ -36,10 +45,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngIf="joblist.length == 0">
+        <tr *ngIf="jobList.length == 0">
           <td colspan="7" class="text-center">No Record Found.</td>
         </tr>
-        <tr *ngFor="let job of joblist | paginate: { itemsPerPage: pagesize, currentPage: page, totalItems: totalRecords }">
+        <tr *ngFor="let job of jobList | paginate: { itemsPerPage: pagesize, currentPage: page, totalItems: totalRecords }">
           <td>{{job.job_id}}</td>
           <td>{{job.job_title}}</td>
           <td>{{job.no_of_roles}}</td>

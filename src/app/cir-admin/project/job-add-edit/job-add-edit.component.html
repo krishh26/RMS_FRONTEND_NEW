@@ -1,8 +1,44 @@
 <section>
   <div class="container">
     <div class="Titleheading">
-      <h1>Create Job Post</h1>
+      <h1>{{projectName ? 'Create Job Post for ' + projectName : 'Create Job Post'}}</h1>
     </div>
+
+    <!-- Project Details Card -->
+    <div class="project-details-card" *ngIf="projectDetails">
+      <div class="project-card-header">
+        <h3>Project Information</h3>
+      </div>
+      <div class="project-card-body">
+        <div class="project-info-grid">
+          <div class="project-info-item">
+            <label>Project Name:</label>
+            <span class="project-name">{{projectDetails.projectName}}</span>
+          </div>
+          <div class="project-info-item">
+            <label>Client:</label>
+            <span class="project-client">{{projectDetails.client}}</span>
+          </div>
+          <div class="project-info-item">
+            <label>Location:</label>
+            <span class="project-location">{{projectDetails.clientLocation}}</span>
+          </div>
+          <div class="project-info-item">
+            <label>Work Type:</label>
+            <span class="project-work-type">{{projectDetails.workType}}</span>
+          </div>
+          <div class="project-info-item">
+            <label>Positions:</label>
+            <span class="project-positions">{{projectDetails.noOfPositions}}</span>
+          </div>
+          <div class="project-info-item">
+            <label>Day Rate Range:</label>
+            <span class="project-rate">£{{projectDetails.dayRatesRange?.min}} - £{{projectDetails.dayRatesRange?.max}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="FlatCard">
       <div class="row">
         <div class="col-lg-7 col-xl-7 col-12">

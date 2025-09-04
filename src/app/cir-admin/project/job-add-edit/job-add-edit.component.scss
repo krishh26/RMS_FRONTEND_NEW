@@ -1,3 +1,96 @@
+// Project Details Card Styles
+.project-details-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+
+  .project-card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 25px;
+    border-radius: 12px 12px 0 0;
+
+    h3 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+
+  .project-card-body {
+    padding: 25px;
+
+    .project-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+
+      .project-info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        label {
+          font-weight: 600;
+          color: #555;
+          font-size: 14px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        span {
+          font-size: 16px;
+          color: #333;
+          padding: 8px 12px;
+          border-radius: 6px;
+          background-color: #f8f9fa;
+          border-left: 4px solid #007bff;
+
+          &.project-name {
+            background-color: #e3f2fd;
+            border-left-color: #2196f3;
+            font-weight: 600;
+            color: #1565c0;
+          }
+
+          &.project-client {
+            background-color: #e8f5e9;
+            border-left-color: #4caf50;
+            color: #2e7d32;
+          }
+
+          &.project-location {
+            background-color: #fff3e0;
+            border-left-color: #ff9800;
+            color: #ef6c00;
+          }
+
+          &.project-work-type {
+            background-color: #f3e5f5;
+            border-left-color: #9c27b0;
+            color: #7b1fa2;
+          }
+
+          &.project-positions {
+            background-color: #e0f2f1;
+            border-left-color: #009688;
+            color: #00695c;
+          }
+
+          &.project-rate {
+            background-color: #fce4ec;
+            border-left-color: #e91e63;
+            color: #c2185b;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+}
+
 .section-registration {
   padding: 40px 0;
   background-image: url("../../../../assets/img/registraion-page-background.jpg");

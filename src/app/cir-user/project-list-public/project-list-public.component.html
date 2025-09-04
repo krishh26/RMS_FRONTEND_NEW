@@ -1,72 +1,207 @@
 <div class="public-projects-container">
   <div class="header">
+    <div class="breadcrumb">
+      <a routerLink="/cir-user">Dashboard</a>
+      <span class="separator">/</span>
+      <span class="current">Public Projects</span>
+    </div>
     <h2>Public Projects</h2>
-    <div class="view-options">
-      <button class="view-btn active">Grid</button>
-      <button class="view-btn">List</button>
+    <div class="header-buttons">
+      <div class="view-options">
+        <button class="view-btn" [class.active]="viewMode === 'grid'" (click)="toggleViewMode('grid')">
+          <i class="fas fa-th"></i> Grid
+        </button>
+        <button class="view-btn" [class.active]="viewMode === 'list'" (click)="toggleViewMode('list')">
+          <i class="fas fa-list"></i> List
+        </button>
+      </div>
+      <button class="refresh-btn" (click)="refreshProjects()" title="Refresh Projects">
+        <i class="fas fa-sync-alt"></i>
+        Refresh
+      </button>
     </div>
   </div>
 
   <div class="filters">
-    <div class="search-bar">
-      <input type="text" placeholder="Search public projects..." class="search-input">
+    <div class="search-box">
+      <div class="search-icon">
+        <i class="fas fa-search"></i>
+      </div>
+      <input type="text" placeholder="Search public projects..." class="search-input" [(ngModel)]="searchKeyword"
+        (input)="onSearchInput()" (keyup.enter)="onSearchEnter()">
+      <button *ngIf="searchKeyword" class="clear-search-btn" (click)="clearSearch()" title="Clear search">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
-    <div class="category-filters">
-      <button class="category-btn active">All</button>
-      <button class="category-btn">Community</button>
-      <button class="category-btn">Environment</button>
-      <button class="category-btn">Education</button>
-      <button class="category-btn">Technology</button>
+
+    <div class="filter-group" [ngClass]="{'mobile-expanded': showMobileFilters}">
+      <div class="filter-item">
+        <label class="filter-label">Status</label>
+        <select class="filter-select" [(ngModel)]="selectedStatus" (change)="onStatusChange(selectedStatus)">
+          <option *ngFor="let option of statusOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Client</label>
+        <select class="filter-select" [(ngModel)]="selectedClient" (change)="onClientChange(selectedClient)">
+          <option value="">All Clients</option>
+          <option *ngFor="let client of uniqueClients" [value]="client">{{ client }}</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Start Date</label>
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd" name="startDate" [maxDate]="maxDate"
+            [(ngModel)]="startDate" ngbDatepicker #startDatePicker="ngbDatepicker"
+            (dateSelect)="onStartDateSelect($event)" />
+          <button class="btn btn-outline-secondary calendar" (click)="startDatePicker.toggle()" type="button">
+            <i class="fas fa-calendar-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">End Date</label>
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd" name="endDate" [maxDate]="maxDate" [minDate]="minEndDate"
+            [(ngModel)]="endDate" ngbDatepicker #endDatePicker="ngbDatepicker" (dateSelect)="onEndDateSelect($event)" />
+          <button class="btn btn-outline-secondary calendar" (click)="endDatePicker.toggle()" type="button">
+            <i class="fas fa-calendar-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">&nbsp;</label>
+        <button class="btn btn-outline-secondary clear-filters" (click)="clearDateFilters()">
+          Clear All Filters
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-filter-toggle" (click)="toggleMobileFilters()">
+      <i class="fas fa-filter"></i>
+      <span>Filters</span>
+      <i class="fas" [ngClass]="showMobileFilters ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
     </div>
   </div>
 
-  <div class="projects-grid">
-    <div class="project-card" *ngFor="let project of publicProjects">
+  <!-- Loading state -->
+  <div *ngIf="showLoader" class="loading-container">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span>Loading public projects...</span>
+    </div>
+  </div>
+
+  <!-- Grid View -->
+  <div *ngIf="!showLoader && viewMode === 'grid'" class="projects-grid">
+    <div *ngIf="!projectlist?.length" class="no-results">
+      <app-no-record-found></app-no-record-found>
+    </div>
+    <div class="project-card" *ngFor="let project of projectlist">
       <div class="project-header">
-        <span class="category-tag">{{ project.category }}</span>
-        <h3>{{ project.name }}</h3>
+        <span class="category-tag">{{ project.type || 'Public' }}</span>
+        <h3>{{ project.projectName || project.name }}</h3>
       </div>
 
       <div class="project-description">
-        {{ project.description }}
+        {{ project.description || 'No description available' }}
       </div>
 
       <div class="project-stats">
         <div class="stat">
           <span class="stat-label">Status</span>
-          <span class="stat-value status-badge" [ngClass]="project.status.toLowerCase()">
+          <span class="stat-value status-badge" [ngClass]="getStatusClass(project.status)">
             {{ project.status }}
           </span>
         </div>
         <div class="stat">
-          <span class="stat-label">Started</span>
-          <span class="stat-value">{{ project.startDate }}</span>
+          <span class="stat-label">Published</span>
+          <span class="stat-value">{{ project.publishedDate | date:'mediumDate' }}</span>
         </div>
         <div class="stat">
-          <span class="stat-label">Participants</span>
-          <span class="stat-value">{{ project.participants }}</span>
+          <span class="stat-label">Positions</span>
+          <span class="stat-value">{{ project.noOfPositions || 0 }}</span>
         </div>
       </div>
 
       <div class="project-actions">
-        <button class="action-btn view" (click)="viewProjectDetails(project.id)">
+        <button class="action-btn view" (click)="viewProjectDetails(project._id)">
           View Details
         </button>
-        <button class="action-btn join" (click)="joinProject(project.id)">
+        <button class="action-btn join" (click)="joinProject(project._id)">
           Join Project
         </button>
-        <button class="action-btn share" (click)="shareProject(project.id)">
+        <button class="action-btn share" (click)="shareProject(project._id)">
           Share
         </button>
       </div>
     </div>
   </div>
 
-  <div class="pagination">
-    <button class="page-btn">&lt;</button>
-    <button class="page-btn active">1</button>
-    <button class="page-btn">2</button>
-    <button class="page-btn">3</button>
-    <button class="page-btn">&gt;</button>
+  <!-- List View -->
+  <div *ngIf="!showLoader && viewMode === 'list'" class="table-container">
+    <table class="projects-table">
+      <thead>
+        <tr>
+          <th>Project Name</th>
+          <th>Client</th>
+          <th>Published Date</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Day Rates Range</th>
+          <th>Positions</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td *ngIf="!projectlist?.length" colspan="8">
+            <app-no-record-found></app-no-record-found>
+          </td>
+        </tr>
+        <tr *ngFor="let project of projectlist">
+          <td>{{ project.projectName || project.name }}</td>
+          <td>{{ project.client }}</td>
+          <td>{{ project.publishedDate | date:'mediumDate' }}</td>
+          <td>{{ project.clientLocation }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusClass(project.status)">
+              {{ project.status }}
+            </span>
+          </td>
+          <td>
+            ${{ project.dayRatesRange?.min | number }} - ${{ project.dayRatesRange?.max | number }}
+          </td>
+          <td>{{ project.noOfPositions }}</td>
+          <td class="actions">
+            <button class="action-btn view" (click)="viewProjectDetails(project._id)" title="View Details">
+              View Details
+            </button>
+            <button class="action-btn join" (click)="joinProject(project._id)" title="Join Project">
+              Join
+            </button>
+            <button class="action-btn share" (click)="shareProject(project._id)" title="Share">
+              Share
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="totalRecords > 0">
+    <button class="page-btn" [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">&lt;</button>
+    <button class="page-btn" *ngFor="let page of [].constructor(Math.ceil(totalRecords / itemsPerPage)); let i = index"
+      [class.active]="currentPage === i + 1" (click)="onPageChange(i + 1)">
+      {{ i + 1 }}
+    </button>
+    <button class="page-btn" [disabled]="currentPage === Math.ceil(totalRecords / itemsPerPage)"
+      (click)="onPageChange(currentPage + 1)">&gt;</button>
   </div>
 </div>

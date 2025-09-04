@@ -19,8 +19,14 @@ export class JobAddEditComponent implements OnInit {
   jobID: string = '';
   fileUploadProcess: boolean = true;
 
+  // Project related properties
+  projectId: string = '';
+  projectDetails: any = null;
+  projectName: string = '';
+
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private notificationService: NotificationService,
     private localStorageService: LocalStorageService,
     private acrservice: AcrServiceService,
@@ -59,7 +65,36 @@ export class JobAddEditComponent implements OnInit {
 
 
   ngOnInit() {
-    this.getJobIDList();
+    // Get project_id from query parameters
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.projectId = params['projectId'] || '';
+      if (this.projectId) {
+        this.getProjectDetails();
+        this.getJobIDList();
+      } else {
+        this.notificationService.showError('Project ID is required');
+        this.getJobIDList();
+      }
+    });
+  }
+
+  getProjectDetails() {
+    if (!this.projectId) {
+      this.notificationService.showError('Project ID is required');
+      return;
+    }
+
+    this.cirservice.getProjectDetails(this.projectId).subscribe((response: any) => {
+      if (response?.status) {
+        this.projectDetails = response?.data;
+        this.projectName = response?.data?.projectName || 'Unknown Project';
+        console.log('Project details:', this.projectDetails);
+      } else {
+        this.notificationService.showError(response?.message || 'Failed to fetch project details');
+      }
+    }, (error) => {
+      this.notificationService.showError(error?.error?.message || 'Failed to fetch project details');
+    });
   }
 
   getJobIDList() {
@@ -136,7 +171,8 @@ export class JobAddEditComponent implements OnInit {
 
     let formData = {
       ...this.jobForm.value,
-      upload: cvObject
+      upload: cvObject,
+      project_id: this.projectId
     };
 
     if (this.jobForm.get('status')?.value !== 'Active') {

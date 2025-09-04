@@ -120,7 +120,7 @@
           <td>{{ project.publishedDate | date:'mediumDate' }}</td>
           <td>{{ project.clientLocation }}</td>
           <td>
-            <span class="status-badge" [ngClass]="project.status?.toLowerCase()">
+            <span class="status-badge" [ngClass]="getStatusClass(project.status)">
               {{ project.status }}
             </span>
           </td>

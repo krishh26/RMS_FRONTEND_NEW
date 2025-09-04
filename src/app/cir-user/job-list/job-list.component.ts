@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { AcrServiceService } from 'src/app/services/acr-service/acr-service.service';
+import { CirSericeService } from 'src/app/services/cir-service/cir-serice.service';
 import { LocalStorageService } from 'src/app/services/local-storage/local-storage.service';
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { pagination } from 'src/app/shared/constant/pagination.constant';
@@ -18,7 +19,7 @@ import Swal from 'sweetalert2';
 export class JobListComponent implements OnInit {
   resourcesForm!: FormGroup;
   file: any;
-  joblist: any = [];
+  jobList: any = [];
   jobDetails: any;
   cvDetails: any;
   @ViewChild('loginDetailModal') loginDetailModal: any;
@@ -39,11 +40,18 @@ export class JobListComponent implements OnInit {
   searchText: any;
   selectedFilterStatus: string = '';
 
+  // Project related properties
+  projectId: string = '';
+  projectDetails: any = null;
+  projectName: string = '';
+
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private notificationService: NotificationService,
     private localStorageService: LocalStorageService,
     private acrservice: AcrServiceService,
+    private cirService: CirSericeService,
     private fb: FormBuilder,
     private modalService: NgbModal,
   ) {
@@ -56,7 +64,17 @@ export class JobListComponent implements OnInit {
 
   ngOnInit() {
     this.loginData = JSON.parse(localStorage.getItem('loginUser') || '{}');
-    this.getProjectList();
+
+    // Get project_id from query parameters
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.projectId = params['projectId'] || '';
+      if (this.projectId) {
+        this.getProjectDetails();
+        this.getProjectList();
+      } else {
+        this.notificationService.showError('Project ID is required');
+      }
+    });
   }
 
   onSelectExistingCV() {
@@ -244,15 +262,40 @@ export class JobListComponent implements OnInit {
     })
   }
 
+  getProjectDetails() {
+    if (!this.projectId) {
+      this.notificationService.showError('Project ID is required');
+      return;
+    }
+
+    this.cirService.getProjectDetails(this.projectId).subscribe((response: any) => {
+      if (response?.status) {
+        this.projectDetails = response?.data;
+        this.projectName = response?.data?.projectName || 'Unknown Project';
+        console.log('Project details:', this.projectDetails);
+      } else {
+        this.notificationService.showError(response?.message || 'Failed to fetch project details');
+      }
+    }, (error) => {
+      this.notificationService.showError(error?.error?.message || 'Failed to fetch project details');
+    });
+  }
+
   getProjectList(records?: number) {
     Payload.projectList.page = String(this.page);
     Payload.projectList.limit = String(this.pagesize);
     if (records) {
       Payload.projectList.limit = String(records);
     }
+
+    // Add project_id to the payload if available
+    if (this.projectId) {
+      Payload.projectList.project_id = this.projectId;
+    }
+
     this.acrservice.getCirJobList(Payload.projectList).subscribe((response: any) => {
       if (response?.status) {
-        this.joblist = response?.data;
+        this.jobList = response?.data;
         this.totalRecords = response?.meta_data?.items;
         this.page = response?.meta_data?.page;
         this.pagesize = response?.meta_data?.page_size;
@@ -265,11 +308,17 @@ export class JobListComponent implements OnInit {
     Payload.projectList.limit = String(this.pagesize);
     Payload.projectList.keyword = this.searchText || '';
     Payload.projectList.job_type = this.selectedStatus;
+
+    // Add project_id to the payload if available
+    if (this.projectId) {
+      Payload.projectList.project_id = this.projectId;
+    }
+
     this.acrservice.getCirJobList(Payload.projectList).subscribe((response) => {
-      this.joblist = [];
+      this.jobList = [];
       this.totalRecords = 0;
       if (response?.status == true) {
-        this.joblist = response?.data;
+        this.jobList = response?.data;
         this.totalRecords = response?.meta_data?.items;
         this.page = response?.meta_data?.page;
         this.pagesize = response?.meta_data?.page_size;
@@ -286,16 +335,22 @@ export class JobListComponent implements OnInit {
     Payload.projectList.limit = String(1000000);
     Payload.projectList.keyword = this.searchText || '';
     Payload.projectList.job_type = this.selectedStatus;
+
+    // Add project_id to the payload if available
+    if (this.projectId) {
+      Payload.projectList.project_id = this.projectId;
+    }
+
     this.acrservice.getCirJobList(Payload.projectList).subscribe((response) => {
-      this.joblist = [];
+      this.jobList = [];
       this.totalRecords = 0;
       if (response?.status == true) {
         if (this.selectedFilterStatus) {
-          this.joblist = response?.data?.filter((job: any) =>
+          this.jobList = response?.data?.filter((job: any) =>
             job.status === this.selectedFilterStatus
           );
         } else {
-          this.joblist = response?.data;
+          this.jobList = response?.data;
         }
         this.totalRecords = response?.meta_data?.items;
         this.page = response?.meta_data?.page;
