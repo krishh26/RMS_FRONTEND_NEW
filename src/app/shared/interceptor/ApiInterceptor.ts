@@ -26,7 +26,7 @@ export class APIInterceptor implements HttpInterceptor {
 
     if (this.localStorageService.getLoggerToken()) {
       jwt = this.localStorageService.getLoggerToken();
-      console.log(jwt);
+      // console.log(jwt);
       // jwt = JSON.parse(jwt)
     } else {
       const data = localStorage.getItem('rmsPersonalDetails');

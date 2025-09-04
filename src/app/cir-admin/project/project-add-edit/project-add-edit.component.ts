@@ -166,7 +166,36 @@ export class ProjectAddEditComponent implements OnInit {
 
   onSubmit(): void {
     if (this.projectForm.valid) {
-      const formData = this.projectForm.value;
+      const formData = { ...this.projectForm.value };
+
+      // Format the publishedDate to YYYY-MM-DD string format
+      if (formData.publishedDate) {
+        try {
+          // Handle different date formats
+          let date: Date;
+          if (typeof formData.publishedDate === 'string') {
+            date = new Date(formData.publishedDate);
+          } else if (formData.publishedDate.year && formData.publishedDate.month && formData.publishedDate.day) {
+            // Handle object format {year, month, day}
+            date = new Date(formData.publishedDate.year, formData.publishedDate.month - 1, formData.publishedDate.day);
+          } else {
+            date = new Date(formData.publishedDate);
+          }
+
+          // Check if date is valid
+          if (isNaN(date.getTime())) {
+            console.error('Invalid date value:', formData.publishedDate);
+            this.notificationService.showError('Please enter a valid date');
+            return;
+          }
+
+          formData.publishedDate = date.toISOString().split('T')[0];
+        } catch (error) {
+          console.error('Error formatting date:', error);
+          this.notificationService.showError('Please enter a valid date');
+          return;
+        }
+      }
 
       // Get logged in user ID
       const loggedInUser = this.localStorageService.getLogger();
