@@ -1045,72 +1045,12 @@
                     </div>
                   </div>
 
-                  <!-- Client 6-10 (Read-only) - Collapsible section -->
-                  <div class="row mb-3" *ngIf="hasAdditionalClients()">
-                    <div class="col-12">
-                      <div class="card">
-                        <div class="card-header" (click)="toggleAdditionalClients()" style="cursor: pointer;">
-                          <h6 class="mb-0">
-                            <i class="bi" [class.bi-chevron-down]="!showAdditionalClients" [class.bi-chevron-up]="showAdditionalClients"></i>
-                            Additional Clients (6-10)
-                          </h6>
-                        </div>
-                        <div class="card-body" *ngIf="showAdditionalClients">
-                          <!-- Client 6 -->
-                          <div class="row mb-3 readonly-field" *ngIf="loginDetails.client6 && loginDetails.client6.name">
-                            <div class="col-md-4">
-                              <label>Client 6:</label>
-                            </div>
-                            <div class="col-md-8">
-                              <input type="text" class="form-control" [value]="loginDetails.client6.name + ' - ' + (loginDetails.client6.location || '')" readonly>
-                            </div>
-                          </div>
-                          <!-- Client 7 -->
-                          <div class="row mb-3 readonly-field" *ngIf="loginDetails.client7 && loginDetails.client7.name">
-                            <div class="col-md-4">
-                              <label>Client 7:</label>
-                            </div>
-                            <div class="col-md-8">
-                              <input type="text" class="form-control" [value]="loginDetails.client7.name + ' - ' + (loginDetails.client7.location || '')" readonly>
-                            </div>
-                          </div>
-                          <!-- Client 8 -->
-                          <div class="row mb-3 readonly-field" *ngIf="loginDetails.client8 && loginDetails.client8.name">
-                            <div class="col-md-4">
-                              <label>Client 8:</label>
-                            </div>
-                            <div class="col-md-8">
-                              <input type="text" class="form-control" [value]="loginDetails.client8.name + ' - ' + (loginDetails.client8.location || '')" readonly>
-                            </div>
-                          </div>
-                          <!-- Client 9 -->
-                          <div class="row mb-3 readonly-field" *ngIf="loginDetails.client9 && loginDetails.client9.name">
-                            <div class="col-md-4">
-                              <label>Client 9:</label>
-                            </div>
-                            <div class="col-md-8">
-                              <input type="text" class="form-control" [value]="loginDetails.client9.name + ' - ' + (loginDetails.client9.location || '')" readonly>
-                            </div>
-                          </div>
-                          <!-- Client 10 -->
-                          <div class="row mb-3 readonly-field" *ngIf="loginDetails.client10 && loginDetails.client10.name">
-                            <div class="col-md-4">
-                              <label>Client 10:</label>
-                            </div>
-                            <div class="col-md-8">
-                              <input type="text" class="form-control" [value]="loginDetails.client10.name + ' - ' + (loginDetails.client10.location || '')" readonly>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
-                  <div class="row">
+                  <!-- <div class="row">
                     <div class="col-12 update">
                       <button style="float: right!important" type="submit" class="btn btn-primary btn-round">Update </button>
                     </div>
-                  </div>
+                  </div> -->
                 </form>
               </div>
 
