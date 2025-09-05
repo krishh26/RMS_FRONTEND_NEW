@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +9,7 @@ import { LocalStorageService } from 'src/app/services/local-storage/local-storag
 import { NotificationService } from 'src/app/services/notification/notification.service';
 import { pagination } from 'src/app/shared/constant/pagination.constant';
 import { Payload } from 'src/app/shared/constant/payload.const';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-job-list',
@@ -41,6 +42,10 @@ export class JobListComponent implements OnInit {
   projectId: string = '';
   projectDetails: any = null;
   projectName: string = '';
+
+  // Dropdown properties
+  openDropdownId: string | null = null;
+  dropdownPosition: { top: number; left: number } = { top: 0, left: 0 };
 
   constructor(
     private router: Router,
@@ -358,9 +363,165 @@ export class JobListComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  // Action methods for job management
+  editJob(job: any): void {
+    // Close dropdown and navigate to edit job page with job ID and project ID
+    this.closeDropdown();
+    this.router.navigate(['/cir-admin/jobs/add'], {
+      queryParams: { 
+        projectId: this.projectId,
+        jobId: job.job_id
+      }
+    });
+  }
+
+  deleteJob(job: any): void {
+    this.closeDropdown();
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to delete job "${job.job_title}". This action cannot be undone!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.cirService.cirDeleteJob({}, job.job_id).subscribe({
+          next: (response: any) => {
+            if (response?.status === true) {
+              Swal.fire(
+                'Deleted!',
+                'Job has been successfully deleted.',
+                'success'
+              );
+              // Refresh the job list
+              this.getProjectList();
+            } else {
+              Swal.fire(
+                'Error!',
+                response?.message || 'Failed to delete job',
+                'error'
+              );
+            }
+          },
+          error: (error) => {
+            Swal.fire(
+              'Error!',
+              error?.error?.message || error?.message || 'Failed to delete job',
+              'error'
+            );
+          }
+        });
+      }
+    });
+  }
+
+  showApplications(job: any): void {
+    // Close dropdown and navigate to applications page for this specific job
+    this.closeDropdown();
+    this.router.navigate(['/cir-admin/applications'], {
+      queryParams: { 
+        jobId: job.job_id,
+        projectId: this.projectId,
+        jobTitle: job.job_title
+      }
+    });
+  }
+
+  // Dropdown methods
+  toggleDropdown(jobId: string, event: Event): void {
+    if (this.openDropdownId === jobId) {
+      this.closeDropdown();
+    } else {
+      this.closeDropdown();
+      this.openDropdownId = jobId;
+      this.calculateDropdownPosition(event);
+    }
+  }
+
+  private calculateDropdownPosition(event: Event): void {
+    const target = event.target as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const isMobile = window.innerWidth <= 768;
+    const dropdownWidth = isMobile ? 140 : 160; // min-width from CSS
+    const dropdownHeight = 200; // approximate height for 4 items
+    
+    let left: number;
+    let top = rect.bottom + 5;
+    
+    if (isMobile) {
+      // Center the dropdown on mobile
+      left = rect.left + (rect.width / 2) - (dropdownWidth / 2);
+    } else {
+      // Position to the right of the button on desktop
+      left = rect.right - dropdownWidth;
+      
+      // Check if dropdown would go off the right edge
+      if (left < 10) {
+        left = rect.left - dropdownWidth + rect.width;
+      }
+    }
+    
+    // Check if dropdown would go off the bottom edge
+    if (top + dropdownHeight > window.innerHeight - 10) {
+      top = rect.top - dropdownHeight - 5;
+    }
+    
+    // Ensure dropdown doesn't go off the left edge
+    if (left < 10) {
+      left = 10;
+    }
+    
+    // Ensure dropdown doesn't go off the right edge
+    if (left + dropdownWidth > window.innerWidth - 10) {
+      left = window.innerWidth - dropdownWidth - 10;
+    }
+    
+    // Ensure dropdown doesn't go off the top edge
+    if (top < 10) {
+      top = 10;
+    }
+    
+    this.dropdownPosition = { top, left };
+  }
+
+  closeDropdown(): void {
+    this.openDropdownId = null;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown')) {
+      this.closeDropdown();
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(): void {
+    if (this.openDropdownId) {
+      this.closeDropdown();
+    }
+  }
+
   ngOnDestroy() {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
     }
+  }
+
+  appliedRoleData(jobId: string) {
+    this.router.navigate(['/cir-admin/jobs/applications', jobId], {
+      queryParams: { projectId: this.projectId }
+    });
+  }
+
+  sendJobMail(jobId: string) {
+    this.closeDropdown();
+    this.router.navigate(['/cir-admin/jobs/send', jobId], {
+      queryParams: { projectId: this.projectId }
+    });
   }
 }

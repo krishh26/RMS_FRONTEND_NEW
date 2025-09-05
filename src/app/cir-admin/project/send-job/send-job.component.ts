@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DatabaseService } from 'src/app/services/database-service/database.service';
+import { NotificationService } from 'src/app/services/notification/notification.service';
+import { pagination } from 'src/app/shared/constant/pagination.constant';
 
 @Component({
   selector: 'app-send-job',
@@ -7,74 +11,127 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./send-job.component.scss']
 })
 export class SendJobComponent implements OnInit {
-  sendJobForm: FormGroup;
-  selectedJob: any = {
-    id: 1,
-    title: 'Senior Software Engineer',
-    department: 'Engineering',
-    location: 'New York'
-  };
+  tableData: any[] = [];
+  jobId: any;
+  projectId: any;
+  page: number = pagination.page;
+  pagesize = pagination.itemsPerPage;
+  totalRecords: number = pagination.totalRecords;
 
-  candidates = [
-    { id: 1, name: 'John Doe', email: 'john@example.com' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-    { id: 3, name: 'Mike Johnson', email: 'mike@example.com' }
-  ];
+  selectedEmails: string[] = [];
+  mailType: string = 'new';
+  selectedDate: string = '';
+  @ViewChild('confirmModal') confirmModal: any;
 
-  constructor(private fb: FormBuilder) {
-    this.sendJobForm = this.fb.group({
-      selectedCandidates: [[], [Validators.required]],
-      subject: ['', [Validators.required]],
-      message: ['', [Validators.required]],
-      includeJobDescription: [true]
-    });
+  get isAllSelected(): boolean {
+    return this.tableData.length > 0 && this.selectedEmails.length === this.tableData.filter(a => a?.email).length;
   }
 
-  ngOnInit(): void {
-    // Pre-fill the subject and message
-    this.sendJobForm.patchValue({
-      subject: `Job Opportunity: ${this.selectedJob.title} at Our Company`,
-      message: `Dear [Candidate Name],
-
-We have an exciting job opportunity that matches your profile. We would like to invite you to apply for the position of ${this.selectedJob.title} in our ${this.selectedJob.department} department.
-
-Please review the job details and submit your application if you're interested.
-
-Best regards,
-[Your Name]`
-    });
+  isSelected(email: string): boolean {
+    return this.selectedEmails.includes(email);
   }
 
-  onSubmit(): void {
-    if (this.sendJobForm.valid) {
-      console.log('Form submitted:', this.sendJobForm.value);
-      // Here you would typically send the job invitations
-    }
-  }
-
-  onSelectAll(): void {
-    const allCandidateIds = this.candidates.map(c => c.id);
-    this.sendJobForm.patchValue({
-      selectedCandidates: allCandidateIds
-    });
-  }
-
-  onClearAll(): void {
-    this.sendJobForm.patchValue({
-      selectedCandidates: []
-    });
-  }
-
-  onCandidateSelect(candidateId: number, checked: boolean): void {
-    const currentSelection = this.sendJobForm.get('selectedCandidates')?.value || [];
-    if (checked) {
-      currentSelection.push(candidateId);
-    } else {
-      const index = currentSelection.indexOf(candidateId);
-      if (index > -1) {
-        currentSelection.splice(index, 1);
+  toggleSelection(email: string, event: any) {
+    if (event.target.checked) {
+      if (!this.selectedEmails.includes(email)) {
+        this.selectedEmails.push(email);
       }
+    } else {
+      this.selectedEmails = this.selectedEmails.filter(e => e !== email);
     }
-    this.sendJobForm.patchValue({ selectedCandidates: currentSelection });
+  }
+
+  toggleSelectAll(event: any) {
+    if (event.target.checked) {
+      this.selectedEmails = this.tableData.filter(a => a?.email).map(a => a.email);
+    } else {
+      this.selectedEmails = [];
+    }
+  }
+
+  constructor(
+    private databaseService: DatabaseService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private notificationService: NotificationService,
+    private modalService: NgbModal
+  ) {
+    this.route.paramMap.subscribe(params => {
+      this.jobId = params.get('id')!;
+    });
+    
+    // Get project ID from query parameters
+    this.route.queryParams.subscribe(params => {
+      this.projectId = params['projectId'] || '';
+    });
+  }
+
+  ngOnInit() {
+    this.getTableData();
+  }
+
+  getTableData() {
+    this.databaseService.getCIRUserWithJobApplication(this.jobId).subscribe((response) => {
+      if (response?.status) {
+        this.tableData = response?.data || []; // Extract all applicants
+        this.totalRecords = response?.meta_data?.items;
+        // Deselect all on new data
+        this.selectedEmails = [];
+      }
+    })
+  }
+
+  openDocument(documentUrl: string) {
+    if (documentUrl) {
+      window.open(documentUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      console.warn('Document URL is missing!');
+    }
+  }
+
+  paginate(page: number) {
+    this.page = page;
+    this.getTableData();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  openConfirmModal() {
+    this.mailType = 'new';
+    this.selectedDate = '';
+    this.modalService.open(this.confirmModal, { centered: true });
+  }
+
+  confirmSubmit(modal: any) {
+    modal.close();
+    this.submit();
+  }
+
+  submit() {
+    const payload = {
+      jobId: this.jobId,
+      emails: this.selectedEmails,
+      mailType: this.mailType,
+      date: this.selectedDate
+    };
+
+    this.databaseService.sendCIRJobPostMail(payload).subscribe((response) => {
+      if (response?.status) {
+        this.notificationService.showSuccess('Successfully sent mail.');
+      } else {
+        this.notificationService.showError('Mail sending failed, please retry!');
+      }
+    }, (error) => {
+      this.notificationService.showError('Mail sending failed, please retry!');
+    });
+  }
+
+  goBack() {
+    if (this.projectId) {
+      this.router.navigate(['/cir-admin/jobs'], {
+        queryParams: { projectId: this.projectId }
+      });
+    } else {
+      this.router.navigate(['/cir-admin/jobs']);
+    }
   }
 }

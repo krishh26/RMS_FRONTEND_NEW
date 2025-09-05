@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 
@@ -17,6 +17,10 @@ export enum CirEndPoint {
   GET_CLIENT_ROLES = '/client/',
   USER_CLIENT_UPDATE = '/user/update/',
   CREATE_CIR_JOB = '/acr/jobs/cir',
+  UPDATE_CIR_JOB = '/acr/jobs/cir/',
+  DELETE_CIR_JOB = '/acr/jobs/cir/',
+  GET_JOB_DETAILS = '/acr/job/details',
+  GET_CIR_JOB_APPLICANT = '/acr/jobs/cir/',
   FUTURE_CARD = '/futures/card/',
   PUBLIC_FUTURE_CARD = '/futures/card/public',
   JOB_ROLE = '/futures/card/',
@@ -31,7 +35,7 @@ export class CirSericeService {
 
   baseUrl!: string;
 
-    constructor(
+  constructor(
     private httpClient: HttpClient,
     private localStorageService: LocalStorageService
   ) {
@@ -70,6 +74,27 @@ export class CirSericeService {
   Circreatejob(payload: any): Observable<any> {
     return this.httpClient
       .post<any>(this.baseUrl + CirEndPoint.CREATE_CIR_JOB, payload);
+  }
+
+  cirUpdatejob(payload: any, jobId: string): Observable<any> {
+    return this.httpClient
+      .put<any>(this.baseUrl + CirEndPoint.UPDATE_CIR_JOB + jobId, payload);
+  }
+
+  cirDeleteJob(payload: any, jobId: string): Observable<any> {
+    return this.httpClient
+      .delete<any>(this.baseUrl + CirEndPoint.DELETE_CIR_JOB + jobId, payload);
+  }
+
+  getJobDetails(jobId: string, jobType: string = 'CIR'): Observable<any> {
+    return this.httpClient
+      .get<any>(this.baseUrl + CirEndPoint.GET_JOB_DETAILS + `?job_id=${jobId}&job_type=${jobType}`);
+  }
+
+  getCIRJobApplicant(jobId: string): Observable<any> {
+    const apiUrl = `${this.baseUrl}${CirEndPoint.GET_CIR_JOB_APPLICANT}${jobId}`;
+    return this.httpClient
+    .get<any>(apiUrl);
   }
 
   fileUpload(payload: any) {

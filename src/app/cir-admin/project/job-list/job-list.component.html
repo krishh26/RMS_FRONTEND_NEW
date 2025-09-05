@@ -42,12 +42,13 @@
             <th>Apply By</th>
             <th>Status</th>
             <th>Role Details</th>
+            <th>Actions</th>
             <!-- <th>Apply Job</th> -->
           </tr>
         </thead>
         <tbody>
           <tr *ngIf="joblist.length == 0">
-            <td colspan="7" class="text-center">No Record Found.</td>
+            <td colspan="8" class="text-center">No Record Found.</td>
           </tr>
           <tr *ngFor="let job of joblist | paginate: { itemsPerPage: pagesize, currentPage: page, totalItems: totalRecords }">
             <td>{{job.job_id}}</td>
@@ -68,6 +69,34 @@
               </span>
             </td>
             <td> <a href="{{job?.upload?.url}}" target="_blank" class="action-btn read-me">Read Me</a></td>
+            <td class="actions">
+              <div class="dropdown">
+                <button class="dropdown-toggle" (click)="toggleDropdown(job.job_id, $event)" title="Actions">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="dropdown-menu" 
+                     [class.show]="openDropdownId === job.job_id"
+                     [style.top.px]="dropdownPosition.top"
+                     [style.left.px]="dropdownPosition.left">
+                  <button class="dropdown-item edit" (click)="editJob(job)" title="Edit Job">
+                    <i class="fas fa-edit"></i>
+                    <span>Edit</span>
+                  </button>
+                  <button class="dropdown-item view" (click)="appliedRoleData(job?.job_id)" title="Show Applications">
+                    <i class="fas fa-users"></i>
+                    <span>Show Applications</span>
+                  </button>
+                  <button class="dropdown-item send-mail" (click)="sendJobMail(job?.job_id)" title="Send Job Mail">
+                    <i class="fas fa-envelope"></i>
+                    <span>Send Mail</span>
+                  </button>
+                  <button class="dropdown-item delete" (click)="deleteJob(job)" title="Delete Job">
+                    <i class="fas fa-trash"></i>
+                    <span>Delete</span>
+                  </button>
+                </div>
+              </div>
+            </td>
             <!-- <td class="actions">
               <ng-container *ngIf="job.status !== 'Under Review'; else emailMessage">
                 <div *ngIf="!job.applied">

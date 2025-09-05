@@ -1,78 +1,248 @@
 <div class="user-list-container">
   <div class="header">
     <h2>User Management</h2>
-    <button class="add-btn" routerLink="../add">Add New User</button>
-  </div>
-
-  <div class="filters">
-    <div class="search-box">
-      <input type="text" placeholder="Search users..." class="search-input">
-    </div>
-    <div class="filter-group">
-      <select class="filter-select">
-        <option value="">All Roles</option>
-        <option value="admin">Admin</option>
-        <option value="user">User</option>
-      </select>
-      <select class="filter-select">
-        <option value="">All Status</option>
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-      </select>
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="downloadAsExcel()">
+        Download Excel
+      </button>
+      <button class="btn btn-primary" (click)="downloadAsExcelAll()">
+        Download All
+      </button>
+      <button class="add-btn" routerLink="../add">Add New User</button>
     </div>
   </div>
 
+  <!-- Filter Toggle -->
+  <div class="filter-toggle">
+    <button class="btn btn-primary" *ngIf="!showFilter" (click)="showFilter = !showFilter">
+      Show Filter
+    </button>
+    <button class="btn btn-primary" *ngIf="showFilter" (click)="showFilter = !showFilter">
+      Hide Filter
+    </button>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filter-section" *ngIf="showFilter">
+    <div class="filter-card">
+      <div class="filter-body">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">Name</label>
+              <input type="text" class="form-control" placeholder="Enter name" [(ngModel)]="userFilter.name" />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="text" class="form-control" placeholder="Enter phone number" 
+                     (keypress)="NumberOnly($event)" [(ngModel)]="userFilter.phoneNumber" />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="text" class="form-control" placeholder="Enter email" [(ngModel)]="userFilter.email" />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">Eligible For SC Clearance</label>
+              <select class="form-control" [(ngModel)]="userFilter.eligible_for_SC">
+                <option value="" disabled selected hidden>Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">SC/DV Clearance Hold</label>
+              <select class="form-control" [(ngModel)]="userFilter.sc_dv_clearance_hold">
+                <option value="" disabled selected hidden>Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">UK Driving License</label>
+              <select class="form-control" [(ngModel)]="userFilter.UKDrivinglicense">
+                <option value="" disabled selected hidden>Select Option</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="filter-actions">
+              <button type="button" class="btn btn-primary" (click)="applyFilter()">Apply Filter</button>
+              <button type="button" class="btn btn-secondary" (click)="resetFilter()">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Container -->
   <div class="table-container">
-    <table class="users-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Last Login</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let user of users">
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>
-            <span class="role-badge" [ngClass]="user.role.toLowerCase()">
-              {{ user.role }}
-            </span>
-          </td>
-          <td>
-            <span class="status-badge" [ngClass]="user.status.toLowerCase()">
-              {{ user.status }}
-            </span>
-          </td>
-          <td>{{ user.lastLogin }}</td>
-          <td class="actions">
-            <button class="action-btn view" (click)="viewDetails(user.id)" title="View Details">
-              View Details
-            </button>
-            <button class="action-btn edit" (click)="editUser(user.id)" title="Edit">
-              Edit
-            </button>
-            <button class="action-btn toggle" (click)="toggleUserStatus(user.id)" title="Toggle Status">
-              {{ user.status === 'Active' ? 'Deactivate' : 'Activate' }}
-            </button>
-            <button class="action-btn delete" (click)="deleteUser(user.id)" title="Delete">
-              Delete
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="table-header">
+      <h3>User Details</h3>
+    </div>
+    
+    <div class="table-responsive">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th *ngFor="let header of basicHeaders">{{ header }}</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let user of users; let i = index">
+            <!-- Basic User Row -->
+            <tr class="user-row">
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.phoneNumber }}</td>
+              <td>{{ user.nationality }}</td>
+              <td>{{ user.currentWork }}</td>
+              <!-- <td class="actions">
+                <button class="action-btn view" (click)="viewDetails(user.id)" title="View Details">
+                  <i class="fa fa-eye"></i>
+                </button>
+                <button class="action-btn edit" (click)="editUser(user.id)" title="Edit">
+                  <i class="fa fa-edit"></i>
+                </button>
+                <button class="action-btn delete" (click)="deleteUser(user.id)" title="Delete">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td> -->
+              <td>
+                <button class="toggle-btn" (click)="toggleUserDetails(user.id)" 
+                        [class.expanded]="expandedUser === user.id">
+                  <i class="fa" [ngClass]="expandedUser === user.id ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+                  {{ expandedUser === user.id ? 'Hide' : 'Show' }} Details
+                </button>
+              </td>
+            </tr>
+            
+            <!-- Expanded Details Row -->
+            <tr *ngIf="expandedUser === user.id" class="details-row">
+              <td colspan="7" class="details-cell">
+                <div class="details-content">
+                  <h4>Detailed Information</h4>
+                  <div class="details-grid">
+                    <div class="detail-item">
+                      <label>Country Code:</label>
+                      <span>{{ user.countrycode }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>UK Visa Type:</label>
+                      <span>{{ user.UKVisaType }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>UK Driving License:</label>
+                      <span>{{ user.UKDrivinglicense ? 'Yes' : 'No' }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>Current Location:</label>
+                      <span>{{ user.postalCode }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>Notice Period (Days):</label>
+                      <span>{{ user.noticePeriodDay }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>Looking For:</label>
+                      <div class="array-content">
+                        <span *ngFor="let item of user.lookingFor; let last = last">
+                          {{ item }}{{ !last ? ', ' : '' }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="detail-item">
+                      <label>Work Preference:</label>
+                      <div class="array-content">
+                        <span *ngFor="let item of user.workPreference; let last = last">
+                          {{ item }}{{ !last ? ', ' : '' }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="detail-item">
+                      <label>Expected Day Rate:</label>
+                      <span>{{ user.expectedDayRate }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>Referred By:</label>
+                      <span>{{ user.referredBy }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>SC/DV Clearance Hold:</label>
+                      <span>{{ user.sc_dv_clearance_hold ? 'Yes' : 'No' }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>Valid Up To:</label>
+                      <span>{{ user.sc_dv_valid_upto | date:'dd MMM yyyy' }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>Eligible For SC Clearance:</label>
+                      <span>{{ user.eligible_for_SC ? 'Yes' : 'No' }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>Call Day:</label>
+                      <span>{{ user.callDay }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>Call Time:</label>
+                      <span>{{ user.callTime }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>Preferred Roles:</label>
+                      <div class="array-content">
+                        <span *ngFor="let item of user.preferredRoles; let last = last">
+                          {{ item }}{{ !last ? ', ' : '' }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="detail-item">
+                      <label>Any Question:</label>
+                      <span>{{ user.anyQuestion }}</span>
+                    </div>
+                    <div class="detail-item">
+                      <label>Profile:</label>
+                      <button (click)="openDocument(user.profilePicture)" type="button" class="btn btn-sm btn-primary">
+                        <i class="fa fa-eye"></i> View
+                      </button>
+                    </div>
+                    <div class="detail-item">
+                      <label>Resume:</label>
+                      <button (click)="openDocument(user.cv)" type="button" class="btn btn-sm btn-primary">
+                        <i class="fa fa-eye"></i> View
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="pagination">
-    <button class="page-btn">&lt;</button>
-    <button class="page-btn active">1</button>
-    <button class="page-btn">2</button>
-    <button class="page-btn">3</button>
-    <button class="page-btn">&gt;</button>
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="totalRecords > pagesize">
+      <button class="page-btn" [disabled]="page === 1" (click)="paginate(page - 1)">&lt;</button>
+      <button class="page-btn" 
+              *ngFor="let pageNum of getPageNumbers()" 
+              [class.active]="pageNum === page"
+              (click)="paginate(pageNum)">
+        {{ pageNum }}
+      </button>
+      <button class="page-btn" [disabled]="page === getTotalPages()" (click)="paginate(page + 1)">&gt;</button>
+    </div>
   </div>
 </div>

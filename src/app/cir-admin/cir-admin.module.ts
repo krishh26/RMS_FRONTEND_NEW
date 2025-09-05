@@ -30,6 +30,8 @@ import { SendJobComponent } from './project/send-job/send-job.component';
 import { NgxEditorModule } from 'ngx-editor';
 import { SharedModule } from '../shared/shared.module';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { DatabaseService } from '../services/database-service/database.service';
+import { NotificationService } from '../services/notification/notification.service';
 
 const routes: Routes = [
   {
@@ -54,7 +56,6 @@ const routes: Routes = [
       { path: 'jobs', component: JobListComponent },
       { path: 'jobs/add', component: JobAddEditComponent },
       { path: 'jobs/edit/:id', component: JobAddEditComponent },
-      { path: 'jobs/applications', component: JobApplicationComponent },
       { path: 'jobs/applications/:id', component: JobApplicationComponent },
       { path: 'jobs/send/:id', component: SendJobComponent },
 
@@ -101,6 +102,10 @@ const routes: Routes = [
     NgxEditorModule,
     NgxPaginationModule,
     SharedModule
+  ],
+  providers: [
+    DatabaseService,
+    NotificationService
   ],
 })
 export class CirAdminModule {}

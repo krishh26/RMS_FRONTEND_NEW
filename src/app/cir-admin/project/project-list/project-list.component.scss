@@ -485,51 +485,127 @@
 
       .actions {
         display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
+        justify-content: center;
+        position: relative;
 
-        .action-btn {
-          padding: 8px 12px;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 12px;
-          transition: all 0.3s ease;
-          font-weight: 500;
+        .dropdown {
+          position: relative;
+          display: inline-block;
 
-          &.view {
-            background-color: #6c757d;
-            color: white;
+          .dropdown-toggle {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
 
             &:hover {
-              background-color: #5a6268;
+              background: #e9ecef;
+              border-color: #adb5bd;
+            }
+
+            i {
+              font-size: 14px;
+              color: #6c757d;
             }
           }
 
-          &.primary {
-            background-color: #007bff;
-            color: white;
+          .dropdown-menu {
+            position: fixed;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            min-width: 160px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
 
-            &:hover {
-              background-color: #0056b3;
+            &.show {
+              opacity: 1;
+              visibility: visible;
+              transform: translateY(0);
             }
-          }
 
-          &.edit {
-            background-color: #007bff;
-            color: white;
+            .dropdown-item {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              padding: 10px 16px;
+              border: none;
+              background: none;
+              width: 100%;
+              text-align: left;
+              cursor: pointer;
+              transition: all 0.2s ease;
+              font-size: 14px;
+              color: #495057;
 
-            &:hover {
-              background-color: #0056b3;
-            }
-          }
+              &:hover {
+                background: #f8f9fa;
+              }
 
-          &.delete {
-            background-color: #dc3545;
-            color: white;
+              &:first-child {
+                border-radius: 8px 8px 0 0;
+              }
 
-            &:hover {
-              background-color: #c82333;
+              &:last-child {
+                border-radius: 0 0 8px 8px;
+              }
+
+              i {
+                font-size: 14px;
+                width: 16px;
+                text-align: center;
+              }
+
+              span {
+                flex: 1;
+              }
+
+              &.view {
+                color: #6c757d;
+
+                &:hover {
+                  background: #6c757d;
+                  color: white;
+                }
+              }
+
+              &.primary {
+                color: #007bff;
+
+                &:hover {
+                  background: #007bff;
+                  color: white;
+                }
+              }
+
+              &.edit {
+                color: #28a745;
+
+                &:hover {
+                  background: #28a745;
+                  color: white;
+                }
+              }
+
+              &.delete {
+                color: #dc3545;
+
+                &:hover {
+                  background: #dc3545;
+                  color: white;
+                }
+              }
             }
           }
         }
@@ -589,14 +665,21 @@
         }
 
         .actions {
-          flex-direction: column;
-          gap: 6px;
+          justify-content: center;
 
-          .action-btn {
-            width: 100%;
-            padding: 10px;
-            font-size: 13px;
-            text-align: center;
+          .dropdown {
+            .dropdown-menu {
+              min-width: 140px;
+
+              .dropdown-item {
+                padding: 12px 16px;
+                font-size: 13px;
+
+                i {
+                  font-size: 13px;
+                }
+              }
+            }
           }
         }
       }

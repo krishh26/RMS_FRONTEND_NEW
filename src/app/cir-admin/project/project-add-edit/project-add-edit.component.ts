@@ -93,29 +93,18 @@ export class ProjectAddEditComponent implements OnInit {
 
         // Check if date is valid
         if (!isNaN(date.getTime())) {
-          formData.publishedDate = {
-            year: date.getFullYear(),
-            month: date.getMonth() + 1,
-            day: date.getDate(),
-          };
+          // Convert to YYYY-MM-DD format for HTML date input
+          formData.publishedDate = date.toISOString().split('T')[0];
         } else {
           // If date is invalid, set to today's date
           const today = new Date();
-          formData.publishedDate = {
-            year: today.getFullYear(),
-            month: today.getMonth() + 1,
-            day: today.getDate(),
-          };
+          formData.publishedDate = today.toISOString().split('T')[0];
         }
       } catch (error) {
         console.error('Date parsing error:', error);
         // If error in parsing, set to today's date
         const today = new Date();
-        formData.publishedDate = {
-          year: today.getFullYear(),
-          month: today.getMonth() + 1,
-          day: today.getDate(),
-        };
+        formData.publishedDate = today.toISOString().split('T')[0];
       }
     }
 
@@ -171,25 +160,30 @@ export class ProjectAddEditComponent implements OnInit {
       // Format the publishedDate to YYYY-MM-DD string format
       if (formData.publishedDate) {
         try {
-          // Handle different date formats
-          let date: Date;
-          if (typeof formData.publishedDate === 'string') {
-            date = new Date(formData.publishedDate);
-          } else if (formData.publishedDate.year && formData.publishedDate.month && formData.publishedDate.day) {
-            // Handle object format {year, month, day}
-            date = new Date(formData.publishedDate.year, formData.publishedDate.month - 1, formData.publishedDate.day);
+          // If it's already in YYYY-MM-DD format, use it directly
+          if (typeof formData.publishedDate === 'string' && formData.publishedDate.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            // Already in correct format, no conversion needed
           } else {
-            date = new Date(formData.publishedDate);
-          }
+            // Handle different date formats
+            let date: Date;
+            if (typeof formData.publishedDate === 'string') {
+              date = new Date(formData.publishedDate);
+            } else if (formData.publishedDate.year && formData.publishedDate.month && formData.publishedDate.day) {
+              // Handle object format {year, month, day}
+              date = new Date(formData.publishedDate.year, formData.publishedDate.month - 1, formData.publishedDate.day);
+            } else {
+              date = new Date(formData.publishedDate);
+            }
 
-          // Check if date is valid
-          if (isNaN(date.getTime())) {
-            console.error('Invalid date value:', formData.publishedDate);
-            this.notificationService.showError('Please enter a valid date');
-            return;
-          }
+            // Check if date is valid
+            if (isNaN(date.getTime())) {
+              console.error('Invalid date value:', formData.publishedDate);
+              this.notificationService.showError('Please enter a valid date');
+              return;
+            }
 
-          formData.publishedDate = date.toISOString().split('T')[0];
+            formData.publishedDate = date.toISOString().split('T')[0];
+          }
         } catch (error) {
           console.error('Error formatting date:', error);
           this.notificationService.showError('Please enter a valid date');

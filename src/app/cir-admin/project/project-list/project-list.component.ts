@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { CirSericeService } from '../../../services/cir-service/cir-serice.service';
 import { NotificationService } from '../../../services/notification/notification.service';
@@ -22,6 +22,8 @@ export class ProjectListComponent implements OnInit {
   searchKeyword: string = '';
   searchTimeout: any;
   uniqueClients: string[] = [];
+  openDropdownId: string | null = null;
+  dropdownPosition: { top: number; left: number } = { top: 0, left: 0 };
 
   statusOptions = [
     { value: 'All', label: 'All Status' },
@@ -160,6 +162,7 @@ export class ProjectListComponent implements OnInit {
   }
 
   deleteProject(projectId: string): void {
+    this.closeDropdown();
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this! This action will permanently delete the project.",
@@ -205,11 +208,13 @@ export class ProjectListComponent implements OnInit {
 
   viewDetails(projectId: string): void {
     // Navigate to project details page or jobs page
+    this.closeDropdown();
     this.router.navigate(['/cir-admin/projects', projectId]);
   }
 
   viewJobs(projectId: string): void {
     // Navigate to job list page for the specific project
+    this.closeDropdown();
     this.router.navigate(['/cir-admin/jobs'], { queryParams: { projectId: projectId } });
   }
 
@@ -220,7 +225,83 @@ export class ProjectListComponent implements OnInit {
 
   openEditProjectModal(project: any): void {
     // Navigate to edit page instead of opening modal
+    this.closeDropdown();
     this.router.navigate(['/cir-admin/projects/edit', project._id]);
+  }
+
+  toggleDropdown(projectId: string, event: Event): void {
+    if (this.openDropdownId === projectId) {
+      this.closeDropdown();
+    } else {
+      this.closeDropdown();
+      this.openDropdownId = projectId;
+      this.calculateDropdownPosition(event);
+    }
+  }
+
+  private calculateDropdownPosition(event: Event): void {
+    const target = event.target as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const isMobile = window.innerWidth <= 768;
+    const dropdownWidth = isMobile ? 140 : 160; // min-width from CSS
+    const dropdownHeight = 200; // approximate height for 4 items
+    
+    let left: number;
+    let top = rect.bottom + 5;
+    
+    if (isMobile) {
+      // Center the dropdown on mobile
+      left = rect.left + (rect.width / 2) - (dropdownWidth / 2);
+    } else {
+      // Position to the right of the button on desktop
+      left = rect.right - dropdownWidth;
+      
+      // Check if dropdown would go off the right edge
+      if (left < 10) {
+        left = rect.left - dropdownWidth + rect.width;
+      }
+    }
+    
+    // Check if dropdown would go off the bottom edge
+    if (top + dropdownHeight > window.innerHeight - 10) {
+      top = rect.top - dropdownHeight - 5;
+    }
+    
+    // Ensure dropdown doesn't go off the left edge
+    if (left < 10) {
+      left = 10;
+    }
+    
+    // Ensure dropdown doesn't go off the right edge
+    if (left + dropdownWidth > window.innerWidth - 10) {
+      left = window.innerWidth - dropdownWidth - 10;
+    }
+    
+    // Ensure dropdown doesn't go off the top edge
+    if (top < 10) {
+      top = 10;
+    }
+    
+    this.dropdownPosition = { top, left };
+  }
+
+  closeDropdown(): void {
+    this.openDropdownId = null;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown')) {
+      this.closeDropdown();
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize(): void {
+    if (this.openDropdownId) {
+      this.closeDropdown();
+    }
   }
 
 

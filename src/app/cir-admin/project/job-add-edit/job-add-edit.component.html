@@ -1,7 +1,19 @@
 <section>
+  <!-- Full Page Loader -->
+  <div class="full-page-loader" *ngIf="showLoader">
+    <div class="loader-content">
+      <div class="loader-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+      <div class="loader-text">{{isEditMode ? 'Updating Job...' : 'Creating Job...'}}</div>
+      <div class="loader-subtext">Please wait while we process your request</div>
+    </div>
+  </div>
+
   <div class="container">
     <div class="Titleheading">
-      <h1>{{projectName ? 'Create Job Post for ' + projectName : 'Create Job Post'}}</h1>
+      <h2>{{isEditMode ? 'Edit Job Post' : 'Create Job Post'}}</h2>
+      <!-- <h1>{{projectName ? 'Create Job Post for ' + projectName : 'Create Job Post'}}</h1> -->
     </div>
 
     <!-- Project Details Card -->
@@ -233,10 +245,51 @@
                 </div>
                 <div class="col-md-7">
                   <div class="form-group">
-                    <input type="file" (change)="fileUpload($event)" class="form-control"
-                      style="height: 45px !important; opacity: 1;" accept=".doc,.docx,.pdf" formControlName="upload">
+                    <!-- File Upload Section for Create Mode or Edit Mode without existing file -->
+                    <div *ngIf="!isEditMode || !hasExistingFile" class="file-upload-container">
+                      <input type="file" (change)="fileUpload($event)" class="form-control"
+                        style="height: 45px !important; opacity: 1;" accept=".doc,.docx,.pdf" formControlName="upload"
+                        [disabled]="!fileUploadProcess">
+                      
+                      <!-- Upload Loader -->
+                      <div class="upload-loader" *ngIf="!fileUploadProcess">
+                        <div class="loader-spinner">
+                          <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <span class="loader-text">Uploading file...</span>
+                      </div>
+                      
+                      <!-- Upload Success -->
+                      <div class="upload-success" *ngIf="fileUploadSuccess && fileUploadProcess">
+                        <div class="success-icon">
+                          <i class="fas fa-check-circle"></i>
+                        </div>
+                        <span class="success-text">File uploaded successfully!</span>
+                      </div>
+                    </div>
+
+                    <!-- Existing File Display for Edit Mode -->
+                    <div *ngIf="isEditMode && hasExistingFile" class="existing-file-container">
+                      <div class="existing-file-display">
+                        <div class="file-info">
+                          <i class="fas fa-file-pdf file-icon"></i>
+                          <span class="file-name">Read Me Document</span>
+                        </div>
+                        <div class="file-actions">
+                          <a [href]="file?.url" target="_blank" class="read-doc-btn">
+                            <i class="fas fa-eye"></i>
+                            Read Document
+                          </a>
+                          <button type="button" class="replace-file-btn" (click)="replaceFile()">
+                            <i class="fas fa-upload"></i>
+                            Replace File
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
                     <span class="text-danger"
-                      *ngIf="jobForm.get('upload')?.touched && jobForm.get('upload')?.errors?.['required']">
+                      *ngIf="jobForm.get('upload')?.touched && jobForm.get('upload')?.errors?.['required'] && (!isEditMode || (isEditMode && fileChanged))">
                       Please Upload file.
                     </span>
                   </div>
@@ -246,7 +299,12 @@
               <div class="row">
                 <div class="update ml-auto mr-auto"><br>
                   <button type="submit" style="float: right !important;" class="btn btn-primary btn-round"
-                    [disabled]="jobForm.invalid || !fileUploadProcess "> Post Job
+                    [disabled]="jobForm.invalid || showLoader || (!isEditMode && !fileUploadProcess) || (!isEditMode && !file)">
+                    <span *ngIf="!showLoader">{{isEditMode ? 'Update Job' : 'Post Job'}}</span>
+                    <span *ngIf="showLoader">
+                      <i class="fas fa-spinner fa-spin"></i>
+                      {{isEditMode ? 'Updating Job...' : 'Creating Job...'}}
+                    </span>
                   </button>
                 </div>
               </div>

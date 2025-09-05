@@ -1,93 +1,104 @@
-<div class="send-job-container">
-  <div class="header">
-    <h2>Send Job Invitation</h2>
-  </div>
-
-  <div class="job-details">
-    <h3>Selected Job</h3>
-    <div class="job-info">
-      <div class="info-item">
-        <span class="label">Title:</span>
-        <span class="value">{{ selectedJob.title }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">Department:</span>
-        <span class="value">{{ selectedJob.department }}</span>
-      </div>
-      <div class="info-item">
-        <span class="label">Location:</span>
-        <span class="value">{{ selectedJob.location }}</span>
-      </div>
-    </div>
-  </div>
-
-  <form [formGroup]="sendJobForm" (ngSubmit)="onSubmit()" class="send-job-form">
-    <div class="form-group candidates-section">
-      <div class="section-header">
-        <label>Select Candidates</label>
-        <div class="selection-actions">
-          <button type="button" class="action-btn" (click)="onSelectAll()">Select All</button>
-          <button type="button" class="action-btn" (click)="onClearAll()">Clear All</button>
+<div class="section-card">
+    <div class="page-header">
+        <div class="page-title">
+            <h2>Send Job Invitations</h2>
+            <p class="page-subtitle">Select candidates and send job invitations</p>
         </div>
-      </div>
-
-      <div class="candidates-list">
-        <div class="candidate-item" *ngFor="let candidate of candidates">
-          <label class="checkbox-container">
-            <!-- <input type="checkbox"
-                   [value]="candidate.id"
-                   [checked]="sendJobForm.get('selectedCandidates')?.value?.includes(candidate.id)"
-                   (change)="onCandidateSelect(candidate.id, ($event.target as HTMLInputElement).checked)"> -->
-            <span class="checkmark"></span>
-            <div class="candidate-info">
-              <span class="name">{{ candidate.name }}</span>
-              <span class="email">{{ candidate.email }}</span>
+        <div class="page-actions">
+            <button class="btn btn-outline-secondary me-2" (click)="goBack()">
+                <i class="fas fa-arrow-left me-1"></i>
+                Back to Jobs
+            </button>
+        </div>
+    </div>
+    
+    <div class="row FlatCard shadow border-radius6 m-3">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">Applied Applicants Details</h3>
+                <div class="applicant-count">
+                    <span class="badge bg-primary">{{ tableData.length }} Applicants</span>
+                </div>
             </div>
-          </label>
         </div>
-      </div>
-      <div class="error-message" *ngIf="sendJobForm.get('selectedCandidates')?.invalid && sendJobForm.get('selectedCandidates')?.touched">
-        Please select at least one candidate
-      </div>
+        <div class="card-body p-3">
+            <div>
+                <table class="table">
+                    <thead class="text-black">
+                        <tr>
+                            <th style="text-align: center;">
+                              <input type="checkbox" [checked]="isAllSelected" (change)="toggleSelectAll($event)">
+                            </th>
+                            <th style="text-align: center;">Sr. No</th>
+                            <th style="text-align: center;">Name</th>
+                            <th style="text-align: center;">Email ID</th>
+                            <th style="text-align: center;">Phone Number</th>
+                            <th style="text-align: center;">ApplicationStatus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let applicant of tableData; let index = index">
+                            <tr>
+                                <td style="text-align: center;">
+                                  <input type="checkbox" [checked]="isSelected(applicant?.email)" (change)="toggleSelection(applicant?.email, $event)">
+                                </td>
+                                <td style="text-align: center;">{{ index + 1 }}</td>
+                                <td style="text-align: center;">{{ applicant?.name }}</td>
+                                <td style="text-align: center;">{{ applicant?.email }}</td>
+                                <td style="text-align: center;">{{ applicant?.phoneNumber }}</td>
+                                <td style="text-align: center;">
+                                    <span *ngIf="applicant?.jobApplication" style="padding: 5px; background-color: green; border-radius: 10px;">{{applicant?.jobApplication?.status}}</span>
+                                    <span *ngIf="!applicant?.jobApplication" style="padding: 5px; background-color: rgb(254, 128, 128);border-radius: 10px;">Not Applied</span>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-actions">
+                <div class="selection-info">
+                    <span class="text-muted" *ngIf="selectedEmails.length === 0">No candidates selected</span>
+                    <span class="text-primary" *ngIf="selectedEmails.length > 0">
+                        <i class="fas fa-check-circle me-1"></i>
+                        {{ selectedEmails.length }} candidate(s) selected
+                    </span>
+                </div>
+                <button class="btn btn-primary btn-lg" 
+                        type="button" 
+                        (click)="openConfirmModal()"
+                        [disabled]="selectedEmails.length === 0">
+                    <i class="fas fa-paper-plane me-2"></i>
+                    Send Job Invitations
+                </button>
+            </div>
+            <!-- <div class="row mt-3 align-items-center">
+                <div class="row">
+                    <div class="pagination">
+                        <pagination-controls (pageChange)="paginate($event)"></pagination-controls>
+                    </div>
+                </div>
+            </div> -->
+        </div>
     </div>
-
-    <div class="form-group">
-      <label for="subject">Email Subject</label>
-      <input
-        type="text"
-        id="subject"
-        formControlName="subject"
-        [class.error]="sendJobForm.get('subject')?.invalid && sendJobForm.get('subject')?.touched">
-      <div class="error-message" *ngIf="sendJobForm.get('subject')?.invalid && sendJobForm.get('subject')?.touched">
-        Subject is required
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="message">Email Message</label>
-      <textarea
-        id="message"
-        formControlName="message"
-        rows="8"
-        [class.error]="sendJobForm.get('message')?.invalid && sendJobForm.get('message')?.touched"></textarea>
-      <div class="error-message" *ngIf="sendJobForm.get('message')?.invalid && sendJobForm.get('message')?.touched">
-        Message is required
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label class="checkbox-container">
-        <input type="checkbox" formControlName="includeJobDescription">
-        <span class="checkmark"></span>
-        Include full job description in the email
-      </label>
-    </div>
-
-    <div class="form-actions">
-      <button type="button" class="cancel-btn" routerLink="../">Cancel</button>
-      <button type="submit" class="submit-btn" [disabled]="sendJobForm.invalid">
-        Send Invitations
-      </button>
-    </div>
-  </form>
 </div>
+
+<ng-template #confirmModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Confirm Send Mail</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label><input type="radio" [(ngModel)]="mailType" value="new" /> Send New Job Post Mail</label><br>
+      <label><input type="radio" [(ngModel)]="mailType" value="reminder" /> Send Job Reminder Mail</label>
+    </div>
+    <div class="mb-3">
+      <label>Select Expire Date:</label>
+      <input type="date" class="form-control" [(ngModel)]="selectedDate" />
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="confirmSubmit(modal)">Submit</button>
+  </div>
+</ng-template>

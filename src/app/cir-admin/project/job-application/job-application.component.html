@@ -1,78 +1,147 @@
-<div class="application-list-container">
-  <div class="header">
-    <h2>Job Applications</h2>
-  </div>
-
-  <div class="filters">
-    <div class="search-box">
-      <input type="text" placeholder="Search applications..." class="search-input">
-    </div>
-    <div class="filter-group">
-      <select class="filter-select">
-        <option value="">All Status</option>
-        <option value="under-review">Under Review</option>
-        <option value="shortlisted">Shortlisted</option>
-        <option value="rejected">Rejected</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="table-container">
-    <table class="applications-table">
-      <thead>
-        <tr>
-          <th>Applicant</th>
-          <th>Job Title</th>
-          <th>Contact</th>
-          <th>Experience</th>
-          <th>Applied Date</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let app of applications">
-          <td>{{ app.applicant }}</td>
-          <td>{{ app.jobTitle }}</td>
-          <td>
-            <div class="contact-info">
-              <div>{{ app.email }}</div>
-              <div>{{ app.phone }}</div>
-            </div>
-          </td>
-          <td>{{ app.experience }}</td>
-          <td>{{ app.appliedDate }}</td>
-          <td>
-            <span class="status-badge" [ngClass]="app.status.toLowerCase().replace(' ', '-')">
-              {{ app.status }}
-            </span>
-          </td>
-          <td class="actions">
-            <button class="action-btn view" (click)="viewApplication(app.id)" title="View Details">
-              View
+<div class="section-card">
+  <!-- Start Database Details -->
+  <div class="FlatCard shadow border-radius6 m-3">
+    <div class="card-header">
+      <div class="header-content">
+        <div class="header-left">
+          <h2 class="card-title">Job Applicants Details</h2>
+        </div>
+        <div class="header-right">
+          <div class="button-group">
+            <button type="button" class="btn btn-primary download-btn"
+              (click)="downloadAsExcel()" [disabled]="filteredData.length === 0">
+              <i class="fa fa-download"></i>
+              <span>Download Excel</span>
             </button>
-            <button class="action-btn download" (click)="downloadResume(app.id)" title="Download Resume">
-              Resume
+            <button class="btn btn-outline-secondary back-btn" (click)="goBack()">
+              <i class="fa fa-arrow-left"></i>
+              <span>Back</span>
             </button>
-            <!-- <select
-              class="status-select"
-              [value]="app.status"
-              (change)="updateStatus(app.id, $event.target.value)">
-              <option value="Under Review">Under Review</option>
-              <option value="Shortlisted">Shortlist</option>
-              <option value="Rejected">Reject</option>
-            </select> -->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Search and Filter Section -->
+    <div class="search-filter-section" *ngIf="!isLoading && tableData.length > 0">
+      <div class="row">
+        <div class="col-md-7">
+          <div class="search-box">
+            <input type="text" 
+                   placeholder="Search applications..." 
+                   class="search-input" 
+                   [(ngModel)]="searchText" 
+                   (input)="onSearch()">
+            <i class="fa fa-search search-icon"></i>
+          </div>
+        </div>
+        <!-- <div class="col-md-3">
+          <select class="filter-select" 
+                  [(ngModel)]="selectedStatus" 
+                  (change)="onFilterChange()">
+            <option value="">All Status</option>
+            <option *ngFor="let status of statusList" [value]="status">{{ status }}</option>
+          </select>
+        </div> -->
+        <div class="col-md-3">
+          <select class="filter-select" 
+                  [(ngModel)]="selectedWorkType" 
+                  (change)="onFilterChange()">
+            <option value="">All Work Types</option>
+            <option *ngFor="let workType of workTypeList" [value]="workType">{{ workType }}</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-outline-secondary clear-btn" (click)="clearFilters()">
+            <i class="fa fa-times"></i> Clear
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-body">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading">
+        <i class="fa fa-spinner fa-spin fa-2x"></i>
+        <p>Loading job applications...</p>
+      </div>
 
-  <div class="pagination">
-    <button class="page-btn">&lt;</button>
-    <button class="page-btn active">1</button>
-    <button class="page-btn">2</button>
-    <button class="page-btn">3</button>
-    <button class="page-btn">&gt;</button>
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && filteredData.length === 0" class="empty-state">
+        <i class="fa fa-file-text-o"></i>
+        <h4>No Applications Found</h4>
+        <p *ngIf="tableData.length === 0">There are no job applications for this position yet.</p>
+        <p *ngIf="tableData.length > 0">No applications match your current filters.</p>
+      </div>
+
+      <!-- Data Table -->
+      <div *ngIf="!isLoading && filteredData.length > 0" class="table-responsive">
+        <table class="table">
+          <thead>
+            <th *ngFor="let header of tableHeader">{{ header }}</th>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of getPaginatedData(); let index = index">
+              <tr>
+                <td>{{ (page - 1) * pageSize + index + 1 }}</td>
+                <td>{{ item?.job_id }}</td>
+                <td>{{ item?.jobDetails?.job_title }}</td>
+                <td>{{ item?.user?.name }}</td>
+                <td>{{ item?.user?.countrycode + ' ' + item?.user?.phoneNumber }} </td>
+                <td>{{ item?.user?.email }}</td>
+                <td>
+                  <span class="work-type-badge" [ngClass]="item?.user?.currentWork?.toLowerCase().replace(' ', '-')">
+                    {{ item?.user?.currentWork }}
+                  </span>
+                </td>
+                <td>{{ item?.user?.expectedDayRate }}</td>
+                <td>
+                  <ng-container *ngIf="item?.workPreference?.length > 0">
+                    <ul>
+                      <li *ngFor="let data of item?.workPreference">
+                        {{ data }}
+                      </li>
+                    </ul>
+                  </ng-container>
+                </td>
+                <td>
+                  <button (click)="openDocument(item?.cvDetails)" type="button" class="btn btn-sm btn-outline-primary" 
+                          [disabled]="!item?.cvDetails?.url" 
+                          [title]="item?.cvDetails?.url ? 'View CV' : 'No CV available'">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </td>
+                <td>{{ item?.createdAt | date : "dd-MM-YYYY" }}</td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Pagination -->
+      <div *ngIf="!isLoading && filteredData.length > pageSize" class="pagination-section">
+        <div class="pagination-info">
+          Showing {{ (page - 1) * pageSize + 1 }} to {{ Math.min(page * pageSize, totalRecords) }} of {{ totalRecords }} entries
+        </div>
+        <div class="pagination">
+          <button class="page-btn" 
+                  [disabled]="page === 1" 
+                  (click)="onPageChange(page - 1)">
+            <i class="fa fa-chevron-left"></i>
+          </button>
+          <button *ngFor="let pageNum of getPageNumbers()" 
+                  class="page-btn" 
+                  [class.active]="pageNum === page"
+                  (click)="onPageChange(pageNum)">
+            {{ pageNum }}
+          </button>
+          <button class="page-btn" 
+                  [disabled]="page === getTotalPages()" 
+                  (click)="onPageChange(page + 1)">
+            <i class="fa fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
