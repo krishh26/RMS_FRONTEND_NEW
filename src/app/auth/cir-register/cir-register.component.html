@@ -1,146 +1,637 @@
-<div class="register-container">
-  <div class="register-card">
-    <div class="register-header">
-      <h2>CIR User Registration</h2>
-      <p>Create your account to get started</p>
+<section>
+  <div class="container">
+    <div class="Titleheading">
+      <h1>Register Yourself</h1>
+    </div>
+    <div class="FlatCard">
+      <div class="row">
+        <div class="col-lg-7 col-xl-7 col-12">
+          <div class="FormRight-panel">
+            <!-- Stepper Navigation -->
+            <div class="stepper-container">
+              <div class="stepper">
+                <div class="step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1">
+                  <div class="step-number">1</div>
+                  <div class="step-label">Personal Details</div>
+                </div>
+                <div class="step-line" [class.completed]="currentStep > 1"></div>
+                <div class="step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2">
+                  <div class="step-number">2</div>
+                  <div class="step-label">Additional Details</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 1: Personal Details -->
+            <div *ngIf="currentStep === 1" class="step-content">
+              <h5><strong>Personal Details</strong></h5>
+              <br />
+              <form [formGroup]="personalDetailForm" (ngSubmit)="submitPersonalDetail()">
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Your Name <span style="color: red">*</span> :</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Your Name" formControlName="name" />
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['name']?.touched &&
+                        personalDetailForm.controls?.['name']?.errors?.['required']">
+                        Please enter your name.
+                      </span>
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['name']?.touched &&
+                        personalDetailForm.controls?.['name']?.errors?.['pattern']">
+                        Please enter a valid format for your name.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Email -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Your Email <span style="color: red">*</span> :</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="email" class="form-control" placeholder="Your Email" formControlName="email" />
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['email']?.touched &&
+                        personalDetailForm.controls?.['email']?.errors?.['required']">
+                        Please enter your email.
+                      </span>
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['email']?.touched &&
+                        personalDetailForm.controls?.['email']?.errors?.['pattern']">
+                        Please enter a valid email address in the format
+                        'username@example.com'.
+                      </span>
+                    </div>
+                  </div>
     </div>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
-      <div class="form-row">
+                <!-- Phone Number -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Your Phone number
+                      <span style="color: red">*</span> :</label>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Code like +91 ,+41, etc."
+                        formControlName="countrycode" />
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['countrycode']?.touched &&
+                        personalDetailForm.controls?.['countrycode']?.errors?.['required']">
+                        Please enter the country code.
+                      </span>
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['countrycode']?.touched &&
+                        personalDetailForm.controls?.['countrycode']?.errors?.['pattern']">
+                        Please enter a valid format for the country code.
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
         <div class="form-group">
-          <label for="firstName">First Name *</label>
-          <input
-            type="text"
-            id="firstName"
-            formControlName="firstName"
-            class="form-control"
-            [class.is-invalid]="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched"
-            placeholder="Enter first name">
-          <div class="invalid-feedback" *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched">
-            First name is required
+                      <input type="tel" class="form-control" placeholder="Your Phone number" [maxlength]="10"
+                        (keypress)="NumberOnly($event)" formControlName="phoneNumber" />
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['phoneNumber']?.touched &&
+                        personalDetailForm.controls?.['phoneNumber']?.errors?.['required']">
+                        Please enter your phone number.
+                      </span>
+                    </div>
           </div>
         </div>
 
+                <!-- Nationality and UK Visa Type -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Nationality <span style="color: red">*</span> :</label>
+                  </div>
+                  <div class="col-md-8">
         <div class="form-group">
-          <label for="lastName">Last Name *</label>
-          <input
-            type="text"
-            id="lastName"
-            formControlName="lastName"
-            class="form-control"
-            [class.is-invalid]="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched"
-            placeholder="Enter last name">
-          <div class="invalid-feedback" *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched">
-            Last name is required
+                      <select class="form-control" formControlName="nationality" (change)="onNationalityChange($event)">
+                        <option value="" disabled selected hidden>
+                          Select Nationality
+                        </option>
+                        <option value="british">British</option>
+                        <option value="other">Others</option>
+                      </select>
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['nationality']?.touched &&
+                        personalDetailForm.controls?.['nationality']?.errors?.['required']">
+                        Please enter your nationality.
+                      </span>
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['nationality']?.touched &&
+                        personalDetailForm.controls?.['nationality']?.errors?.['pattern']">
+                        Please enter a valid format for your nationality.
+                      </span>
           </div>
         </div>
       </div>
 
+                <div class="row align-items-center" *ngIf="showUKVisaType">
+                  <div class="col-md-4">
+                    <label>UK Visa Type <span style="color: red">*</span> :</label>
+                  </div>
+                  <div class="col-md-8">
       <div class="form-group">
-        <label for="email">Email Address *</label>
-        <input
-          type="email"
-          id="email"
-          formControlName="email"
-          class="form-control"
-          [class.is-invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
-          placeholder="Enter email address">
-        <div class="invalid-feedback" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
-          <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</span>
-          <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+                      <input type="text" class="form-control" placeholder="Your Current Visa Type"
+                        formControlName="UKVisaType" />
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['UKVisaType']?.touched &&
+                        personalDetailForm.controls?.['UKVisaType']?.errors?.['required']">
+                        Please enter your Current Visa Type.
+                      </span>
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['UKVisaType']?.touched &&
+                        personalDetailForm.controls?.['UKVisaType']?.errors?.['pattern']">
+                        Please enter a valid format for your Current Visa Type.
+                      </span>
+                    </div>
         </div>
       </div>
 
-      <div class="form-row">
+                <!-- UK Driving License -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Do you Have a UK Driving license?<span style="color: red">*</span>
+                      :</label>
+                  </div>
+                  <div class="col-md-8">
         <div class="form-group">
-          <label for="password">Password *</label>
-          <input
-            type="password"
-            id="password"
-            formControlName="password"
-            class="form-control"
-            [class.is-invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
-            placeholder="Enter password">
-          <div class="invalid-feedback" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-            <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required</span>
-            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
+                      <select class="form-control" formControlName="UKDrivinglicense">
+                        <option value="" disabled selected hidden>
+                          Select Type
+                        </option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['UKDrivinglicense']?.touched &&
+                        personalDetailForm.controls?.['UKDrivinglicense']?.errors?.['required']">
+                        Please select a value.
+                      </span>
+                    </div>
           </div>
         </div>
 
+                <!-- Postal Code -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Your Current Location<span style="color: red">*</span>:</label>
+                  </div>
+                  <div class="col-md-8">
         <div class="form-group">
-          <label for="confirmPassword">Confirm Password *</label>
-          <input
-            type="password"
-            id="confirmPassword"
-            formControlName="confirmPassword"
-            class="form-control"
-            [class.is-invalid]="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched"
-            placeholder="Confirm password">
-          <div class="invalid-feedback" *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
-            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Please confirm your password</span>
-            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="phone">Phone Number *</label>
-          <input
-            type="tel"
-            id="phone"
-            formControlName="phone"
-            class="form-control"
-            [class.is-invalid]="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched"
-            placeholder="Enter phone number">
-          <div class="invalid-feedback" *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
-            Phone number is required
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="company">Company *</label>
-          <input
-            type="text"
-            id="company"
-            formControlName="company"
-            class="form-control"
-            [class.is-invalid]="registerForm.get('company')?.invalid && registerForm.get('company')?.touched"
-            placeholder="Enter company name">
-          <div class="invalid-feedback" *ngIf="registerForm.get('company')?.invalid && registerForm.get('company')?.touched">
-            Company name is required
+                      <input type="text" class="form-control" placeholder="Enter your current city or postcode"
+                        formControlName="postalCode" />
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['postalCode']?.touched &&
+                        personalDetailForm.controls?.['postalCode']?.errors?.['required']">
+                        Please enter your postal code.
+                      </span>
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['postalCode']?.touched &&
+                        personalDetailForm.controls?.['postalCode']?.errors?.['pattern']">
+                        Please enter a valid format for your postal code.
+                      </span>
           </div>
         </div>
       </div>
 
-      <div class="form-group checkbox-group">
-        <div class="form-check">
-          <input
-            type="checkbox"
-            id="acceptTerms"
-            formControlName="acceptTerms"
-            class="form-check-input"
-            [class.is-invalid]="registerForm.get('acceptTerms')?.invalid && registerForm.get('acceptTerms')?.touched">
-          <label class="form-check-label" for="acceptTerms">
-            I agree to the <a href="#" class="terms-link">Terms and Conditions</a> *
+                <!-- Current Work -->
+                <div class="row align-items-start">
+                  <div class="col-md-4">
+                    <label class="form-label">I'm currently Working<span style="color: red">*</span>:</label>
+                  </div>
+                  <div class="col-md-8">
+        <div class="form-group">
+                      <div class="radio-group">
+                        <label class="radio-option">
+                          <input type="radio" id="currentWork1" name="currentWork" value="full-time"
+                            formControlName="currentWork" />
+                          <span class="radio-label">Full-time</span>
+                        </label>
+                        <label class="radio-option">
+                          <input type="radio" id="currentWork2" name="currentWork" value="part-time"
+                            formControlName="currentWork" />
+                          <span class="radio-label">Part-time</span>
+                        </label>
+                        <label class="radio-option">
+                          <input type="radio" id="currentWork3" name="currentWork" value="not-working"
+                            formControlName="currentWork" />
+                          <span class="radio-label">Not working</span>
+                        </label>
+                      </div>
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['currentWork']?.touched &&
+                        personalDetailForm.controls?.['currentWork']?.errors?.['required']">
+                        Please select your current work status.
+                      </span>
+                    </div>
+          </div>
+        </div>
+
+                <!-- Looking For -->
+                <div class="row align-items-start">
+                  <div class="col-md-4">
+                    <label class="form-label">I am looking for<span style="color: red">*</span>:</label>
+                  </div>
+                  <div class="col-md-8">
+        <div class="form-group">
+                      <div class="checkbox-group">
+                        <label class="checkbox-option">
+                          <input type="checkbox" name="roles" value="full-time-role" (change)="onCheckboxChange($event)"
+                            [checked]="selectedLookingFor('full-time-role')" />
+                          <span class="checkbox-label">Full time role</span>
+                        </label>
+                        <label class="checkbox-option">
+                          <input type="checkbox" name="roles" value="additional-role" (change)="onCheckboxChange($event)"
+                            [checked]="selectedLookingFor('additional-role')" />
+                          <span class="checkbox-label">Additional role</span>
+                        </label>
+                        <label class="checkbox-option">
+                          <input type="checkbox" name="roles" value="part-time-role" (change)="onCheckboxChange($event)"
+                            [checked]="selectedLookingFor('part-time-role')" />
+                          <span class="checkbox-label">Part-time role</span>
+                        </label>
+                        <label class="checkbox-option">
+                          <input type="checkbox" name="roles" value="freelance-role" (change)="onCheckboxChange($event)"
+                            [checked]="selectedLookingFor('freelance-role')" />
+                          <span class="checkbox-label">Freelancing role</span>
+                        </label>
+                      </div>
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['lookingFor']?.touched &&
+                        personalDetailForm.controls?.['lookingFor']?.errors?.['required']">
+                        Please select what you are looking for.
+                      </span>
+          </div>
+        </div>
+      </div>
+
+                <!-- Work Preferences -->
+                <div class="row align-items-start">
+                  <div class="col-md-4">
+                    <label class="form-label">Work Preferences<span style="color: red">*</span>:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <div class="checkbox-group">
+                        <label class="checkbox-option">
+                          <input type="checkbox" name="workPref" value="Remote Only with Informed client travel" (change)="onCheckboxWorkPReference($event)"
+                            [checked]="selectedWorkPreference('Remote Only with Informed client travel')" />
+                          <span class="checkbox-label">Remote Only with Informed client travel</span>
+                        </label>
+                        <label class="checkbox-option">
+                          <input type="checkbox" name="workPref" value="Remote only - No client tavel" (change)="onCheckboxWorkPReference($event)"
+                            [checked]="selectedWorkPreference('Remote only - No client tavel')" />
+                          <span class="checkbox-label">Remote only - No client travel</span>
+                        </label>
+                        <label class="checkbox-option">
+                          <input type="checkbox" name="workPref" value="Full time at client site" (change)="onCheckboxWorkPReference($event)"
+                            [checked]="selectedWorkPreference('Full time at client site')" />
+                          <span class="checkbox-label">Full time at client site</span>
+                        </label>
+                        <label class="checkbox-option">
+                          <input type="checkbox" name="workPref" value="Hybrid" (change)="onCheckboxWorkPReference($event)"
+                            [checked]="selectedWorkPreference('Hybrid')" />
+                          <span class="checkbox-label">Hybrid</span>
           </label>
         </div>
-        <div class="invalid-feedback" *ngIf="registerForm.get('acceptTerms')?.invalid && registerForm.get('acceptTerms')?.touched">
-          You must accept the terms and conditions
+                      <span class="text-danger" *ngIf="
+                        personalDetailForm.controls?.['workPreference']?.touched &&
+                        personalDetailForm.controls?.['workPreference']?.errors?.['required']">
+                        Please select work preferences.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- My current notice period (Days) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>My current notice period (Days)<span style="color: red">*</span>
+                      :</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Enter current notice period (Days)"
+                        formControlName="noticePeriodDay" />
+                      <span class="text-danger" *ngIf="
+                                        personalDetailForm.controls?.['noticePeriodDay']?.touched &&
+                                        personalDetailForm.controls?.['noticePeriodDay']?.errors?.['required']">
+                        Please enter your notice period.
+                      </span>
+                    </div>
         </div>
       </div>
 
-      <button
-        type="submit"
-        class="btn btn-primary btn-block"
-        [disabled]="registerForm.invalid || loading">
-        <span *ngIf="!loading">Create Account</span>
-        <span *ngIf="loading">Creating Account...</span>
-      </button>
+                <!-- CAPTCHA removed for now -->
 
-      <div class="login-link">
-        Already have an account? <a routerLink="/cir-user-login">Sign in here</a>
+                <div class="row align-items-center">
+                  <div class="col-12 update">
+                    <button style="float: right !important" type="submit" class="btn btn-primary btn-round">
+                      Next Step
+      </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <!-- Step 2: Additional Details -->
+            <div *ngIf="currentStep === 2" class="step-content">
+              <h5><strong>Additional details</strong></h5>
+              <form [formGroup]="otherDetailForm" (ngSubmit)="submit()">
+                <div class="row mb-3">
+                  <div class="col-lg-4">
+                    <label>Upload CV <span style="color: red;">*</span> :</label>
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="form-file">
+                      <input type="file" aria-label="file example" class="form-control" (change)="fileUpload($event)"
+                        accept=".doc, .docx,.pdf">
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-lg-4">
+                    <label>Preferred Role <span style="color: red;">*</span> :</label>
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="form-group">
+                      <select class="form-control" formControlName="preferredRoles" multiple>
+                        <option *ngFor="let role of preferredRoles" [value]="role.value">
+                          {{ role.label }}
+                        </option>
+                      </select>
+                      <span class="text-danger" *ngIf="
+                        otherDetailForm.controls?.['preferredRoles']?.touched &&
+                        otherDetailForm.controls?.['preferredRoles']?.errors?.['required']">
+                        Please select at least one preferred role.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-lg-4">
+                    <label>Referred by <span style="color: red;">*</span> :</label>
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="form-group">
+                      <select class="form-control" formControlName="referredBy" [disabled]="true">
+                        <option *ngFor="let option of referredByOptions" [value]="option">
+                          {{ option}}
+                        </option>
+                      </select>
+                      <span class="text-danger" *ngIf="
+                    otherDetailForm.controls?.['referredBy']?.touched &&
+                    otherDetailForm.controls?.['referredBy']?.errors?.['required']">
+                        Please enter referredBy.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SC/DV clearance -->
+                <div class="row">
+                  <div class="col-md-4">
+                    <label>Do you hold any SC/DV clearance? <span style="color: red;">*</span> :</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <select class="form-control" formControlName="sc_dv_clearance_hold" (change)="onSCDVChange($event)">
+                        <option value="" disabled selected hidden>Select Type</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      <span class="text-danger" *ngIf="
+                        otherDetailForm.controls?.['sc_dv_clearance_hold']?.touched &&
+                        otherDetailForm.controls?.['sc_dv_clearance_hold']?.errors?.['required']">
+                        Please select a SC/DV clearance.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- SC/DV clearance -->
+                <div class="row">
+                  <div class="col-md-4">
+                    <label>Are you eligible for SC Clearance ? <span style="color: red;">*</span> :</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <select class="form-control" formControlName="eligible_for_SC">
+                        <option value="" disabled selected hidden>Select Type</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                      </select>
+                      <span class="text-danger" *ngIf="
+                                    otherDetailForm.controls?.['eligible_for_SC']?.touched &&
+                                    otherDetailForm.controls?.['eligible_for_SC']?.errors?.['required']">
+                        Please select a eligible for SC clearance.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Valid Upto Date (shows only when Yes is selected) -->
+                <div class="row" *ngIf="showValidUptoDate">
+                  <div class="col-md-4">
+                    <label>Valid Upto <span style="color: red;">*</span> :</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="date" class="form-control" formControlName="sc_dv_valid_upto">
+                      <span class="text-danger" *ngIf="
+                        otherDetailForm.controls?.['sc_dv_valid_upto']?.touched &&
+                        otherDetailForm.controls?.['sc_dv_valid_upto']?.errors?.['required']">
+                        Please select valid upto date.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- answer is NO to above -->
+                <div class="row" *ngIf="otherDetailForm.get('sc_dv_clearance_hold')?.value === 'no'">
+                  <div class="col-md-4">
+                    <label>Are you willing to undertake if/when we sponsor it? <span style="color: red;">*</span>
+                      :</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <select class="form-control" formControlName="willing_to_undertake">
+                        <option value="" disabled selected hidden>Select Type</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                        <option value="might_not_be_eligible">I might not be eligible</option>
+                        <option value="dont_know"> don't know</option>
+                      </select>
+                      <span class="text-danger" *ngIf="
+                        otherDetailForm.controls?.['willing_to_undertake']?.touched &&
+                        otherDetailForm.controls?.['willing_to_undertake']?.errors?.['required']">
+                        Please select a value.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <br>
+                <div class="row mb-3">
+                  <div class="col-lg-4">
+                    <label>Preferred contact Time<span style="color: red;">*</span>:</label>
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="form-group">
+                      <select class="form-control" formControlName="callTime" multiple>
+                        <option *ngFor="let time of timeSlots" [value]="time.value">
+                          {{ time.label }}
+                        </option>
+                      </select>
+                      <span class="text-danger" *ngIf="
+                    otherDetailForm.controls?.['callTime']?.touched &&
+                    otherDetailForm.controls?.['callTime']?.errors?.['required']">
+                        Please enter callTime.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-lg-4">
+                    <label>Preferred contact Day<span style="color: red;">*</span>:</label>
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="form-group">
+                      <select class="form-control" formControlName="callDay" multiple>
+                        <option *ngFor="let day of daysOfWeek" [value]="day.value">
+                          {{ day.label }}
+                        </option>
+                      </select>
+                      <span class="text-danger" *ngIf="
+                    otherDetailForm.controls?.['callDay']?.touched &&
+                    otherDetailForm.controls?.['callDay']?.errors?.['required']">
+                        Please enter callDay.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-lg-4">
+                    <label>Password <span style="color: red;">*</span> :</label>
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="input-group mb-0">
+                      <input [type]="password" class="form-control" placeholder="Password" formControlName="password"
+                        required>
+                      <div class="input-group-append">
+                        <div class="input-group-text">
+                          <span *ngIf="!showPassword" class="fas fa-eye" (click)="showHidePass('password')"></span>
+                          <span *ngIf="showPassword" class="fas fa-eye-slash" (click)="showHidePass('password')"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="text-danger" *ngIf="
+                      otherDetailForm.controls?.['password']?.touched &&
+                      otherDetailForm.controls?.['password']?.errors?.['required']">
+                      Please enter password.
+                    </span>
+                    <span class="text-danger" *ngIf="
+                      otherDetailForm.controls?.['password']?.touched &&
+                      otherDetailForm.controls?.['password']?.errors?.['pattern']">
+                      Password must be at least 8 characters long, contain an uppercase letter, a number, and a special
+                      character.
+                    </span>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-lg-4">
+                    <label>Confirm Password <span style="color: red;">*</span> :</label>
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="input-group mb-0">
+                      <input [type]="confirmPassword" class="form-control" placeholder="Password"
+                        formControlName="confirmPassword" required>
+                      <div class="input-group-append">
+                        <div class="input-group-text">
+                          <span *ngIf="!confirmShowPassword" class="fas fa-eye"
+                            (click)="showHidePass('confirmPassword')"></span>
+                          <span *ngIf="confirmShowPassword" class="fas fa-eye-slash"
+                            (click)="showHidePass('confirmPassword')"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="text-danger" *ngIf="
+                      otherDetailForm.controls?.['confirmPassword']?.touched &&
+                      otherDetailForm.controls?.['confirmPassword']?.errors?.['required']">
+                      Please enter confirm password.
+                    </span>
+                    <span class="text-danger" *ngIf="
+                      otherDetailForm.controls?.['confirmPassword']?.touched &&
+                      otherDetailForm.controls?.['confirmPassword']?.errors?.['pattern']">
+                      Password must be at least 8 characters long, contain an uppercase letter, a number, and a special
+                      character.
+                    </span>
+                    <span class="text-danger" *ngIf="
+                      otherDetailForm.controls?.['confirmPassword']?.touched &&
+                      otherDetailForm.controls?.['confirmPassword']?.errors?.['notSame']">
+                      Password and Confirm password do not match.
+                    </span>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-lg-4">
+                    <label>Any question for us? : </label>
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="form-group">
+                      <textarea type="text" class="form-control" placeholder="Any question for us ?"
+                        formControlName="anyQuestion"></textarea>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-12 update">
+                    <button style="float: left !important;" class="btn btn-primary" type="button" (click)="goToPreviousStep()">Back</button>
+                    <button style="float: right !important;" class="btn btn-primary" type="submit">Submit</button>
+                  </div>
       </div>
     </form>
   </div>
 </div>
+        </div>
+        <div class="col-lg-5 col-xl-5 col-12">
+          <div class="FormLeft-panel">
+            <div class="text-center">
+              <img src="../../../../assets/img/Saivenlogo.png" width="200" class="mb-5" />
+            </div>
+            <h1 class="HeadingLarge">
+              "Elevate Your Career with SaiVen: Join Public Sector IT Projects"
+            </h1>
+            <p class="mb-5 textfont">
+              SaiVen, is an emerging IT QA lead business with 40+ business
+              collaborations across UK and India. We are a dedicated business to
+              lead the governance of all public sector QA projects signed by the
+              group and we are the driving force for client relationship
+              management, project governance, and people/delivery management.<br /><br />
+              Our job is to ensure seamless execution for exceptional results,
+              through bringing our industry expertise added with right skills at
+              right time - enabling quick and cost-effective resource
+              augmentation, for benefit of our clients.<br /><br />Partner with
+              us for exciting contract opportunities and be a part of our
+              success story
+            </p>
+            <p>
+              <strong>SaiVen Technology Solutions Limited</strong><br />
+              1-04, Focal Point, <br />27-35 Fleet Street, <br />Swindon SN1 1RQ
+            </p>
+            <p>Company Registration Number: 8856876</p>
+            <p>Email: Info@saivensolutions.co.uk</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
