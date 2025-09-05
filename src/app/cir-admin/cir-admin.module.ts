@@ -13,6 +13,7 @@ import { CirAdminDashboardComponent } from './dashboard/dashboard.component';
 
 // Settings component
 import { SettingsComponent } from './settings/settings.component';
+import { BannerListComponent } from './settings/banner-list/banner-list.component';
 
 // User components
 import { UserListComponent } from './user/user-list/user-list.component';
@@ -59,8 +60,9 @@ const routes: Routes = [
       { path: 'jobs/applications/:id', component: JobApplicationComponent },
       { path: 'jobs/send/:id', component: SendJobComponent },
 
-      // Settings route
-      { path: 'settings', component: SettingsComponent },
+      // Settings routes
+      { path: 'settings', component: BannerListComponent },
+      { path: 'settings/banner', component: SettingsComponent },
     ],
   },
 ];
@@ -90,6 +92,7 @@ const routes: Routes = [
 
     // Settings component
     SettingsComponent,
+    BannerListComponent,
   ],
   imports: [
     CommonModule,

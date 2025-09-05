@@ -1,7 +1,7 @@
 <div class="settings-container">
   <div class="header">
-    <h2>Settings</h2>
-    <p class="subtitle">Manage your application preferences and configurations</p>
+    <h2>{{ pageTitle }}</h2>
+    <p class="subtitle">{{ isEditMode ? 'Edit banner details and content' : 'Create a new banner for your application' }}</p>
   </div>
 
   <div class="settings-content">
@@ -215,18 +215,35 @@
 
       <!-- Banner Settings -->
       <div class="settings-section" *ngIf="activeTab === 'banner'">
-        <h3>Banner Settings</h3>
+        <h3>Banner {{ isEditMode ? 'Edit' : 'Creation' }}</h3>
         <form [formGroup]="mandatoryDetailsForm">
           <div class="form-group mb-3">
-            <label for="mandatoryDetails" class="form-label">Banner Details:</label>
+            <label for="pageType" class="form-label">Page Type:</label>
+            <select
+              id="pageType"
+              formControlName="page_type"
+              class="form-control"
+            >
+              <option value="">Select Page Type</option>
+              <option *ngFor="let pageType of pageTypes" [value]="pageType.value">
+                {{ pageType.label }}
+              </option>
+            </select>
+            <div *ngIf="mandatoryDetailsForm.get('page_type')?.touched && mandatoryDetailsForm.get('page_type')?.invalid" class="text-danger">
+              Page Type is required.
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="bannerContent" class="form-label">Banner Content:</label>
             <div class="NgxEditor__Wrapper">
               <ngx-editor-menu [editor]="mandatoryDetailsEditor" [toolbar]="toolbar" style="padding: 15px !important;">
               </ngx-editor-menu>
-              <ngx-editor [editor]="mandatoryDetailsEditor" rows="8" formControlName="details" [disabled]="false"
-                [placeholder]="'Enter Banner Details here...'"></ngx-editor>
+              <ngx-editor [editor]="mandatoryDetailsEditor" rows="8" formControlName="content" [disabled]="false"
+                [placeholder]="'Enter Banner Content here...'"></ngx-editor>
             </div>
-            <div *ngIf="mandatoryDetailsForm.get('details')?.touched && mandatoryDetailsForm.get('details')?.invalid" class="text-danger">
-              Banner Details are required.
+            <div class="form-text">
+              <small class="text-muted">Use the editor to create rich content. The content will be saved as HTML in the database.</small>
             </div>
           </div>
         </form>
@@ -236,13 +253,13 @@
 
   <!-- Action Buttons -->
   <div class="settings-actions">
-    <!-- <button class="btn btn-secondary" (click)="resetSettings()">
-      <i class="fas fa-undo"></i>
-      Reset to Default
-    </button> -->
-    <button class="btn btn-primary" (click)="saveSettings()">
-      <i class="fas fa-save"></i>
-      Save Settings
+    <button class="btn btn-secondary" (click)="cancelEdit()" [disabled]="isLoading">
+      <i class="fas fa-times"></i>
+      Cancel
+    </button>
+    <button class="btn btn-primary" (click)="saveSettings()" [disabled]="isLoading">
+      <i class="fas" [ngClass]="isLoading ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+      {{ isLoading ? 'Saving...' : (isEditMode ? 'Update Banner' : 'Save Banner') }}
     </button>
   </div>
 </div>
