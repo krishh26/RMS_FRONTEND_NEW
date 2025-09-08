@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 interface Banner {
-  id: number;
+  _id: string;
   page_type: string;
-  content: string;
-  created_at?: string;
-  updated_at?: string;
+  content: string; // HTML content
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 @Component({
@@ -22,6 +23,9 @@ export class BannerListComponent implements OnInit {
   itemsPerPage = 10;
   totalItems = 0;
   isLoading = false;
+  showPreviewModal = false;
+  selectedBannerContent = '';
+  selectedBannerPageType = '';
 
   // Page type labels for display
   pageTypeLabels: { [key: string]: string } = {
@@ -44,12 +48,21 @@ export class BannerListComponent implements OnInit {
     this.isLoading = true;
     const apiUrl = `${environment.baseUrl}/banner/`;
     const headers = this.getHeaders();
-    
+
     this.http.get(apiUrl, { headers }).subscribe({
       next: (response: any) => {
         console.log('Banners loaded:', response);
-        this.banners = response.results || response; // Handle both paginated and non-paginated responses
-        this.totalItems = response.count || this.banners.length;
+
+        // Handle the API response structure
+        if (response.status && response.data) {
+          this.banners = response.data;
+          this.totalItems = response.meta_data?.items || response.data.length;
+        } else {
+          // Fallback for different response structure
+          this.banners = response.results || response;
+          this.totalItems = response.count || this.banners.length;
+        }
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -65,28 +78,28 @@ export class BannerListComponent implements OnInit {
     // Static data for demonstration when API fails
     this.banners = [
       {
-        id: 1,
+        _id: '1',
         page_type: 'home',
         content: '<div class="banner-home"><h2>Welcome to our Resource Management System</h2><p>This is the main banner displayed on the dashboard.</p></div>',
-        created_at: '2024-01-15T10:00:00Z'
+        createdAt: '2024-01-15T10:00:00Z'
       },
       {
-        id: 2,
+        _id: '2',
         page_type: 'profile_page',
         content: '<div class="banner-notice"><h3>System Maintenance</h3><p>System maintenance scheduled for this weekend. Please save your work.</p></div>',
-        created_at: '2024-01-20T10:00:00Z'
+        createdAt: '2024-01-20T10:00:00Z'
       },
       {
-        id: 3,
+        _id: '3',
         page_type: 'add_user',
         content: '<div class="banner-feature"><h3>New Features Available</h3><p>Check out our latest features including improved user management and reporting tools.</p></div>',
-        created_at: '2024-01-25T10:00:00Z'
+        createdAt: '2024-01-25T10:00:00Z'
       },
       {
-        id: 4,
+        _id: '4',
         page_type: 'job_post',
         content: '<div class="banner-security"><h3>Security Alert</h3><p>Please update your password regularly for better security.</p></div>',
-        created_at: '2024-02-01T10:00:00Z'
+        createdAt: '2024-02-01T10:00:00Z'
       }
     ];
     this.totalItems = this.banners.length;
@@ -105,34 +118,54 @@ export class BannerListComponent implements OnInit {
   }
 
   editBanner(banner: Banner): void {
-    this.router.navigate(['/cir-admin/settings/banner'], { queryParams: { action: 'edit', id: banner.id } });
+    this.router.navigate(['/cir-admin/settings/banner'], { queryParams: { action: 'edit', id: banner._id } });
   }
 
   deleteBanner(banner: Banner): void {
-    if (confirm(`Are you sure you want to delete the banner for "${this.getPageTypeLabel(banner.page_type)}"?`)) {
-      this.isLoading = true;
-      const apiUrl = `${environment.baseUrl}/banner/${banner.id}/`;
-      const headers = this.getHeaders();
-      
-      this.http.delete(apiUrl, { headers }).subscribe({
-        next: (response: any) => {
-          console.log('Banner deleted successfully:', response);
-          this.isLoading = false;
-          // Remove from local array
-          const index = this.banners.findIndex(b => b.id === banner.id);
-          if (index > -1) {
-            this.banners.splice(index, 1);
-            this.totalItems = this.banners.length;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `You won't be able to revert this! This action will permanently delete the banner for "${this.getPageTypeLabel(banner.page_type)}".`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true;
+        const apiUrl = `${environment.baseUrl}/banner/${banner._id}/`;
+        const headers = this.getHeaders();
+
+        this.http.delete(apiUrl, { headers }).subscribe({
+          next: (response: any) => {
+            console.log('Banner deleted successfully:', response);
+            this.isLoading = false;
+            // Remove from local array
+            const index = this.banners.findIndex(b => b._id === banner._id);
+            if (index > -1) {
+              this.banners.splice(index, 1);
+              this.totalItems = this.banners.length;
+            }
+            Swal.fire(
+              'Deleted!',
+              'Banner has been permanently deleted.',
+              'success'
+            );
+          },
+          error: (error) => {
+            console.error('Error deleting banner:', error);
+            this.isLoading = false;
+            Swal.fire(
+              'Error!',
+              error?.error?.message || error?.message || 'Failed to delete banner. Please try again.',
+              'error'
+            );
           }
-          alert('Banner deleted successfully!');
-        },
-        error: (error) => {
-          console.error('Error deleting banner:', error);
-          this.isLoading = false;
-          alert('Error deleting banner. Please try again.');
-        }
-      });
-    }
+        });
+      }
+    });
   }
 
   getPageTypeLabel(pageType: string): string {
@@ -141,20 +174,19 @@ export class BannerListComponent implements OnInit {
 
   getBannerDetailsPreview(content: string): string {
     if (!content) return 'No content';
-    
-    // For HTML content, we'll show a truncated version
-    // Remove extra whitespace and get first 150 characters
-    const cleanContent = content.replace(/\s+/g, ' ').trim();
-    return cleanContent.length > 150 ? cleanContent.substring(0, 150) + '...' : cleanContent;
+
+    // For HTML content, strip HTML tags and show a truncated version
+    const textContent = content.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+    return textContent.length > 150 ? textContent.substring(0, 150) + '...' : textContent;
   }
 
   formatDate(dateString: string): string {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: '2-digit' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit'
     });
   }
 
@@ -166,5 +198,17 @@ export class BannerListComponent implements OnInit {
 
   onPageChange(page: number): void {
     this.currentPage = page;
+  }
+
+  showBannerPreview(banner: Banner): void {
+    this.selectedBannerContent = banner.content;
+    this.selectedBannerPageType = this.getPageTypeLabel(banner.page_type);
+    this.showPreviewModal = true;
+  }
+
+  closePreviewModal(): void {
+    this.showPreviewModal = false;
+    this.selectedBannerContent = '';
+    this.selectedBannerPageType = '';
   }
 }

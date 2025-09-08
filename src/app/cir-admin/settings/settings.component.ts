@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Editor, Toolbar } from 'ngx-editor';
+import { Editor, Toolbar, toHTML, toDoc } from 'ngx-editor';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -15,10 +15,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
   mandatoryDetailsForm: FormGroup;
   mandatoryDetailsEditor: Editor = new Editor();
   isEditMode = false;
-  bannerId: number | null = null;
+  bannerId: string | null = null;
   pageTitle = 'Add Banner';
   isLoading = false;
-  
+
   // Page types for dropdown
   pageTypes = [
     { value: 'home', label: 'Home Page' },
@@ -79,9 +79,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.route.queryParams.subscribe(params => {
       if (params['action'] === 'edit' && params['id']) {
         this.isEditMode = true;
-        this.bannerId = +params['id'];
+        this.bannerId = params['id'];
         this.pageTitle = 'Edit Banner';
-        this.loadBannerForEdit(this.bannerId);
+        this.loadBannerForEdit(this.bannerId!);
       } else if (params['action'] === 'add') {
         this.isEditMode = false;
         this.bannerId = null;
@@ -101,26 +101,32 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   saveSettings(): void {
     const formData = this.mandatoryDetailsForm.value;
-    
+
     // Custom validation for editor content
     if (!formData.page_type) {
       this.mandatoryDetailsForm.get('page_type')?.markAsTouched();
       return;
     }
-    
-    if (!formData.content || formData.content === '<p></p>') {
+
+    // Get JSON content from the form control and convert to HTML
+    const jsonContent = formData.content;
+    const htmlContent = toHTML(jsonContent);
+
+    if (!htmlContent || htmlContent === '<p></p>' || htmlContent.trim() === '') {
       alert('Please enter banner content.');
       return;
     }
-    
+
     this.isLoading = true;
-    
-    // Use the form control content which contains the HTML from the editor
+
+    // Use HTML content directly instead of the JSON structure
     const bannerData = {
       page_type: formData.page_type,
-      content: formData.content // Get HTML content from form control
+      content: htmlContent // Get HTML content from editor
     };
-    
+
+    console.log('Saving banner with HTML content:', htmlContent);
+
     if (this.isEditMode) {
       this.updateBanner(bannerData);
     } else {
@@ -131,7 +137,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   createBanner(formData: any): void {
     const apiUrl = `${environment.baseUrl}/banner/`;
     const headers = this.getHeaders();
-    
+
     this.http.post(apiUrl, formData, { headers }).subscribe({
       next: (response: any) => {
         console.log('Banner created successfully:', response);
@@ -150,7 +156,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   updateBanner(formData: any): void {
     const apiUrl = `${environment.baseUrl}/banner/${this.bannerId}/`;
     const headers = this.getHeaders();
-    
+
     this.http.put(apiUrl, formData, { headers }).subscribe({
       next: (response: any) => {
         console.log('Banner updated successfully:', response);
@@ -174,21 +180,27 @@ export class SettingsComponent implements OnInit, OnDestroy {
     });
   }
 
-  loadBannerForEdit(bannerId: number): void {
+  loadBannerForEdit(bannerId: string): void {
     this.isLoading = true;
     const apiUrl = `${environment.baseUrl}/banner/${bannerId}/`;
     const headers = this.getHeaders();
-    
+
     this.http.get(apiUrl, { headers }).subscribe({
       next: (response: any) => {
         console.log('Banner loaded for edit:', response);
+
+        // Handle the API response structure
+        const bannerData = response.data || response;
+
+        // Set the page type
         this.mandatoryDetailsForm.patchValue({
-          page_type: response.page_type,
-          content: response.content
+          page_type: bannerData.page_type
         });
-        
-        // The editor will automatically update when the form control is updated
-        
+
+        // Convert HTML content to JSON format for the editor
+        const jsonContent = toDoc(bannerData.content);
+        this.mandatoryDetailsEditor.setContent(jsonContent);
+
         this.isLoading = false;
       },
       error: (error) => {
