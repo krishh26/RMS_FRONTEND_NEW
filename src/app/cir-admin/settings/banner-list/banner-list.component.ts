@@ -118,7 +118,7 @@ export class BannerListComponent implements OnInit {
   }
 
   editBanner(banner: Banner): void {
-    this.router.navigate(['/cir-admin/settings/banner'], { queryParams: { action: 'edit', id: banner._id } });
+    this.router.navigate(['/cir-admin/settings/banner'], { queryParams: { action: 'edit', id: banner.page_type } });
   }
 
   deleteBanner(banner: Banner): void {

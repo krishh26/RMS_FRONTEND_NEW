@@ -388,7 +388,7 @@ export class JobListComponent implements OnInit {
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.cirService.cirDeleteJob({}, job.job_id).subscribe({
+        this.cirService.cirDeleteJob({}, job._id).subscribe({
           next: (response: any) => {
             if (response?.status === true) {
               Swal.fire(

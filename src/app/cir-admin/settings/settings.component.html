@@ -6,7 +6,7 @@
 
   <div class="settings-content">
     <!-- Settings Navigation Tabs -->
-    <div class="settings-nav">
+    <!-- <div class="settings-nav"> -->
       <!-- <button
         class="nav-tab"
         [ngClass]="{'active': activeTab === 'general'}"
@@ -39,14 +39,14 @@
         <span>Appearance</span>
       </button> -->
 
-      <button
+      <!-- <button
         class="nav-tab"
         [ngClass]="{'active': activeTab === 'banner'}"
         (click)="switchTab('banner')">
         <i class="fas fa-image"></i>
         <span>Banner Settings</span>
-      </button>
-    </div>
+      </button> -->
+    <!-- </div> -->
 
     <!-- Settings Content -->
     <div class="settings-panel">
@@ -253,13 +253,13 @@
 
   <!-- Action Buttons -->
   <div class="settings-actions">
-    <button class="btn btn-secondary" (click)="cancelEdit()" [disabled]="isLoading">
+    <button class="btn btn-secondary" type="button" (click)="cancelEdit()" [disabled]="isLoading">
       <i class="fas fa-times"></i>
       Cancel
     </button>
-    <button class="btn btn-primary" (click)="saveSettings()" [disabled]="isLoading">
+    <button class="btn btn-primary" type="button" (click)="saveSettings()" [disabled]="isLoading">
       <i class="fas" [ngClass]="isLoading ? 'fa-spinner fa-spin' : 'fa-save'"></i>
-      {{ isLoading ? 'Saving...' : (isEditMode ? 'Update Banner' : 'Save Banner') }}
+      {{ isEditMode ? 'Update Banner' : 'Save Banner' }}
     </button>
   </div>
 </div>
