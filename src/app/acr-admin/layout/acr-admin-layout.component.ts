@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { LocalStorageService } from 'src/app/services/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-acr-admin-layout',
@@ -15,7 +16,10 @@ export class AcrAdminLayoutComponent implements OnInit {
   currentPageTitle = 'Dashboard';
   currentBreadcrumb: string[] = ['ACR Admin'];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private localStorageService: LocalStorageService
+  ) {}
 
   ngOnInit() {
     this.router.events
@@ -46,9 +50,10 @@ export class AcrAdminLayoutComponent implements OnInit {
   }
 
   logout() {
-    // Implement logout logic
+    // Clear localStorage and navigate to acr-admin-login page
+    this.localStorageService.clearStorage();
+    this.router.navigate(['/acr-admin-login']);
     this.isUserDropdownOpen = false;
-    // Navigate to login page or clear session
   }
 
   private updatePageInfo(url: string) {
@@ -73,6 +78,8 @@ export class AcrAdminLayoutComponent implements OnInit {
         this.currentPageTitle = 'Job Applications';
       } else if (section === 'send-job') {
         this.currentPageTitle = 'Send Job';
+      } else if (section === 'settings') {
+        this.currentPageTitle = 'Settings';
       } else {
         this.currentPageTitle = 'Dashboard';
       }
@@ -81,7 +88,7 @@ export class AcrAdminLayoutComponent implements OnInit {
       this.currentBreadcrumb = ['ACR Admin'];
       if (section !== 'acr-admin') {
         this.currentBreadcrumb.push(this.capitalizeFirst(section));
-        if (action && action !== 'add' && action !== 'edit') {
+        if (action && action !== 'add' && action !== 'edit' && action !== 'banner') {
           this.currentBreadcrumb.push(this.capitalizeFirst(action));
         }
       }
