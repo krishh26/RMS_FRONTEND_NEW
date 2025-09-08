@@ -27,14 +27,10 @@ const routes: Routes = [
     path: 'acr-user',
     loadChildren: () => import('./acr-user/acr-user.module').then(m => m.AcrUserModule)
   },
-  {
-    path: '**',
-    redirectTo: 'auth/cir-admin-login'
-  }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
