@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxEditorModule } from 'ngx-editor';
 
 // Layout components
 import { AcrAdminLayoutComponent } from './layout/acr-admin-layout.component';
@@ -31,6 +32,10 @@ import { SendJobComponent } from './send-job/send-job.component';
 import { JobApplicationComponent } from './job-application/job-application.component';
 import { AcrUserAddEditComponent } from './acr-user-add-edit/acr-user-add-edit.component';
 import { AcrUserListComponent } from './acr-user-list/acr-user-list.component';
+
+// Settings components
+import { SettingsComponent } from './settings/settings.component';
+import { BannerListComponent } from './settings/banner-list/banner-list.component';
 
 const routes: Routes = [
   {
@@ -65,7 +70,11 @@ const routes: Routes = [
       { path: 'job-applications', component: JobApplicationComponent },
       { path: 'users', component: AcrUserListComponent },
       { path: 'user/add', component: AcrUserAddEditComponent },
-      { path: 'user/edit/:id', component: AcrUserAddEditComponent }
+      { path: 'user/edit/:id', component: AcrUserAddEditComponent },
+
+      // Settings routes
+      { path: 'settings', component: BannerListComponent },
+      { path: 'settings/banner', component: SettingsComponent }
     ]
   }
 ];
@@ -99,13 +108,18 @@ const routes: Routes = [
     SendJobComponent,
     JobApplicationComponent,
     AcrUserAddEditComponent,
-    AcrUserListComponent
+    AcrUserListComponent,
+
+    // Settings components
+    SettingsComponent,
+    BannerListComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    NgxEditorModule
   ]
 })
 export class AcrAdminModule { }

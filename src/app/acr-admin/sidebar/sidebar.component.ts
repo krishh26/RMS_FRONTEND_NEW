@@ -91,6 +91,13 @@ export class AcrAdminSidebarComponent implements OnInit {
         { label: 'All Users', route: '/acr-admin/users' },
         { label: 'Add User', route: '/acr-admin/user/add' }
       ]
+    },
+    {
+      label: 'Settings',
+      icon: 'fas fa-cog',
+      route: '/acr-admin/settings',
+      badge: null,
+      expanded: false
     }
   ];
 

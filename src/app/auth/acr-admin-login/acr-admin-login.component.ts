@@ -39,7 +39,7 @@ export class AcrAdminLoginComponent {
         if (response?.status == true) {
           this.localStorageService.setLoginToken(response?.data);
           this.localStorageService.setLogger(response?.data?.user);
-          this.router.navigate(['/acr/acr-create-job']);
+          this.router.navigate(['/acr-admin/jobs']);
         } else {
           this.notificationService.showError(response?.message);
         }

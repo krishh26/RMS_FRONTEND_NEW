@@ -1,0 +1,265 @@
+<div class="settings-container">
+  <div class="header">
+    <h2>{{ pageTitle }}</h2>
+    <p class="subtitle">{{ isEditMode ? 'Edit banner details and content' : 'Create a new banner for your application' }}</p>
+  </div>
+
+  <div class="settings-content">
+    <!-- Settings Navigation Tabs -->
+    <div class="settings-nav">
+      <!-- <button
+        class="nav-tab"
+        [ngClass]="{'active': activeTab === 'general'}"
+        (click)="switchTab('general')">
+        <i class="fas fa-cog"></i>
+        <span>General</span>
+      </button> -->
+
+      <!-- <button
+        class="nav-tab"
+        [ngClass]="{'active': activeTab === 'notifications'}"
+        (click)="switchTab('notifications')">
+        <i class="fas fa-bell"></i>
+        <span>Notifications</span>
+      </button>
+
+      <button
+        class="nav-tab"
+        [ngClass]="{'active': activeTab === 'security'}"
+        (click)="switchTab('security')">
+        <i class="fas fa-shield-alt"></i>
+        <span>Security</span>
+      </button>
+
+      <button
+        class="nav-tab"
+        [ngClass]="{'active': activeTab === 'appearance'}"
+        (click)="switchTab('appearance')">
+        <i class="fas fa-palette"></i>
+        <span>Appearance</span>
+      </button> -->
+
+      <button
+        class="nav-tab"
+        [ngClass]="{'active': activeTab === 'banner'}"
+        (click)="switchTab('banner')">
+        <i class="fas fa-image"></i>
+        <span>Banner Settings</span>
+      </button>
+    </div>
+
+    <!-- Settings Content -->
+    <div class="settings-panel">
+      <!-- General Settings -->
+      <!-- <div class="settings-section" *ngIf="activeTab === 'general'">
+        <h3>General Settings</h3>
+        <div class="form-group">
+          <label for="companyName">Company Name</label>
+          <input
+            type="text"
+            id="companyName"
+            [(ngModel)]="settings.general.companyName"
+            class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="timezone">Timezone</label>
+          <select id="timezone" [(ngModel)]="settings.general.timezone" class="form-control">
+            <option value="UTC">UTC</option>
+            <option value="EST">Eastern Time</option>
+            <option value="PST">Pacific Time</option>
+            <option value="GMT">GMT</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="language">Language</label>
+          <select id="language" [(ngModel)]="settings.general.language" class="form-control">
+            <option value="English">English</option>
+            <option value="Spanish">Spanish</option>
+            <option value="French">French</option>
+            <option value="German">German</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="dateFormat">Date Format</label>
+          <select id="dateFormat" [(ngModel)]="settings.general.dateFormat" class="form-control">
+            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+            <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+          </select>
+        </div>
+      </div> -->
+
+      <!-- Notification Settings -->
+      <!-- <div class="settings-section" *ngIf="activeTab === 'notifications'">
+        <h3>Notification Preferences</h3>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [(ngModel)]="settings.notifications.emailNotifications">
+            <span class="checkmark"></span>
+            Email Notifications
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [(ngModel)]="settings.notifications.pushNotifications">
+            <span class="checkmark"></span>
+            Push Notifications
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [(ngModel)]="settings.notifications.weeklyReports">
+            <span class="checkmark"></span>
+            Weekly Reports
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [(ngModel)]="settings.notifications.projectUpdates">
+            <span class="checkmark"></span>
+            Project Updates
+          </label>
+        </div>
+      </div> -->
+
+      <!-- Security Settings -->
+      <!-- <div class="settings-section" *ngIf="activeTab === 'security'">
+        <h3>Security Settings</h3>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [(ngModel)]="settings.security.twoFactorAuth">
+            <span class="checkmark"></span>
+            Enable Two-Factor Authentication
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="sessionTimeout">Session Timeout (minutes)</label>
+          <input
+            type="number"
+            id="sessionTimeout"
+            [(ngModel)]="settings.security.sessionTimeout"
+            class="form-control"
+            min="5" max="120">
+        </div>
+
+        <div class="form-group">
+          <label for="passwordExpiry">Password Expiry (days)</label>
+          <input
+            type="number"
+            id="passwordExpiry"
+            [(ngModel)]="settings.security.passwordExpiry"
+            class="form-control"
+            min="30" max="365">
+        </div>
+
+        <div class="form-group">
+          <label for="loginAttempts">Max Login Attempts</label>
+          <input
+            type="number"
+            id="loginAttempts"
+            [(ngModel)]="settings.security.loginAttempts"
+            class="form-control"
+            min="3" max="10">
+        </div>
+      </div> -->
+
+      <!-- Appearance Settings -->
+      <!-- <div class="settings-section" *ngIf="activeTab === 'appearance'">
+        <h3>Appearance Settings</h3>
+        <div class="form-group">
+          <label for="theme">Theme</label>
+          <select id="theme" [(ngModel)]="settings.appearance.theme" class="form-control">
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="auto">Auto (System)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [(ngModel)]="settings.appearance.sidebarCollapsed">
+            <span class="checkmark"></span>
+            Collapse Sidebar by Default
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input
+              type="checkbox"
+              [(ngModel)]="settings.appearance.compactMode">
+            <span class="checkmark"></span>
+            Compact Mode
+          </label>
+        </div>
+      </div> -->
+
+      <!-- Banner Settings -->
+      <div class="settings-section" *ngIf="activeTab === 'banner'">
+        <h3>Banner {{ isEditMode ? 'Edit' : 'Creation' }}</h3>
+        <form [formGroup]="mandatoryDetailsForm">
+          <div class="form-group mb-3">
+            <label for="pageType" class="form-label">Page Type:</label>
+            <select
+              id="pageType"
+              formControlName="page_type"
+              class="form-control"
+            >
+              <option value="">Select Page Type</option>
+              <option *ngFor="let pageType of pageTypes" [value]="pageType.value">
+                {{ pageType.label }}
+              </option>
+            </select>
+            <div *ngIf="mandatoryDetailsForm.get('page_type')?.touched && mandatoryDetailsForm.get('page_type')?.invalid" class="text-danger">
+              Page Type is required.
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="bannerContent" class="form-label">Banner Content:</label>
+            <div class="NgxEditor__Wrapper">
+              <ngx-editor-menu [editor]="mandatoryDetailsEditor" [toolbar]="toolbar" style="padding: 15px !important;">
+              </ngx-editor-menu>
+              <ngx-editor [editor]="mandatoryDetailsEditor" rows="8" formControlName="content" [disabled]="false"
+                [placeholder]="'Enter Banner Content here...'"></ngx-editor>
+            </div>
+            <div class="form-text">
+              <small class="text-muted">Use the editor to create rich content. The content will be saved as HTML in the database.</small>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="settings-actions">
+    <button class="btn btn-secondary" (click)="cancelEdit()" [disabled]="isLoading">
+      <i class="fas fa-times"></i>
+      Cancel
+    </button>
+    <button class="btn btn-primary" (click)="saveSettings()" [disabled]="isLoading">
+      <i class="fas" [ngClass]="isLoading ? 'fa-spinner fa-spin' : 'fa-save'"></i>
+      {{ isLoading ? 'Saving...' : (isEditMode ? 'Update Banner' : 'Save Banner') }}
+    </button>
+  </div>
+</div>

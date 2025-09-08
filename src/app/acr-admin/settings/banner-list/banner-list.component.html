@@ -1,0 +1,109 @@
+<div class="banner-list-container">
+  <div class="header">
+    <h2>Banner Management</h2>
+    <p class="subtitle">Manage system banners and notifications</p>
+  </div>
+
+  <div class="banner-content">
+    <!-- Add Banner Button -->
+    <div class="action-bar">
+      <button class="btn btn-primary" (click)="addBanner()">
+        <i class="fas fa-plus"></i>
+        Add New Banner
+      </button>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin fa-2x"></i>
+        <p>Loading banners...</p>
+      </div>
+    </div>
+
+    <!-- Banner List Table -->
+    <div class="banner-table-container" *ngIf="!isLoading">
+      <div class="table-responsive">
+        <table class="table table-striped">
+                     <thead>
+             <tr>
+               <th>Sr No</th>
+               <th>Page Type</th>
+               <th>Content Preview</th>
+               <th>Created Date</th>
+               <th>Actions</th>
+             </tr>
+           </thead>
+          <tbody>
+            <tr *ngFor="let banner of paginatedBanners; let i = index">
+              <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+              <td>
+                <div class="banner-title">
+                  <strong>{{ getPageTypeLabel(banner.page_type) }}</strong>
+                </div>
+              </td>
+              <td>
+                <div class="banner-preview">
+                  <div [innerHTML]="getBannerDetailsPreview(banner.content)"></div>
+                </div>
+              </td>
+              <td>
+                <div class="date-info">
+                  <!-- {{ formatDate(banner.created_at) }} -->
+                </div>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="editBanner(banner)"
+                    title="Edit Banner"
+                    [disabled]="isLoading">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-outline-danger"
+                    (click)="deleteBanner(banner)"
+                    title="Delete Banner"
+                    [disabled]="isLoading">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="!banners || banners.length === 0">
+              <td colspan="5" class="text-center no-data">
+                <div class="no-data-content">
+                  <i class="fas fa-image fa-3x text-muted"></i>
+                  <p class="text-muted">No banners found</p>
+                  <button class="btn btn-primary" (click)="addBanner()">
+                    <i class="fas fa-plus"></i>
+                    Add Your First Banner
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination-container" *ngIf="totalItems > itemsPerPage">
+        <!-- <ngx-pagination
+          [(page)]="currentPage"
+          [totalItems]="totalItems"
+          [itemsPerPage]="itemsPerPage"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          [directionLinks]="true"
+          (pageChange)="onPageChange($event)"
+          previousText="&lsaquo;"
+          nextText="&rsaquo;"
+          firstText="&laquo;"
+          lastText="&raquo;">
+        </ngx-pagination> -->
+      </div>
+    </div>
+  </div>
+</div>
