@@ -1,1 +1,173 @@
-<p>project-list works!</p>
+<div class="project-list-container">
+  <div class="header">
+    <h2>Project Management</h2>
+    <div class="header-buttons">
+      <!-- <button class="refresh-btn" (click)="refreshProjects()" title="Refresh Projects">
+        <i class="fas fa-sync-alt"></i>
+        Refresh
+      </button> -->
+      <button class="add-btn project" (click)="openAddJobModal()">Add New Project </button>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="search-box">
+      <div class="search-icon">
+        <i class="fas fa-search"></i>
+      </div>
+      <input type="text" placeholder="Search projects..." class="search-input" [(ngModel)]="searchKeyword"
+        (input)="onSearchInput()" (keyup.enter)="onSearchEnter()">
+      <button *ngIf="searchKeyword" class="clear-search-btn" (click)="clearSearch()" title="Clear search">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="filter-group" [ngClass]="{'mobile-expanded': showMobileFilters}">
+      <div class="filter-item">
+        <label class="filter-label">Status</label>
+        <select class="filter-select" [(ngModel)]="selectedStatus" (change)="onStatusChange(selectedStatus)">
+          <option *ngFor="let option of statusOptions" [value]="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Client</label>
+        <select class="filter-select" [(ngModel)]="selectedClient" (change)="onClientChange(selectedClient)">
+          <option value="">All Clients</option>
+          <option *ngFor="let client of uniqueClients" [value]="client">{{ client }}</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">Start Date</label>
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd" name="startDate"
+            [(ngModel)]="startDate" ngbDatepicker #startDatePicker="ngbDatepicker"
+            (dateSelect)="onStartDateSelect($event)" />
+          <button class="btn btn-outline-secondary calendar" (click)="startDatePicker.toggle()" type="button">
+            <i class="fas fa-calendar-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">End Date</label>
+        <div class="input-group">
+          <input class="form-control" placeholder="yyyy-mm-dd" name="endDate"
+            [(ngModel)]="endDate" ngbDatepicker #endDatePicker="ngbDatepicker"
+            (dateSelect)="onEndDateSelect($event)" />
+          <button class="btn btn-outline-secondary calendar" (click)="endDatePicker.toggle()" type="button">
+            <i class="fas fa-calendar-alt"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-item">
+        <label class="filter-label">&nbsp;</label>
+        <button class="btn btn-outline-secondary clear-filters" (click)="clearDateFilters()">
+          Clear All Filters
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-filter-toggle" (click)="toggleMobileFilters()">
+      <i class="fas fa-filter"></i>
+      <span>Filters</span>
+      <i class="fas" [ngClass]="showMobileFilters ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <!-- Loading state -->
+    <div *ngIf="showLoader" class="loading-container">
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span>Loading projects...</span>
+      </div>
+    </div>
+
+    <!-- Table content -->
+    <table *ngIf="!showLoader" class="projects-table">
+      <thead>
+        <tr>
+          <th>Project Name</th>
+          <th>Client</th>
+          <th>Published Date</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Day Rates Range</th>
+          <th>Positions</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <td *ngIf="!projectlist?.length" colspan="8" class="no-records">
+            <div class="no-records-message">
+              <i class="fas fa-folder-open"></i>
+              <h4>No Projects Found</h4>
+              <p>No projects match your current filters. Try adjusting your search criteria or create a new project.</p>
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngFor="let project of projectlist">
+          <td>{{ project.projectName }}</td>
+          <td>{{ project.client }}</td>
+          <td>{{ project.publishedDate | date:'mediumDate' }}</td>
+          <td>{{ project.clientLocation }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="getStatusClass(project.status)">
+              {{ project.status }}
+            </span>
+          </td>
+          <td>
+            ${{ project.dayRatesRange?.min | number }} - ${{ project.dayRatesRange?.max | number }}
+          </td>
+          <td>{{ project.noOfPositions }}</td>
+          <td class="actions">
+            <div class="dropdown">
+              <button class="dropdown-toggle" (click)="toggleDropdown(project._id, $event)" title="Actions">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+              <div class="dropdown-menu"
+                   [class.show]="openDropdownId === project._id"
+                   [style.top.px]="dropdownPosition.top"
+                   [style.left.px]="dropdownPosition.left">
+                <button class="dropdown-item view" (click)="viewDetails(project._id)" title="View Details">
+                  <i class="fas fa-eye"></i>
+                  <span>View Details</span>
+                </button>
+                <button class="dropdown-item primary" (click)="viewJobs(project._id)" title="View Jobs">
+                  <i class="fas fa-briefcase"></i>
+                  <span>View Jobs</span>
+                </button>
+                <button class="dropdown-item edit" (click)="openEditProjectModal(project)" title="Edit">
+                  <i class="fas fa-edit"></i>
+                  <span>Edit</span>
+                </button>
+                <button class="dropdown-item delete" (click)="deleteProject(project._id)" title="Delete">
+                  <i class="fas fa-trash"></i>
+                  <span>Delete</span>
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" *ngIf="totalRecords > 0">
+    <button class="page-btn" [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">&lt;</button>
+    <button class="page-btn" *ngFor="let page of [].constructor(Math.ceil(totalRecords / itemsPerPage)); let i = index"
+      [class.active]="currentPage === i + 1" (click)="onPageChange(i + 1)">
+      {{ i + 1 }}
+    </button>
+    <button class="page-btn" [disabled]="currentPage === Math.ceil(totalRecords / itemsPerPage)"
+      (click)="onPageChange(currentPage + 1)">&gt;</button>
+  </div>
+</div>

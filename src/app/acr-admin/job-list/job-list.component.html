@@ -1,1 +1,140 @@
-<p>job-list works!</p>
+<div class="job-list-container">
+  <div class="header">
+    <div class="header-content">
+      <h2>{{projectName ? projectName + ' - Jobs' : 'Job Management'}}</h2>
+      <div class="project-info" *ngIf="projectDetails">
+        <div class="project-details">
+          <span class="project-client">{{projectDetails.client}}</span>
+          <span class="project-location">{{projectDetails.clientLocation}}</span>
+          <span class="project-type">{{projectDetails.workType}}</span>
+        </div>
+      </div>
+    </div>
+    <button class="add-button" [routerLink]="['add']" [queryParams]="{projectId: projectId}">Add New Job</button>
+  </div>
+
+  <div class="search-filter">
+    <input type="text" placeholder="Search jobs..." class="search-input" [(ngModel)]="searchText" (input)="searchtext()">
+    <select class="filter-select" [(ngModel)]="selectedStatus" (change)="searchtext()">
+      <option value="">All Job Types</option>
+      <option *ngFor="let status of statusList" [value]="status">{{status}}</option>
+    </select>
+    <select class="filter-select" [(ngModel)]="selectedFilterStatus" (change)="applyStatusFilter()">
+      <option value="">All Status</option>
+      <option value="Applied">Applied</option>
+      <option value="Expired">Expired</option>
+      <option value="Active">Active</option>
+      <option value="Under Review">Under Review</option>
+      <option value="Actioned">Actioned</option>
+      <option value="Inactive">Inactive</option>
+    </select>
+  </div>
+
+    <div class="table-container">
+      <table class="jobs-table">
+        <thead>
+          <tr>
+            <th>Job ID</th>
+            <th>Job Title</th>
+            <th>No. of Roles</th>
+            <th>Publish Date</th>
+            <th>Apply By</th>
+            <th>Status</th>
+            <th>Role Details</th>
+            <th>Actions</th>
+            <!-- <th>Apply Job</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="joblist.length == 0">
+            <td colspan="8" class="no-records">
+              <div class="no-records-message">
+                <i class="fas fa-folder-open"></i>
+                <h4>No Jobs Found</h4>
+                <p>No jobs match your current filters. Try adjusting your search criteria or create a new job.</p>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let job of joblist">
+            <td>{{job.job_id}}</td>
+            <td>{{job.job_title}}</td>
+            <td>{{job.no_of_roles}}</td>
+            <td>{{job.publish_date | date:'dd/MM/yyyy'}}</td>
+            <td>
+              <ng-container *ngIf="!job?.cirextendJobDetails?.job_expire_date">
+                {{job?.jobExpireDate | date:'dd/MM/yyyy'}}
+              </ng-container>
+              <ng-container *ngIf="job?.cirextendJobDetails?.job_expire_date">
+                {{job?.cirextendJobDetails?.job_expire_date | date:'dd/MM/yyyy'}}
+              </ng-container>
+            </td>
+            <td>
+              <span class="status-badge" [ngClass]="job.status?.toLowerCase().replace(' ', '-')">
+                {{job.status}}
+              </span>
+            </td>
+            <td> <a href="{{job?.upload?.url}}" target="_blank" class="action-btn read-me">Read Me</a></td>
+            <td class="actions">
+              <div class="dropdown">
+                <button class="dropdown-toggle" (click)="toggleDropdown(job.job_id, $event)" title="Actions">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="dropdown-menu"
+                     [class.show]="openDropdownId === job.job_id"
+                     [style.top.px]="dropdownPosition.top"
+                     [style.left.px]="dropdownPosition.left">
+                  <button class="dropdown-item edit" (click)="editJob(job)" title="Edit Job">
+                    <i class="fas fa-edit"></i>
+                    <span>Edit</span>
+                  </button>
+                  <button class="dropdown-item view" (click)="appliedRoleData(job?.job_id)" title="Show Applications">
+                    <i class="fas fa-users"></i>
+                    <span>Show Applications</span>
+                  </button>
+                  <button class="dropdown-item send-mail" (click)="sendJobMail(job?.job_id)" title="Send Job Mail">
+                    <i class="fas fa-envelope"></i>
+                    <span>Send Mail</span>
+                  </button>
+                  <button class="dropdown-item delete" (click)="deleteJob(job)" title="Delete Job">
+                    <i class="fas fa-trash"></i>
+                    <span>Delete</span>
+                  </button>
+                </div>
+              </div>
+            </td>
+            <!-- <td class="actions">
+              <ng-container *ngIf="job.status !== 'Under Review'; else emailMessage">
+                <div *ngIf="!job.applied">
+                  <button class="action-btn apply"
+                    [disabled]="job.status === 'Applied' || job.status === 'Expired' || job.status === 'Inactive'"
+                    (click)="openModal(job)">
+                    Apply
+                  </button>
+                </div>
+                <div *ngIf="job.applied == true">
+                  <button class="action-btn upload"
+                    [disabled]="job.status === 'Not Submitted'"
+                    (click)="openCVModal(job)">
+                    Upload CV
+                  </button>
+                </div>
+              </ng-container>
+              <ng-template #emailMessage>
+                <span class="email-message">Email CVs to: jamie.thompson@saivensolutions.co.uk</span>
+              </ng-template>
+            </td> -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" *ngIf="totalRecords > 0">
+      <button class="page-btn" [disabled]="page === 1" (click)="paginate(page - 1)">&lt;</button>
+      <button class="page-btn" *ngFor="let pageNum of [].constructor(Math.ceil(totalRecords / pagesize)); let i = index"
+        [class.active]="page === i + 1" (click)="paginate(i + 1)">
+        {{ i + 1 }}
+      </button>
+      <button class="page-btn" [disabled]="page === Math.ceil(totalRecords / pagesize)"
+        (click)="paginate(page + 1)">&gt;</button>
+    </div>
+</div>

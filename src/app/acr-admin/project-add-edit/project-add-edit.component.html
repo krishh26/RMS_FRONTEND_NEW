@@ -1,1 +1,164 @@
-<p>project-add-edit works!</p>
+<div class="project-form-container">
+  <div class="header">
+    <h2>{{ isViewMode ? 'View Project' : (isEditMode ? 'Edit Project' : 'Add New Project') }}</h2>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="isEditMode && !projectData" class="loading-container">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <span>Loading project details...</span>
+    </div>
+  </div>
+
+  <!-- Form content -->
+  <div *ngIf="!isEditMode || projectData">
+
+      <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="project-form" [class.view-mode]="isViewMode">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="projectName">Project Name</label>
+        <input
+          type="text"
+          id="projectName"
+          formControlName="projectName"
+          placeholder="Enter project name"
+          [class.error]="projectForm.get('projectName')?.invalid && projectForm.get('projectName')?.touched">
+        <div class="error-message" *ngIf="projectForm.get('projectName')?.invalid && projectForm.get('projectName')?.touched">
+          Project name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="publishedDate">Published Date</label>
+        <input
+          type="date"
+          id="publishedDate"
+          formControlName="publishedDate"
+          [class.error]="projectForm.get('publishedDate')?.invalid && projectForm.get('publishedDate')?.touched">
+        <div class="error-message" *ngIf="projectForm.get('publishedDate')?.invalid && projectForm.get('publishedDate')?.touched">
+          Published date is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="client">Client</label>
+        <input
+          type="text"
+          id="client"
+          formControlName="client"
+          placeholder="Enter client name"
+          [class.error]="projectForm.get('client')?.invalid && projectForm.get('client')?.touched">
+        <div class="error-message" *ngIf="projectForm.get('client')?.invalid && projectForm.get('client')?.touched">
+          Client is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="clientLocation">Client Location</label>
+        <input
+          type="text"
+          id="clientLocation"
+          formControlName="clientLocation"
+          placeholder="Enter client location"
+          [class.error]="projectForm.get('clientLocation')?.invalid && projectForm.get('clientLocation')?.touched">
+        <div class="error-message" *ngIf="projectForm.get('clientLocation')?.invalid && projectForm.get('clientLocation')?.touched">
+          Client location is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="workType">Work Type</label>
+        <select
+          id="workType"
+          formControlName="workType"
+          [class.error]="projectForm.get('workType')?.invalid && projectForm.get('workType')?.touched">
+          <option *ngFor="let type of workTypes" [value]="type">{{ type }}</option>
+        </select>
+        <div class="error-message" *ngIf="projectForm.get('workType')?.invalid && projectForm.get('workType')?.touched">
+          Work type is required
+        </div>
+      </div>
+
+      <div class="form-group" formGroupName="dayRatesRange">
+        <label>Day Rates Range ($)</label>
+        <div class="range-inputs">
+          <input
+            type="number"
+            formControlName="min"
+            placeholder="Min rate"
+            [class.error]="projectForm.get('dayRatesRange.min')?.invalid && projectForm.get('dayRatesRange.min')?.touched">
+          <span>to</span>
+          <input
+            type="number"
+            formControlName="max"
+            placeholder="Max rate"
+            [class.error]="projectForm.get('dayRatesRange.max')?.invalid && projectForm.get('dayRatesRange.max')?.touched">
+        </div>
+        <div class="error-message" *ngIf="projectForm.get('dayRatesRange')?.invalid && projectForm.get('dayRatesRange')?.touched">
+          Both min and max rates are required and must be greater than 0
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="noOfPositions">Number of Positions</label>
+        <input
+          type="number"
+          id="noOfPositions"
+          formControlName="noOfPositions"
+          placeholder="Enter number of positions"
+          [class.error]="projectForm.get('noOfPositions')?.invalid && projectForm.get('noOfPositions')?.touched">
+        <div class="error-message" *ngIf="projectForm.get('noOfPositions')?.invalid && projectForm.get('noOfPositions')?.touched">
+          Number of positions is required and must be at least 1
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select
+          id="status"
+          formControlName="status"
+          [class.error]="projectForm.get('status')?.invalid && projectForm.get('status')?.touched">
+          <option *ngFor="let status of statusTypes" [value]="status">{{ status }}</option>
+        </select>
+        <div class="error-message" *ngIf="projectForm.get('status')?.invalid && projectForm.get('status')?.touched">
+          Status is required
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Clearance/Certifications Required</label>
+      <div class="certifications-list" formArrayName="clearanceOrCertifications">
+        <div *ngFor="let cert of certifications.controls; let i = index" class="certification-item">
+          <input [formControlName]="i" placeholder="Enter certification">
+          <button type="button" class="remove-btn" (click)="removeCertification(i)">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <button type="button" class="add-btn" (click)="addCertification()">
+          <i class="fas fa-plus"></i> Add Certification
+        </button>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="cancel-btn" (click)="onCancel()">
+        {{ isViewMode ? 'Back' : 'Cancel' }}
+      </button>
+      <button *ngIf="!isViewMode" type="submit" class="submit-btn">
+        {{ isEditMode ? 'Update' : 'Create' }} Project
+      </button>
+      <button *ngIf="isViewMode" type="button" class="edit-btn" (click)="editProject()">
+        Edit Project
+      </button>
+    </div>
+  </form>
+  </div>
+</div>

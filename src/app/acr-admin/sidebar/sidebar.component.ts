@@ -47,18 +47,18 @@ export class AcrAdminSidebarComponent implements OnInit {
         { label: 'Add Project', route: '/acr-admin/project/add' }
       ]
     },
-    {
-      label: 'Jobs',
-      icon: 'fas fa-briefcase',
-      route: '/acr-admin/jobs',
-      badge: null,
-      expanded: false,
-      subItems: [
-        { label: 'All Jobs', route: '/acr-admin/jobs' },
-        { label: 'Add Job', route: '/acr-admin/job/add' },
-        { label: 'Applications', route: '/acr-admin/job-applications' }
-      ]
-    },
+    // {
+    //   label: 'Jobs',
+    //   icon: 'fas fa-briefcase',
+    //   route: '/acr-admin/jobs',
+    //   badge: null,
+    //   expanded: false,
+    //   subItems: [
+    //     { label: 'All Jobs', route: '/acr-admin/jobs' },
+    //     { label: 'Add Job', route: '/acr-admin/job/add' },
+    //     { label: 'Applications', route: '/acr-admin/job-applications' }
+    //   ]
+    // },
     {
       label: 'Candidates',
       icon: 'fas fa-user-graduate',

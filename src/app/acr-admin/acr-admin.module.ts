@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxEditorModule } from 'ngx-editor';
+import { NgbDatepickerModule, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 // Layout components
 import { AcrAdminLayoutComponent } from './layout/acr-admin-layout.component';
@@ -57,13 +59,14 @@ const routes: Routes = [
 
       // Job routes
       { path: 'jobs', component: JobListComponent },
-      { path: 'job/add', component: JobAddEditComponent },
-      { path: 'job/edit/:id', component: JobAddEditComponent },
+      { path: 'jobs/add', component: JobAddEditComponent },
+      { path: 'jobs/edit/:id', component: JobAddEditComponent },
 
       // Project routes
       { path: 'projects', component: ProjectListComponent },
       { path: 'project/add', component: ProjectAddEditComponent },
       { path: 'project/edit/:id', component: ProjectAddEditComponent },
+      { path: 'projects/:id', component: ProjectAddEditComponent },
 
       // Other routes
       { path: 'send-job/:id', component: SendJobComponent },
@@ -119,7 +122,9 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
-    NgxEditorModule
+    NgxEditorModule,
+    NgbDatepickerModule,
+    NgxPaginationModule
   ]
 })
 export class AcrAdminModule { }
