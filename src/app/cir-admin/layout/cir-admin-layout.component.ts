@@ -90,7 +90,7 @@ export class CirAdminLayoutComponent implements OnInit, AfterViewInit {
 
   logout(): void {
     // Navigate to cir-admin-login page
-    this.router.navigate(['/cir-admin-login']);
+    this.router.navigate(['/auth/cir-admin-login']);
     this.isUserDropdownOpen = false;
   }
 

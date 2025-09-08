@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { LocalStorageService } from 'src/app/services/local-storage/local-storage.service';
 
 @Component({
   selector: 'app-acr-admin-layout',
@@ -17,8 +16,7 @@ export class AcrAdminLayoutComponent implements OnInit {
   currentBreadcrumb: string[] = ['ACR Admin'];
 
   constructor(
-    private router: Router,
-    private localStorageService: LocalStorageService
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -45,14 +43,20 @@ export class AcrAdminLayoutComponent implements OnInit {
   }
 
   navigateToProfile() {
-    // Navigate to profile page
+    // TODO: Implement profile navigation
+    console.log('Navigate to profile');
+    this.isUserDropdownOpen = false;
+  }
+
+  quickActions() {
+    // TODO: Implement quick actions
+    console.log('Quick Actions');
     this.isUserDropdownOpen = false;
   }
 
   logout() {
-    // Clear localStorage and navigate to acr-admin-login page
-    this.localStorageService.clearStorage();
-    this.router.navigate(['/acr-admin-login']);
+    // Navigate to acr-admin-login page
+    this.router.navigate(['/auth/acr-admin-login']);
     this.isUserDropdownOpen = false;
   }
 
