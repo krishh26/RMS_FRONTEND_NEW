@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CirSericeService } from '../../services/cir-service/cir-serice.service';
 import { NotificationService } from '../../services/notification/notification.service';
 
@@ -22,12 +22,20 @@ export class ProjectListComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private activatedRoute: ActivatedRoute,
     private cirService: CirSericeService,
     private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
-    this.getProjectList();
+    // Check for tab parameter from navigation
+    this.activatedRoute.queryParams.subscribe(params => {
+      const tab = params['tab'];
+      if (tab && ['Active', 'Future Role', 'Expired'].includes(tab)) {
+        this.selectedStatus = tab as 'Active' | 'Future Role' | 'Expired';
+      }
+      this.getProjectList();
+    });
   }
 
   getProjectList() {
@@ -66,8 +74,13 @@ export class ProjectListComponent implements OnInit {
   }
 
   viewJobs(projectId: string): void {
-    // Navigate to job list page for the specific project
-    this.router.navigate(['/cir-user/jobs'], { queryParams: { projectId: projectId } });
+    // Navigate to job list page for the specific project with current tab
+    this.router.navigate(['/cir-user/jobs'], {
+      queryParams: {
+        projectId: projectId,
+        tab: this.selectedStatus
+      }
+    });
   }
 
   toggleMobileFilters(): void {

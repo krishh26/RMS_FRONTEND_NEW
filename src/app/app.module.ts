@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgxEditorModule } from 'ngx-editor';
 import { APIInterceptor } from './shared/interceptor/ApiInterceptor';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { APIInterceptor } from './shared/interceptor/ApiInterceptor';
     NgxEditorModule
   ],
   providers: [
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: APIInterceptor,

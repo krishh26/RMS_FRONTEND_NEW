@@ -364,11 +364,15 @@
                   </div>
                   <div class="col-lg-8">
                     <div class="form-group">
-                      <select class="form-control" formControlName="preferredRoles" multiple>
-                        <option *ngFor="let role of preferredRoles" [value]="role.value">
-                          {{ role.label }}
-                        </option>
-                      </select>
+                      <ng-multiselect-dropdown
+                        [placeholder]="'Select Preferred Roles'"
+                        [data]="preferredRoles"
+                        [(ngModel)]="selectedPreferredRoles"
+                        [settings]="dropdownSettings"
+                        (onSelect)="onItemSelect($event)"
+                        (onSelectAll)="onSelectAll($event)"
+                        formControlName="preferredRoles">
+                      </ng-multiselect-dropdown>
                       <span class="text-danger" *ngIf="
                         otherDetailForm.controls?.['preferredRoles']?.touched &&
                         otherDetailForm.controls?.['preferredRoles']?.errors?.['required']">
@@ -486,15 +490,19 @@
                   </div>
                   <div class="col-lg-8">
                     <div class="form-group">
-                      <select class="form-control" formControlName="callTime" multiple>
-                        <option *ngFor="let time of timeSlots" [value]="time.value">
-                          {{ time.label }}
-                        </option>
-                      </select>
+                      <ng-multiselect-dropdown
+                        [placeholder]="'Select Preferred Contact Time'"
+                        [data]="timeSlots"
+                        [(ngModel)]="selectedCallTime"
+                        [settings]="dropdownSettings"
+                        (onSelect)="onItemSelect($event)"
+                        (onSelectAll)="onSelectAll($event)"
+                        formControlName="callTime">
+                      </ng-multiselect-dropdown>
                       <span class="text-danger" *ngIf="
                     otherDetailForm.controls?.['callTime']?.touched &&
                     otherDetailForm.controls?.['callTime']?.errors?.['required']">
-                        Please enter callTime.
+                        Please select preferred contact time.
                       </span>
                     </div>
                   </div>
@@ -505,15 +513,19 @@
                   </div>
                   <div class="col-lg-8">
                     <div class="form-group">
-                      <select class="form-control" formControlName="callDay" multiple>
-                        <option *ngFor="let day of daysOfWeek" [value]="day.value">
-                          {{ day.label }}
-                        </option>
-                      </select>
+                      <ng-multiselect-dropdown
+                        [placeholder]="'Select Preferred Contact Day'"
+                        [data]="daysOfWeek"
+                        [(ngModel)]="selectedCallDay"
+                        [settings]="dropdownSettings"
+                        (onSelect)="onItemSelect($event)"
+                        (onSelectAll)="onSelectAll($event)"
+                        formControlName="callDay">
+                      </ng-multiselect-dropdown>
                       <span class="text-danger" *ngIf="
                     otherDetailForm.controls?.['callDay']?.touched &&
                     otherDetailForm.controls?.['callDay']?.errors?.['required']">
-                        Please enter callDay.
+                        Please select preferred contact day.
                       </span>
                     </div>
                   </div>

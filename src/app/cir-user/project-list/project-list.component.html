@@ -1,10 +1,10 @@
 <div class="project-list-container">
   <div class="header">
-    <div class="breadcrumb">
+    <!-- <div class="breadcrumb">
       <a routerLink="/cir-user">Dashboard</a>
       <span class="separator">/</span>
       <span class="current">Projects</span>
-    </div>
+    </div> -->
     <h2>Project Management</h2>
     <div class="header-buttons">
       <button class="refresh-btn" (click)="refreshProjects()" title="Refresh Projects">
@@ -28,20 +28,73 @@
           class="tab-btn"
           [class.active]="selectedStatus === 'Active'"
           (click)="onStatusChange('Active')">
-          Active
+          Active Roles
         </button>
         <button
           class="tab-btn"
           [class.active]="selectedStatus === 'Future Role'"
           (click)="onStatusChange('Future Role')">
-          Future Role
+          Future Roles
         </button>
         <button
           class="tab-btn"
           [class.active]="selectedStatus === 'Expired'"
           (click)="onStatusChange('Expired')">
-          Expired
+          Expired Roles
         </button>
+      </div>
+    </div>
+
+    <!-- No Active Projects Message -->
+    <!-- && (!projectlist || projectlist.length === 0) -->
+    <div *ngIf="selectedStatus === 'Active' && !showLoader " class="no-active-projects-message">
+      <div class="message-container">
+        <div class="icon-wrapper">
+          <div class="icon">
+            <i class="fas fa-briefcase"></i>
+          </div>
+        </div>
+        <h3>No Active Projects at the Moment!</h3>
+        <p>We don't have any active projects available right now, but exciting opportunities are on the way! Check out the Future Roles tab to explore upcoming positions and express your interest. By doing so, you'll be among the first to be considered when new projects open up.</p>
+        <p class="stay-connected">Stay connected — your next role could be just around the corner!</p>
+        <div class="cta-button">
+          <button (click)="onStatusChange('Future Role')">
+            <i class="fas fa-arrow-right"></i>
+            Explore Future Roles
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Future Role Message -->
+    <div *ngIf="selectedStatus === 'Future Role' && !showLoader" class="future-role-message">
+      <div class="message-container">
+        <div class="icon-wrapper">
+          <div class="icon">
+            <i class="fas fa-star"></i>
+          </div>
+        </div>
+        <h3>🌟 Upcoming Opportunities 🌟</h3>
+        <p>These are the projects that will be active soon.</p>
+        <p>Click <strong>View Jobs</strong> to explore and apply for multiple roles under each project.</p>
+        <p>Choose the role(s) that best match your skills and interests, then click <strong>Apply</strong>.</p>
+        <p class="note-text"><strong>Note:</strong> Please read the attached ReadMe documents carefully for project details before applying.</p>
+        <p class="stay-connected">Your next opportunity starts here — don't miss out!</p>
+      </div>
+    </div>
+
+    <!-- Expired Role Message -->
+    <div *ngIf="selectedStatus === 'Expired' && !showLoader" class="expired-role-message">
+      <div class="message-container">
+        <div class="icon-wrapper">
+          <div class="icon">
+            <i class="fas fa-clock"></i>
+          </div>
+        </div>
+        <h3>Expired Projects & Roles</h3>
+        <p>These projects and roles have now expired and are no longer open for applications.</p>
+        <p>You can still view them for your reference to understand the type of opportunities we offer and prepare for similar upcoming roles.</p>
+        <p class="stay-connected">👉 For active opportunities, please check the <strong>Active</strong> and <strong>Future Role</strong> sections.</p>
       </div>
     </div>
 
