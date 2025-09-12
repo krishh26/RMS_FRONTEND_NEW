@@ -15,7 +15,7 @@ export class UserListComponent implements OnInit {
   filteredUsers: User[] = [];
   expandedUser: string | null = null;
   showFilter: boolean = false;
-  
+
   // Pagination
   page: number = pagination.page;
   pagesize = pagination.itemsPerPage;
@@ -35,10 +35,10 @@ export class UserListComponent implements OnInit {
   };
 
   // Table headers for basic view
-  basicHeaders = ['Name', 'Email', 'Phone Number', 'Nationality', 'Current Work', 
+  basicHeaders = ['Name', 'Email', 'Phone Number', 'Nationality', 'Current Work',
     // 'Actions'
   ];
-  
+
   // Table headers for detailed view
   detailedHeaders = [
     'Country Code',
@@ -80,6 +80,11 @@ export class UserListComponent implements OnInit {
     this.databaseService.getModelData(payload, this.userFilter).subscribe((response: UserResponse) => {
       if (response?.status) {
         this.users = response?.data;
+        // Ensure each user has an id field (handle both _id and id)
+        this.users = this.users.map(user => ({
+          ...user,
+          id: user.id || (user as any)._id || Math.random().toString(36).substr(2, 9)
+        }));
         this.filteredUsers = [...this.users];
         this.totalRecords = response?.meta_data?.items;
       } else {
@@ -91,7 +96,12 @@ export class UserListComponent implements OnInit {
   }
 
   toggleUserDetails(userId: string): void {
-    this.expandedUser = this.expandedUser === userId ? null : userId;
+    // If clicking on the same user, close it. Otherwise, open this user and close others
+    if (this.expandedUser === userId) {
+      this.expandedUser = null;
+    } else {
+      this.expandedUser = userId;
+    }
   }
 
   viewDetails(userId: string): void {
@@ -144,7 +154,7 @@ export class UserListComponent implements OnInit {
       page: 1,
       limit: 10000
     };
-    
+
     this.databaseService.getModelData(payload, {}).subscribe((response: UserResponse) => {
       if (response?.status) {
         const processedData = this.processDataForExcel(response?.data);
@@ -223,7 +233,7 @@ export class UserListComponent implements OnInit {
     const pages: number[] = [];
     const startPage = Math.max(1, this.page - 2);
     const endPage = Math.min(totalPages, this.page + 2);
-    
+
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }

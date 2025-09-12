@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cir-admin-dashboard',
@@ -17,12 +18,52 @@ export class CirAdminDashboardComponent implements OnInit {
       color: '#3498db'
     },
     {
-      title: 'Active Jobs',
+      title: 'Active Projects',
       value: '18',
       change: '+8%',
       changeType: 'positive',
-      icon: 'fas fa-briefcase',
+      icon: 'fas fa-play-circle',
       color: '#2ecc71'
+    },
+    {
+      title: 'Future Projects',
+      value: '4',
+      change: '+2%',
+      changeType: 'positive',
+      icon: 'fas fa-clock',
+      color: '#f39c12'
+    },
+    {
+      title: 'Expired Projects',
+      value: '2',
+      change: '-1%',
+      changeType: 'negative',
+      icon: 'fas fa-times-circle',
+      color: '#e74c3c'
+    },
+    {
+      title: 'Active Roles',
+      value: '12',
+      change: '+5%',
+      changeType: 'positive',
+      icon: 'fas fa-user-tie',
+      color: '#9b59b6'
+    },
+    {
+      title: 'Future Roles',
+      value: '3',
+      change: '+1%',
+      changeType: 'positive',
+      icon: 'fas fa-calendar-plus',
+      color: '#1abc9c'
+    },
+    {
+      title: 'Expired Roles',
+      value: '1',
+      change: '0%',
+      changeType: 'neutral',
+      icon: 'fas fa-calendar-times',
+      color: '#95a5a6'
     },
     {
       title: 'Total Users',
@@ -30,14 +71,22 @@ export class CirAdminDashboardComponent implements OnInit {
       change: '+5%',
       changeType: 'positive',
       icon: 'fas fa-users',
-      color: '#9b59b6'
+      color: '#34495e'
     },
     {
-      title: 'Applications',
-      value: '89',
-      change: '+23%',
+      title: 'Active Users',
+      value: '142',
+      change: '+8%',
       changeType: 'positive',
-      icon: 'fas fa-file-alt',
+      icon: 'fas fa-user-check',
+      color: '#27ae60'
+    },
+    {
+      title: 'Inactive Users',
+      value: '14',
+      change: '-3%',
+      changeType: 'negative',
+      icon: 'fas fa-user-times',
       color: '#e67e22'
     }
   ];
@@ -73,16 +122,9 @@ export class CirAdminDashboardComponent implements OnInit {
     {
       title: 'Add New Project',
       description: 'Create a new project',
-      icon: 'fas fa-plus',
+      icon: 'fas fa-project-diagram',
       route: '/cir-admin/projects/add',
       color: '#3498db'
-    },
-    {
-      title: 'Post New Job',
-      description: 'Create a new job posting',
-      icon: 'fas fa-briefcase',
-      route: '/cir-admin/jobs/add',
-      color: '#2ecc71'
     },
     {
       title: 'Add New User',
@@ -90,17 +132,10 @@ export class CirAdminDashboardComponent implements OnInit {
       icon: 'fas fa-user-plus',
       route: '/cir-admin/users/add',
       color: '#9b59b6'
-    },
-    {
-      title: 'View Reports',
-      description: 'Generate reports and analytics',
-      icon: 'fas fa-chart-bar',
-      route: '/cir-admin/reports',
-      color: '#e67e22'
     }
   ];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -123,5 +158,9 @@ export class CirAdminDashboardComponent implements OnInit {
       application: '#e67e22'
     };
     return colors[type] || '#95a5a6';
+  }
+
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
   }
 }

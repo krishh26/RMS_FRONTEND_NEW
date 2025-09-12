@@ -36,7 +36,7 @@
           <div class="col-md-4">
             <div class="form-group">
               <label class="form-label">Phone Number</label>
-              <input type="text" class="form-control" placeholder="Enter phone number" 
+              <input type="text" class="form-control" placeholder="Enter phone number"
                      (keypress)="NumberOnly($event)" [(ngModel)]="userFilter.phoneNumber" />
             </div>
           </div>
@@ -92,7 +92,7 @@
     <div class="table-header">
       <h3>User Details</h3>
     </div>
-    
+
     <div class="table-responsive">
       <table class="users-table">
         <thead>
@@ -122,17 +122,17 @@
                 </button>
               </td> -->
               <td>
-                <button class="toggle-btn" (click)="toggleUserDetails(user.id)" 
+                <button class="toggle-btn" (click)="toggleUserDetails(user.id)"
                         [class.expanded]="expandedUser === user.id">
                   <i class="fa" [ngClass]="expandedUser === user.id ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
                   {{ expandedUser === user.id ? 'Hide' : 'Show' }} Details
                 </button>
               </td>
             </tr>
-            
+
             <!-- Expanded Details Row -->
             <tr *ngIf="expandedUser === user.id" class="details-row">
-              <td colspan="7" class="details-cell">
+              <td colspan="6" class="details-cell">
                 <div class="details-content">
                   <h4>Detailed Information</h4>
                   <div class="details-grid">
@@ -236,8 +236,8 @@
     <!-- Pagination -->
     <div class="pagination" *ngIf="totalRecords > pagesize">
       <button class="page-btn" [disabled]="page === 1" (click)="paginate(page - 1)">&lt;</button>
-      <button class="page-btn" 
-              *ngFor="let pageNum of getPageNumbers()" 
+      <button class="page-btn"
+              *ngFor="let pageNum of getPageNumbers()"
               [class.active]="pageNum === page"
               (click)="paginate(pageNum)">
         {{ pageNum }}

@@ -5,12 +5,12 @@
       <h1 class="welcome-title">Welcome back, Admin!</h1>
       <p class="welcome-subtitle">Here's what's happening with your projects and jobs today.</p>
     </div>
-    <div class="welcome-actions">
+    <!-- <div class="welcome-actions">
       <button class="btn btn-primary">
         <i class="fas fa-plus"></i>
         Quick Add
       </button>
-    </div>
+    </div> -->
   </div>
 
   <!-- Statistics Cards -->
@@ -30,133 +30,23 @@
     </div>
   </div>
 
-  <!-- Main Content Grid -->
-  <div class="dashboard-grid">
-    <!-- Quick Actions -->
-    <div class="dashboard-card quick-actions-card">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="fas fa-bolt"></i>
-          Quick Actions
-        </h3>
-      </div>
-      <div class="card-content">
-        <div class="quick-actions-grid">
-          <div class="quick-action-item" *ngFor="let action of quickActions">
-            <div class="action-icon" [style.background-color]="action.color">
-              <i [class]="action.icon"></i>
-            </div>
-            <div class="action-content">
-              <h4 class="action-title">{{ action.title }}</h4>
-              <p class="action-description">{{ action.description }}</p>
-            </div>
-            <button class="action-btn" [routerLink]="action.route">
-              <i class="fas fa-arrow-right"></i>
-            </button>
-          </div>
+  <!-- Quick Actions Section -->
+  <div class="quick-actions-section">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="quick-actions-grid">
+      <div class="quick-action-item" *ngFor="let action of quickActions" (click)="navigateTo(action.route)">
+        <div class="action-icon" [style.background-color]="action.color">
+          <i [class]="action.icon"></i>
         </div>
-      </div>
-    </div>
-
-    <!-- Recent Activities -->
-    <div class="dashboard-card activities-card">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="fas fa-clock"></i>
-          Recent Activities
-        </h3>
-        <button class="view-all-btn">View All</button>
-      </div>
-      <div class="card-content">
-        <div class="activities-list">
-          <div class="activity-item" *ngFor="let activity of recentActivities">
-            <div class="activity-icon" [style.background-color]="getActivityColor(activity.type)">
-              <i [class]="getActivityIcon(activity.type)"></i>
-            </div>
-            <div class="activity-content">
-              <p class="activity-message">{{ activity.message }}</p>
-              <div class="activity-meta">
-                <span class="activity-user">{{ activity.user }}</span>
-                <span class="activity-time">{{ activity.time }}</span>
-              </div>
-            </div>
-          </div>
+        <div class="action-content">
+          <h3 class="action-title">{{ action.title }}</h3>
+          <p class="action-description">{{ action.description }}</p>
+        </div>
+        <div class="action-arrow">
+          <i class="fas fa-arrow-right"></i>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Additional Dashboard Content -->
-  <div class="dashboard-bottom-grid">
-    <!-- Project Status -->
-    <div class="dashboard-card project-status-card">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="fas fa-chart-pie"></i>
-          Project Status Overview
-        </h3>
-      </div>
-      <div class="card-content">
-        <div class="status-chart">
-          <div class="chart-item">
-            <div class="chart-label">
-              <span class="status-dot active"></span>
-              Active Projects
-            </div>
-            <div class="chart-value">18</div>
-          </div>
-          <div class="chart-item">
-            <div class="chart-label">
-              <span class="status-dot planning"></span>
-              Planning
-            </div>
-            <div class="chart-value">4</div>
-          </div>
-          <div class="chart-item">
-            <div class="chart-label">
-              <span class="status-dot completed"></span>
-              Completed
-            </div>
-            <div class="chart-value">2</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Upcoming Deadlines -->
-    <div class="dashboard-card deadlines-card">
-      <div class="card-header">
-        <h3 class="card-title">
-          <i class="fas fa-calendar-alt"></i>
-          Upcoming Deadlines
-        </h3>
-      </div>
-      <div class="card-content">
-        <div class="deadlines-list">
-          <div class="deadline-item">
-            <div class="deadline-date">
-              <span class="day">15</span>
-              <span class="month">Dec</span>
-            </div>
-            <div class="deadline-content">
-              <h4 class="deadline-title">Project Alpha Review</h4>
-              <p class="deadline-project">E-commerce Platform</p>
-            </div>
-            <div class="deadline-status urgent">Urgent</div>
-          </div>
-          <div class="deadline-item">
-            <div class="deadline-date">
-              <span class="day">20</span>
-              <span class="month">Dec</span>
-            </div>
-            <div class="deadline-content">
-              <h4 class="deadline-title">Job Applications Close</h4>
-              <p class="deadline-project">Senior Developer</p>
-            </div>
-            <div class="deadline-status normal">Normal</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
