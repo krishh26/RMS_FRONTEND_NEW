@@ -132,7 +132,7 @@
               <button class="dropdown-toggle" (click)="toggleDropdown(project._id, $event)" title="Actions">
                 <i class="fas fa-ellipsis-v"></i>
               </button>
-              <div class="dropdown-menu" 
+              <div class="dropdown-menu"
                    [class.show]="openDropdownId === project._id"
                    [style.top.px]="dropdownPosition.top"
                    [style.left.px]="dropdownPosition.left">
@@ -142,7 +142,7 @@
                 </button>
                 <button class="dropdown-item primary" (click)="viewJobs(project._id)" title="View Jobs">
                   <i class="fas fa-briefcase"></i>
-                  <span>View Jobs</span>
+                  <span>View Roles</span>
                 </button>
                 <button class="dropdown-item edit" (click)="openEditProjectModal(project)" title="Edit">
                   <i class="fas fa-edit"></i>

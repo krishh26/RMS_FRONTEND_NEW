@@ -368,7 +368,7 @@ export class JobListComponent implements OnInit {
     // Close dropdown and navigate to edit job page with job ID and project ID
     this.closeDropdown();
     this.router.navigate(['/cir-admin/jobs/add'], {
-      queryParams: { 
+      queryParams: {
         projectId: this.projectId,
         jobId: job.job_id
       }
@@ -422,7 +422,7 @@ export class JobListComponent implements OnInit {
     // Close dropdown and navigate to applications page for this specific job
     this.closeDropdown();
     this.router.navigate(['/cir-admin/applications'], {
-      queryParams: { 
+      queryParams: {
         jobId: job.job_id,
         projectId: this.projectId,
         jobTitle: job.job_title
@@ -447,43 +447,43 @@ export class JobListComponent implements OnInit {
     const isMobile = window.innerWidth <= 768;
     const dropdownWidth = isMobile ? 140 : 160; // min-width from CSS
     const dropdownHeight = 200; // approximate height for 4 items
-    
+
     let left: number;
     let top = rect.bottom + 5;
-    
+
     if (isMobile) {
       // Center the dropdown on mobile
       left = rect.left + (rect.width / 2) - (dropdownWidth / 2);
     } else {
       // Position to the right of the button on desktop
       left = rect.right - dropdownWidth;
-      
+
       // Check if dropdown would go off the right edge
       if (left < 10) {
         left = rect.left - dropdownWidth + rect.width;
       }
     }
-    
+
     // Check if dropdown would go off the bottom edge
     if (top + dropdownHeight > window.innerHeight - 10) {
       top = rect.top - dropdownHeight - 5;
     }
-    
+
     // Ensure dropdown doesn't go off the left edge
     if (left < 10) {
       left = 10;
     }
-    
+
     // Ensure dropdown doesn't go off the right edge
     if (left + dropdownWidth > window.innerWidth - 10) {
       left = window.innerWidth - dropdownWidth - 10;
     }
-    
+
     // Ensure dropdown doesn't go off the top edge
     if (top < 10) {
       top = 10;
     }
-    
+
     this.dropdownPosition = { top, left };
   }
 
@@ -523,5 +523,9 @@ export class JobListComponent implements OnInit {
     this.router.navigate(['/cir-admin/jobs/send', jobId], {
       queryParams: { projectId: this.projectId }
     });
+  }
+
+  goBack(): void {
+    this.router.navigate(['/cir-admin/projects']);
   }
 }

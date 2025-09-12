@@ -11,7 +11,13 @@
         </div>
       </div>
     </div>
-    <button class="add-button" [routerLink]="['add']" [queryParams]="{projectId: projectId}">Add New Job</button>
+    <div class="header-actions">
+      <button class="back-button" (click)="goBack()" title="Back to Projects">
+        <i class="fas fa-arrow-left"></i>
+        <span>BACK</span>
+      </button>
+      <button class="add-button" [routerLink]="['add']" [queryParams]="{projectId: projectId}">Add New Job</button>
+    </div>
   </div>
 
     <div class="search-filter">
@@ -74,7 +80,7 @@
                 <button class="dropdown-toggle" (click)="toggleDropdown(job.job_id, $event)" title="Actions">
                   <i class="fas fa-ellipsis-v"></i>
                 </button>
-                <div class="dropdown-menu" 
+                <div class="dropdown-menu"
                      [class.show]="openDropdownId === job.job_id"
                      [style.top.px]="dropdownPosition.top"
                      [style.left.px]="dropdownPosition.left">

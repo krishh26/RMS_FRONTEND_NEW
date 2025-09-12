@@ -52,17 +52,58 @@
       }
     }
 
-    .add-button {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.2s;
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
 
-      &:hover {
-        background-color: #218838;
+      .back-button {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #6c757d;
+        font-size: 14px;
+        font-weight: 500;
+
+        &:hover {
+          background: #e9ecef;
+          border-color: #adb5bd;
+          color: #495057;
+        }
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        i {
+          font-size: 14px;
+        }
+
+        span {
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+
+      .add-button {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: #218838;
+        }
       }
     }
   }
@@ -543,6 +584,41 @@
 @media (max-width: 768px) {
   .job-list-container {
     padding: 15px;
+
+    .header {
+      flex-direction: column;
+      gap: 15px;
+
+      .header-content {
+        h2 {
+          font-size: 24px;
+        }
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: flex-end;
+        gap: 10px;
+
+        .back-button {
+          padding: 8px 12px;
+          font-size: 13px;
+
+          i {
+            font-size: 12px;
+          }
+
+          span {
+            font-size: 13px;
+          }
+        }
+
+        .add-button {
+          padding: 8px 16px;
+          font-size: 13px;
+        }
+      }
+    }
 
     .search-filter {
       flex-direction: column;
