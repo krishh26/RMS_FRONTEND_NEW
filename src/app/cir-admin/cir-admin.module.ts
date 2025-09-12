@@ -31,6 +31,7 @@ import { SendJobComponent } from './project/send-job/send-job.component';
 import { NgxEditorModule } from 'ngx-editor';
 import { SharedModule } from '../shared/shared.module';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { DatabaseService } from '../services/database-service/database.service';
 import { NotificationService } from '../services/notification/notification.service';
 
@@ -104,6 +105,7 @@ const routes: Routes = [
     HttpClientModule,
     NgxEditorModule,
     NgxPaginationModule,
+    NgMultiSelectDropDownModule,
     SharedModule
   ],
   providers: [
