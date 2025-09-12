@@ -38,6 +38,11 @@ export class CirRegisterComponent implements OnInit {
   showValidUptoDate: boolean = false;
   file: any;
 
+  // Multi-select dropdown properties
+  selectedPreferredRoles: any[] = [];
+  selectedCallTime: any[] = [];
+  selectedCallDay: any[] = [];
+
   // Time slots and days
   timeSlots = [
     { label: '1-2 AM', value: 1 },
@@ -453,11 +458,24 @@ export class CirRegisterComponent implements OnInit {
   }
 
   onItemSelect(item: any) {
-    console.log(item);
+    console.log('Item selected:', item);
+    // Update form controls with selected values
+    this.updateFormControls();
   }
 
   onSelectAll(items: any) {
-    console.log(items);
+    console.log('All items selected:', items);
+    // Update form controls with selected values
+    this.updateFormControls();
+  }
+
+  updateFormControls() {
+    // Update form controls with current multi-select values
+    this.otherDetailForm.patchValue({
+      preferredRoles: this.selectedPreferredRoles,
+      callTime: this.selectedCallTime,
+      callDay: this.selectedCallDay
+    });
   }
 
   setWillingToUndertakeVisibility(): void {
@@ -520,28 +538,32 @@ export class CirRegisterComponent implements OnInit {
     if (!this.file) {
       return this.notificationService.showError('Please upload file');
     }
-    const selectedDays = this.otherDetailForm.controls['callDay'].value;
-    const selectedDaysArray = Array.isArray(selectedDays) ? selectedDays : [];
 
-    const selectedTimes = this.otherDetailForm.controls['callTime'].value;
-    const selectedTimesArray = Array.isArray(selectedTimes) ? selectedTimes : [];
+    // Update form controls with current multi-select values
+    this.updateFormControls();
 
-    const selectedRoles = this.otherDetailForm.controls['preferredRoles'].value;
-    const selectedRolesArray = Array.isArray(selectedRoles) ? selectedRoles : [];
+    // Extract values from multi-select dropdowns
+    const selectedDays = this.selectedCallDay.map(day => day.value);
+    const selectedTimes = this.selectedCallTime.map(time => time.value);
+    const selectedRoles = this.selectedPreferredRoles.map(role => role.value);
 
     const cvObject = {
       key: this.file?.key,
       url: this.file?.url,
       name: this.file?.name
     };
+
     const formData = {
       ...this.otherDetailForm.value,
-      callDay: selectedDaysArray,
-      callTime: selectedTimesArray,
-      preferredRoles: selectedRolesArray,
+      callDay: selectedDays,
+      callTime: selectedTimes,
+      preferredRoles: selectedRoles,
       cv: cvObject,
       referredBy: String(localStorage.getItem('referCode')) || null,
     };
+
+    console.log('Form data being sent:', formData);
+
     this.userdata = this.localStorageService.getLogger();
     this.userID = this.userdata?.user?._id;
     this.otherDetailForm.controls['cv'].patchValue(cvObject);

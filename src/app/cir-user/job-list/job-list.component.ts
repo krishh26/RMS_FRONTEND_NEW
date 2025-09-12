@@ -44,6 +44,8 @@ export class JobListComponent implements OnInit {
   projectId: string = '';
   projectDetails: any = null;
   projectName: string = '';
+  projectStatus: string = ''; // Store the project status
+  selectedTab: string = 'Active'; // Store the selected tab from project list
 
   constructor(
     private router: Router,
@@ -65,9 +67,10 @@ export class JobListComponent implements OnInit {
   ngOnInit() {
     this.loginData = JSON.parse(localStorage.getItem('loginUser') || '{}');
 
-    // Get project_id from query parameters
+    // Get project_id and selectedTab from query parameters
     this.activatedRoute.queryParams.subscribe(params => {
       this.projectId = params['projectId'] || '';
+      this.selectedTab = params['tab'] || 'Active'; // Get the selected tab
       if (this.projectId) {
         this.getProjectDetails();
         this.getProjectList();
@@ -272,7 +275,9 @@ export class JobListComponent implements OnInit {
       if (response?.status) {
         this.projectDetails = response?.data;
         this.projectName = response?.data?.projectName || 'Unknown Project';
+        this.projectStatus = response?.data?.status || ''; // Store project status
         console.log('Project details:', this.projectDetails);
+        console.log('Project status:', this.projectStatus);
       } else {
         this.notificationService.showError(response?.message || 'Failed to fetch project details');
       }
@@ -375,9 +380,53 @@ export class JobListComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  goBack() {
+    // Navigate back to project list with the selected tab
+    this.router.navigate(['/cir-user/projects'], {
+      queryParams: { tab: this.selectedTab }
+    });
+  }
+
+  isProjectExpired(): boolean {
+    return this.projectStatus?.toLowerCase() === 'expired';
+  }
+
+  isProjectFutureRole(): boolean {
+    return this.projectStatus?.toLowerCase() === 'future role';
+  }
+
+  getJobStatus(job: any): string {
+    // If project is expired, show all jobs as expired
+    if (this.isProjectExpired()) {
+      return 'Expired';
+    }
+    return job?.status || 'Unknown';
+  }
+
   ngOnDestroy() {
     if (this.timerSubscription) {
       this.timerSubscription.unsubscribe();
+    }
+  }
+
+  getStatusClass(status: string): string {
+    if (!status) return '';
+
+    // Convert status to lowercase and handle special cases
+    const statusLower = status.toLowerCase().replace(/\s+/g, '-');
+
+    // Map status values to CSS classes
+    switch (statusLower) {
+      case 'active':
+        return 'active';
+      case 'future-role':
+        return 'future-role';
+      case 'expired':
+        return 'expired';
+      case 'completed':
+        return 'completed';
+      default:
+        return statusLower;
     }
   }
 }

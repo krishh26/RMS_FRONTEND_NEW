@@ -1,16 +1,55 @@
 <div class="job-list-container">
   <div class="header">
-    <div class="header-content">
+    <div class="header-left">
       <h2>{{projectName ? projectName + ' - Jobs' : 'Jobs'}}</h2>
-      <div class="project-info" *ngIf="projectDetails">
-        <div class="project-details">
-          <span class="project-client">{{projectDetails.client}}</span>
-          <span class="project-location">{{projectDetails.clientLocation}}</span>
-          <span class="project-type">{{projectDetails.workType}}</span>
+    </div>
+    <div class="header-right">
+      <button class="back-button" (click)="goBack()" title="Back to Projects">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Projects</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="project-info-section" *ngIf="projectDetails">
+    <div class="project-details">
+      <!-- <div class="detail-item">
+        <span class="detail-key">Client:</span>
+        <span class="detail-value">{{projectDetails.client}}</span>
+      </div> -->
+      <div class="detail-item">
+        <span class="detail-key">Location:</span>
+        <span class="detail-value">{{projectDetails.clientLocation}}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-key">Work Type:</span>
+        <span class="detail-value">{{projectDetails.workType}}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-key">Status:</span>
+        <span class="detail-value status-value" style="width: 120px;" [ngClass]="getStatusClass(projectDetails?.status)">
+          {{projectDetails.status}}
+        </span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-key">Positions:</span>
+        <span class="detail-value">{{projectDetails.noOfPositions}}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-key">Day Rates:</span>
+        <span class="detail-value">
+          ${{projectDetails.dayRatesRange?.min | number}} - ${{projectDetails.dayRatesRange?.max | number}}
+        </span>
+      </div>
+      <div class="detail-item clearance-item" *ngIf="projectDetails.clearanceOrCertifications?.length">
+        <span class="detail-key">Clearance/Certifications:</span>
+        <div class="clearance-tags">
+          <span class="clearance-tag" *ngFor="let clearance of projectDetails.clearanceOrCertifications">
+            {{clearance}}
+          </span>
         </div>
       </div>
     </div>
-    <!-- <button class="add-button">Add New Job</button> -->
   </div>
 
   <div class="search-filter">
@@ -28,6 +67,32 @@
       <option value="Actioned">Actioned</option>
       <option value="Inactive">Inactive</option>
     </select>
+  </div>
+
+  <!-- Expired Project Message -->
+  <div *ngIf="isProjectExpired()" class="expired-project-message">
+    <div class="message-container">
+      <div class="icon-wrapper">
+        <div class="icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+      </div>
+      <h3>Project Expired</h3>
+      <p>This project has expired and is no longer accepting applications. All job positions are now closed.</p>
+    </div>
+  </div>
+
+  <!-- Future Role Project Message -->
+  <div *ngIf="isProjectFutureRole()" class="future-role-message">
+    <div class="message-container">
+      <div class="icon-wrapper">
+        <div class="icon">
+          <i class="fas fa-info-circle"></i>
+        </div>
+      </div>
+      <h3>Important Notice</h3>
+      <p>It is important for you to read the Read me document for each job title before you take action.</p>
+    </div>
   </div>
 
   <div class="table-container">
@@ -62,8 +127,8 @@
             </ng-container>
           </td>
           <td>
-            <span class="status-badge" [ngClass]="job.status?.toLowerCase().replace(' ', '-')">
-              {{job.status}}
+            <span class="status-badge" [ngClass]="getJobStatus(job).toLowerCase().replace(' ', '-')">
+              {{getJobStatus(job)}}
             </span>
           </td>
           <td> <a href="{{job?.upload?.url}}" target="_blank" class="action-btn read-me">Read Me</a></td>
@@ -71,14 +136,14 @@
             <ng-container *ngIf="job.status !== 'Under Review'; else emailMessage">
               <div *ngIf="!job.applied">
                 <button class="action-btn apply"
-                  [disabled]="job.status === 'Applied' || job.status === 'Expired' || job.status === 'Inactive'"
+                  [disabled]="job.status === 'Applied' || job.status === 'Expired' || job.status === 'Inactive' || isProjectExpired()"
                   (click)="openModal(job)">
                   Apply
                 </button>
               </div>
               <div *ngIf="job.applied == true">
                 <button class="action-btn upload"
-                  [disabled]="job.status === 'Not Submitted'"
+                  [disabled]="job.status === 'Not Submitted' || isProjectExpired()"
                   (click)="openCVModal(job)">
                   Upload CV
                 </button>
@@ -100,84 +165,114 @@
 
 <!-- Apply Job Modal -->
 <ng-template class="modal" #loginDetailModal id="loginDetailModal" tabindex="-1" aria-labelledby="ViewLogin" aria-hidden="true">
-  <div class="modal-header">
-    <h5 class="modal-title" id="ViewLogin">Upload Details</h5>
-    <button type="button" class="btn-close" (click)="closeModal()"></button>
-  </div>
-  <div class="modal-body">
-    <form [formGroup]="resourcesForm">
-      <div class="row">
-        <div class="row mt-3">
-          <div class="col-md-4">
-            <label>Choose CV option: <span style="color: red;"> *</span></label>
-          </div>
-          <div class="col-md-8">
-            <div class="form-group d-flex align-items-center">
-              <label class="me-3">
-                <input type="radio" id="1" name="currentWork" value="existing-cv" formControlName="currentWork"
-                  (change)="onSelectExistingCV()">&nbsp;
-                <span style="font-weight: normal;">USE EXISTING CV</span>
+  <div class="modal-overlay" (click)="closeModal()"></div>
+  <div class="modal-container">
+    <div class="modal-header">
+      <h5 class="modal-title" id="ViewLogin">Upload Details</h5>
+      <button type="button" class="close-btn" (click)="closeModal()" title="Close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="resourcesForm">
+        <!-- CV Option Section -->
+        <div class="form-section">
+          <div class="form-group">
+            <label class="form-label">
+              Choose CV option: <span class="required">*</span>
+            </label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" id="existing-cv" name="currentWork" value="existing-cv" formControlName="currentWork"
+                  (change)="onSelectExistingCV()">
+                <span class="radio-label">USE EXISTING CV</span>
               </label>
-              <label>
-                <input type="radio" id="2" name="currentWork" value="upload-cv" formControlName="currentWork"
-                  (change)="newselectedCv()">&nbsp;
-                <span style="font-weight: normal;">UPLOAD NEW CV</span>
+              <label class="radio-option">
+                <input type="radio" id="upload-cv" name="currentWork" value="upload-cv" formControlName="currentWork"
+                  (change)="newselectedCv()">
+                <span class="radio-label">UPLOAD NEW CV</span>
               </label>
             </div>
 
-            <div *ngIf="selectedCV">
-              <h5>Existing CV Details</h5>
-              <p><strong>CV Name:</strong> {{selectedCV?.name}}</p>
-              <a [href]="selectedCV?.url" target="_blank" class="btn btn-info">Download CV</a>
-            </div>
-            <div *ngIf="newCV" class="form-file">
-              <h5>Upload new CV :</h5>
-              <input type="file" aria-label="file example" class="form-control" (change)="fileUpload($event)"
-                accept=".doc, .docx,.pdf">
-            </div>
-            <br>
-          </div>
+            <!-- CV Details Container - Both options in one line -->
+            <div class="cv-details-container">
+              <!-- Existing CV Details -->
+              <div *ngIf="selectedCV" class="cv-details">
+                <div class="cv-info">
+                  <h6>Existing CV Details</h6>
+                  <p><strong>CV Name:</strong> {{selectedCV?.name}}</p>
+                  <a [href]="selectedCV?.url" target="_blank" class="btn btn-info">
+                    <i class="fas fa-download"></i>
+                    Download CV
+                  </a>
+                </div>
+              </div>
 
-          <!-- Work Preferences -->
-          <div class="row">
-            <div class="col-md-4">
-              <label>Work Preferences<span style="color: red">*</span> :</label>
-            </div>
-            <div class="col-md-8">
-              <div class="form-group">
-                <label>
-                  <input type="checkbox" name="roles" value="Remote Only with Informed client travel"
-                    (change)="onCheckboxWorkPReference($event)"
-                    [checked]="selectedWorkPreference('Remote Only with Informed client travel')" />&nbsp;
-                  <span style="font-weight: normal">Remote Only with Informed client travel</span>
-                </label><br />
-                <label>
-                  <input type="checkbox" name="roles" value="Remote only - No client tavel"
-                    (change)="onCheckboxWorkPReference($event)"
-                    [checked]="selectedWorkPreference('Remote only - No client tavel')" />&nbsp;
-                  <span style="font-weight: normal">Remote only - No client tavel</span>
-                </label><br />
-                <label>
-                  <input type="checkbox" name="roles" value="Full time at client site"
-                    (change)="onCheckboxWorkPReference($event)"
-                    [checked]="selectedWorkPreference('Full time at client site')" />&nbsp;
-                  <span style="font-weight: normal">Full time at client site</span>
-                </label><br />
-                <label>
-                  <input type="checkbox" name="roles" value="Hybrid" (change)="onCheckboxWorkPReference($event)"
-                    [checked]="selectedWorkPreference('Hybrid')" />&nbsp;
-                  <span style="font-weight: normal">Hybrid</span>
-                </label>
+              <!-- New CV Upload -->
+              <div *ngIf="newCV" class="file-upload">
+                <div class="upload-info">
+                  <h6>Upload new CV</h6>
+                  <div class="file-input-wrapper">
+                    <input type="file" id="file-upload" aria-label="file example" class="file-input" (change)="fileUpload($event)"
+                      accept=".doc, .docx,.pdf">
+                    <label for="file-upload" class="file-label">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                      Choose File
+                    </label>
+                  </div>
+                  <p class="file-hint">Supported formats: .doc, .docx, .pdf</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-3" style="float: right;">
-        <div class="d-flex align-items-center justify-content-between" *ngIf="!submitRes">
-          <button type="button" (click)="submitResources()" class="btn btn-primary w-50">Submit</button>
+
+        <!-- Work Preferences Section -->
+        <div class="form-section">
+          <div class="form-group">
+            <label class="form-label">
+              Work Preferences <span class="required">*</span>
+            </label>
+            <div class="checkbox-group">
+              <label class="checkbox-option">
+                <input type="checkbox" name="roles" value="Remote Only with Informed client travel"
+                  (change)="onCheckboxWorkPReference($event)"
+                  [checked]="selectedWorkPreference('Remote Only with Informed client travel')">
+                <span class="checkbox-label">Remote Only with Informed client travel</span>
+              </label>
+              <label class="checkbox-option">
+                <input type="checkbox" name="roles" value="Remote only - No client tavel"
+                  (change)="onCheckboxWorkPReference($event)"
+                  [checked]="selectedWorkPreference('Remote only - No client tavel')">
+                <span class="checkbox-label">Remote only - No client travel</span>
+              </label>
+              <label class="checkbox-option">
+                <input type="checkbox" name="roles" value="Full time at client site"
+                  (change)="onCheckboxWorkPReference($event)"
+                  [checked]="selectedWorkPreference('Full time at client site')">
+                <span class="checkbox-label">Full time at client site</span>
+              </label>
+              <label class="checkbox-option">
+                <input type="checkbox" name="roles" value="Hybrid" (change)="onCheckboxWorkPReference($event)"
+                  [checked]="selectedWorkPreference('Hybrid')">
+                <span class="checkbox-label">Hybrid</span>
+              </label>
+            </div>
+          </div>
         </div>
-      </div>
-    </form>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button type="button" (click)="submitResources()" class="btn btn-primary submit-btn"
+                  [disabled]="submitRes">
+            <span *ngIf="!submitRes">Submit</span>
+            <span *ngIf="submitRes">
+              <i class="fas fa-spinner fa-spin"></i>
+              Submitting...
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </ng-template>
