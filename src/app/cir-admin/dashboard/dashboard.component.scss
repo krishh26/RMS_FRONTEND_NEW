@@ -33,6 +33,34 @@ $border-radius: 8px;
   max-width: 100%;
 }
 
+// Loading Styles
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  background: white;
+  border-radius: $border-radius;
+  @include card-shadow;
+
+  .loading-spinner {
+    text-align: center;
+    color: $primary-color;
+
+    i {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+  }
+}
+
 // Welcome Section
 .welcome-section {
   background: linear-gradient(135deg, $primary-color 0%, darken($primary-color, 15%) 100%);

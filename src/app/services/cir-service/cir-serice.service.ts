@@ -25,7 +25,8 @@ export enum CirEndPoint {
   PUBLIC_FUTURE_CARD = '/futures/card/public',
   JOB_ROLE = '/futures/card/',
   JOB_ROLE_LIST = '/futures/card/',
-  GET_PROJECTS = '/project/projects'
+  GET_PROJECTS = '/project/projects',
+  CIR_DASHBOARD = '/dashboard/cir-dashboard'
 }
 
 @Injectable({
@@ -276,6 +277,11 @@ export class CirSericeService {
   deleteProject(projectId: string): Observable<any> {
     return this.httpClient
       .delete<any>(`${this.baseUrl}${CirEndPoint.GET_PROJECTS}/${projectId}/permanent`, { headers: this.getHeader() });
+  }
+
+  getCIRDashboard(): Observable<any> {
+    return this.httpClient
+      .get<any>(this.baseUrl + CirEndPoint.CIR_DASHBOARD, { headers: this.getHeader() });
   }
 
 }
