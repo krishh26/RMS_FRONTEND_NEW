@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormControl, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Patterns } from 'src/app/shared/constant/validation-patterns.const';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { LocalStorageService } from 'src/app/services/local-storage/local-storag
   templateUrl: './user-add-edit.component.html',
   styleUrls: ['./user-add-edit.component.scss']
 })
-export class UserAddEditComponent implements OnInit {
+export class UserAddEditComponent implements OnInit, AfterViewInit {
   // Stepper properties
   currentStep = 1;
 
@@ -34,9 +34,18 @@ export class UserAddEditComponent implements OnInit {
   userID!: string;
   userdata: any = [];
   referredByOptions: any = [];
-  dropdownSettings = {};
+  dropdownSettings: any = {
+    singleSelection: false,
+    idField: 'value',
+    textField: 'label',
+    selectAllText: 'Select All',
+    unSelectAllText: 'UnSelect All',
+    itemsShowLimit: 3,
+    allowSearchFilter: true
+  };
   showValidUptoDate: boolean = false;
   file: any;
+  isSubmitting: boolean = false;
 
   // Multi-select dropdown properties
   selectedPreferredRoles: any[] = [];
@@ -127,25 +136,27 @@ export class UserAddEditComponent implements OnInit {
     private notificationService: NotificationService,
     private localStorageService: LocalStorageService,
   ) {
+    this.initializeDropdownSettings();
     this.initializeForms();
     this.setupReferredByOptions();
   }
 
   ngOnInit() {
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'value',
-      textField: 'label',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
-      allowSearchFilter: true
-    };
+    // Ensure dropdown settings are properly initialized
+    this.initializeDropdownSettings();
 
     // Debug: Check if data arrays are populated
+    console.log('=== DROPDOWN DEBUG INFO ===');
     console.log('Preferred Roles:', this.preferredRoles);
+    console.log('Preferred Roles Length:', this.preferredRoles?.length);
     console.log('Time Slots:', this.timeSlots);
+    console.log('Time Slots Length:', this.timeSlots?.length);
     console.log('Days of Week:', this.daysOfWeek);
+    console.log('Days of Week Length:', this.daysOfWeek?.length);
+    console.log('Dropdown Settings:', this.dropdownSettings);
+    console.log('Dropdown Settings idField:', this.dropdownSettings?.idField);
+    console.log('Dropdown Settings textField:', this.dropdownSettings?.textField);
+    console.log('=== END DEBUG INFO ===');
 
     this.otherDetailForm.get('sc_dv_clearance_hold')?.valueChanges.subscribe((value) => {
       this.setWillingToUndertakeVisibility();
@@ -157,6 +168,29 @@ export class UserAddEditComponent implements OnInit {
       }
       this.otherDetailForm.get('sc_dv_valid_upto')?.updateValueAndValidity();
     });
+  }
+
+  ngAfterViewInit() {
+    // Additional initialization after view is ready
+    console.log('=== AFTER VIEW INIT ===');
+    console.log('Dropdown Settings after view init:', this.dropdownSettings);
+    console.log('Preferred Roles after view init:', this.preferredRoles);
+    console.log('=== END AFTER VIEW INIT ===');
+  }
+
+  private initializeDropdownSettings() {
+    // Ensure dropdownSettings is properly initialized
+    if (!this.dropdownSettings) {
+      this.dropdownSettings = {
+        singleSelection: false,
+        idField: 'value',
+        textField: 'label',
+        selectAllText: 'Select All',
+        unSelectAllText: 'UnSelect All',
+        itemsShowLimit: 3,
+        allowSearchFilter: true
+      };
+    }
   }
 
   private setupReferredByOptions() {
@@ -185,9 +219,9 @@ export class UserAddEditComponent implements OnInit {
     // Other Details Form
     this.otherDetailForm = new FormGroup({
       workLocation: new FormControl([]),
-      currency: new FormControl('', [Validators.required]),
-      expectedDayRate: new FormControl(''),
-      referredBy: new FormControl(''),
+      currency: new FormControl('GBP', [Validators.required]),
+      expectedDayRate: new FormControl('', [Validators.required]),
+      referredBy: new FormControl('', [Validators.required]),
       callDay: new FormControl([], [Validators.required]),
       callTime: new FormControl([], [Validators.required]),
       password: new FormControl('', [Validators.required, Validators.pattern(Patterns.password)]),
@@ -196,7 +230,7 @@ export class UserAddEditComponent implements OnInit {
       preferredRoles: new FormControl([], [Validators.required]),
       sc_dv_clearance_hold: new FormControl('', [Validators.required]),
       sc_dv_valid_upto: new FormControl(''),
-      willing_to_undertake: new FormControl('', [Validators.required]),
+      willing_to_undertake: new FormControl(''),
       confirmPassword: new FormControl('', [Validators.required]),
       eligible_for_SC: new FormControl('', [Validators.required]),
     }, { validators: this.passwordMatchValidator });
@@ -370,14 +404,35 @@ export class UserAddEditComponent implements OnInit {
     this.currentStep = 1;
   }
 
-  onItemSelect(item: any) {
+  onItemSelect(item: any, controlName: string) {
     console.log('Item selected:', item);
-    console.log('Form control value:', this.otherDetailForm.get('preferredRoles')?.value);
+    console.log('Form control value:', this.otherDetailForm.get(controlName)?.value);
   }
 
-  onSelectAll(items: any) {
+  onSelectAll(items: any, controlName: string) {
     console.log('All items selected:', items);
-    console.log('Form control value:', this.otherDetailForm.get('preferredRoles')?.value);
+    console.log('Form control value:', this.otherDetailForm.get(controlName)?.value);
+  }
+
+  onRoleCheckboxChange(event: any, role: any) {
+    const isChecked = event.target.checked;
+    const currentValue = this.otherDetailForm.get('preferredRoles')?.value || [];
+
+    if (isChecked) {
+      // Add role if not already present
+      if (!currentValue.some((item: any) => item.value === role.value)) {
+        currentValue.push(role);
+      }
+    } else {
+      // Remove role
+      const index = currentValue.findIndex((item: any) => item.value === role.value);
+      if (index > -1) {
+        currentValue.splice(index, 1);
+      }
+    }
+
+    this.otherDetailForm.get('preferredRoles')?.setValue([...currentValue]);
+    console.log('Updated preferred roles:', currentValue);
   }
 
   updateFormControls() {
@@ -389,7 +444,11 @@ export class UserAddEditComponent implements OnInit {
     const scDvClearanceValue = this.otherDetailForm.get('sc_dv_clearance_hold')?.value;
     if (scDvClearanceValue !== 'no') {
       this.otherDetailForm.get('willing_to_undertake')?.reset();
+      this.otherDetailForm.get('willing_to_undertake')?.clearValidators();
+    } else {
+      this.otherDetailForm.get('willing_to_undertake')?.setValidators([Validators.required]);
     }
+    this.otherDetailForm.get('willing_to_undertake')?.updateValueAndValidity();
   }
 
   fileUpload(event: any): void {
@@ -410,11 +469,27 @@ export class UserAddEditComponent implements OnInit {
   }
 
   submit() {
-    const localData: any = localStorage.getItem('rmsPersonalDetails');
+    // Prevent multiple submissions
+    if (this.isSubmitting) {
+      return;
+    }
+
+    // Mark all form fields as touched to trigger validation
+    this.otherDetailForm.markAllAsTouched();
+
+    // Check if form is valid
+    if (!this.otherDetailForm.valid) {
+      this.notificationService.showError('Please fill all required fields correctly');
+      return;
+    }
 
     if (!this.file) {
-      return this.notificationService.showError('Please upload file');
+      this.notificationService.showError('Please upload CV file');
+      return;
     }
+
+    this.isSubmitting = true;
+    const localData: any = localStorage.getItem('rmsPersonalDetails');
 
     if (!localData || localData == undefined || localData == 'undefined') {
       return this.submitotherDetail();
@@ -428,22 +503,25 @@ export class UserAddEditComponent implements OnInit {
           this.submitotherDetail();
         }, 300);
       } else {
-        this.notificationService.showError(response?.message || 'Fill all the fields of register page to proceed to next Page');
+        this.isSubmitting = false;
+        this.notificationService.showError(response?.message || 'Registration failed. Please try again.');
       }
     }, (error) => {
-      this.notificationService.showError(error?.error?.message || 'Fill all the fields of register page to proceed to next Page');
+      this.isSubmitting = false;
+      this.notificationService.showError(error?.error?.message || 'Registration failed. Please try again.');
     });
   }
 
   submitotherDetail() {
     if (!this.file) {
-      return this.notificationService.showError('Please upload file');
+      this.isSubmitting = false;
+      return this.notificationService.showError('Please upload CV file');
     }
 
     // Get values directly from form controls
     const formValues = this.otherDetailForm.value;
 
-    // Extract values from multi-select dropdowns
+    // Extract values from multi-select dropdown components
     const selectedDays = formValues.callDay ? formValues.callDay.map((day: any) => day.value || day) : [];
     const selectedTimes = formValues.callTime ? formValues.callTime.map((time: any) => time.value || time) : [];
     const selectedRoles = formValues.preferredRoles ? formValues.preferredRoles.map((role: any) => role.value || role) : [];
@@ -460,25 +538,34 @@ export class UserAddEditComponent implements OnInit {
       callTime: selectedTimes,
       preferredRoles: selectedRoles,
       cv: cvObject,
-      referredBy: String(localStorage.getItem('referCode')) || null,
+      referredBy: formValues.referredBy || String(localStorage.getItem('referCode')) || null,
     };
 
     this.userdata = this.localStorageService.getLogger();
     this.userID = this.userdata?.user?._id;
+
+    if (!this.userID) {
+      this.isSubmitting = false;
+      this.notificationService.showError('User ID not found. Please try again.');
+      return;
+    }
+
     this.otherDetailForm.controls['cv'].patchValue(cvObject);
     this.cirservice.updateregister(this.userID, formData).subscribe(
       (response) => {
+        this.isSubmitting = false;
         if (response?.status == true) {
           this.router.navigate(['/cir-admin/users']);
-          this.notificationService.showSuccess(response?.message, 'Success !');
+          this.notificationService.showSuccess(response?.message || 'User created successfully!', 'Success !');
           localStorage.removeItem('rmsRolesDetails');
         } else {
-          this.notificationService.showError(response?.message, 'Select different Username!');
+          this.notificationService.showError(response?.message || 'Failed to create user. Please try again.', 'Error!');
         }
         localStorage.removeItem('referCode');
       },
       (error) => {
-        this.notificationService.showError(error?.error?.message, 'Select different Username!');
+        this.isSubmitting = false;
+        this.notificationService.showError(error?.error?.message || 'Failed to create user. Please try again.', 'Error!');
       }
     );
   }
