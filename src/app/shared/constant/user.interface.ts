@@ -41,6 +41,7 @@ export interface UserFilter {
   currentWork: string;
   eligible_for_SC: string;
   sc_dv_clearance_hold: string;
+  referredBy: string;
 }
 
 export interface UserResponse {

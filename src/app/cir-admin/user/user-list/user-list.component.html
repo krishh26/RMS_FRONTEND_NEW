@@ -76,6 +76,35 @@
               </select>
             </div>
           </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label">Referred By</label>
+              <select class="form-control" [(ngModel)]="userFilter.referredBy">
+                <option value="" disabled selected hidden>Select Option</option>
+                <option value="0">LinkedIn</option>
+                <option value="1">SaiVen Technology Solutions Ltd</option>
+                <option value="2">Delphi Services Ltd</option>
+                <option value="3">Apex IT</option>
+                <option value="4">Jamie Thompson</option>
+                <option value="5">WhatsApp</option>
+                <option value="6">LinkedIn</option>
+                <option value="7">Westgate IT Hub Pvt Ltd</option>
+                <option value="8">Spectrum</option>
+                <option value="9">SWT</option>
+                <option value="10">MC Personal</option>
+                <option value="11">Akkodis</option>
+                <option value="12">Next Move Recruitment Ltd</option>
+                <option value="13">We Are Dcoded Limited</option>
+                <option value="14">Heat Recruitment Limited</option>
+                <option value="15">Starapex Recruitment</option>
+                <option value="16">Colossus Recruitment Ltd</option>
+                <option value="17">Hexwired Recruitment Limited</option>
+                <option value="18">Fynity</option>
+                <option value="19">Others</option>
+                <option value="20">RH Portal</option>
+              </select>
+            </div>
+          </div>
           <div class="col-md-12">
             <div class="filter-actions">
               <button type="button" class="btn btn-primary" (click)="applyFilter()">Apply Filter</button>
@@ -178,7 +207,7 @@
                     </div>
                     <div class="detail-item">
                       <label>Referred By:</label>
-                      <span>{{ user.referredBy }}</span>
+                      <span>{{ getReferredByName(user.referredBy) }}</span>
                     </div>
                     <div class="detail-item">
                       <label>SC/DV Clearance Hold:</label>
@@ -212,12 +241,12 @@
                       <label>Any Question:</label>
                       <span>{{ user.anyQuestion }}</span>
                     </div>
-                    <div class="detail-item">
+                    <!-- <div class="detail-item">
                       <label>Profile:</label>
                       <button (click)="openDocument(user.profilePicture)" type="button" class="btn btn-sm btn-primary">
                         <i class="fa fa-eye"></i> View
                       </button>
-                    </div>
+                    </div> -->
                     <div class="detail-item">
                       <label>Resume:</label>
                       <button (click)="openDocument(user.cv)" type="button" class="btn btn-sm btn-primary">

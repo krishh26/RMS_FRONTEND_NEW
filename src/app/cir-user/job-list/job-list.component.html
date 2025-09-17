@@ -82,6 +82,19 @@
     </div>
   </div>
 
+  <!-- Active Project Message -->
+  <div *ngIf="isProjectActive()" class="active-project-message">
+    <div class="message-container">
+      <div class="icon-wrapper">
+        <div class="icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+      </div>
+      <h3>Project Active</h3>
+      <p>This project is currently active and accepting applications. You can apply for available job positions.</p>
+    </div>
+  </div>
+
   <!-- Future Role Project Message -->
   <div *ngIf="isProjectFutureRole()" class="future-role-message">
     <div class="message-container">

@@ -39,12 +39,12 @@
                     </div>
                   </div>
                   <!-- User ID (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.id">
+                  <div class="row mb-3 readonly-field" *ngIf="loginDetails._id">
                     <div class="col-md-4">
                       <label for="userId">User ID:</label>
                     </div>
                     <div class="col-md-8">
-                      <input id="userId" type="text" class="form-control" [value]="loginDetails.id" readonly>
+                      <input id="userId" type="text" class="form-control" [value]="loginDetails._id" readonly>
                     </div>
                   </div>
 
@@ -70,6 +70,16 @@
                     </div>
                   </div>
 
+                  <!-- Country Code (Read-only) -->
+                  <div class="row mb-3 readonly-field">
+                    <div class="col-md-4">
+                      <label for="countrycode">Country Code:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="countrycode" type="text" class="form-control" [value]="loginDetails.countrycode || 'No data'" readonly>
+                    </div>
+                  </div>
+
                   <!-- Phone Number (Read-only) -->
                   <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
@@ -92,958 +102,223 @@
                     </div>
                   </div>
 
-                  <!-- Postal Code (Read-only) -->
-                  <div class="row mb-3 readonly-field">
+                  <!-- UK Visa Type (Read-only) - Only show if nationality is not British -->
+                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.nationality !== 'british'">
                     <div class="col-md-4">
-                      <label for="postalCode">Postal Code:</label>
+                      <label for="UKVisaType">UK Visa Type:</label>
                     </div>
                     <div class="col-md-8">
-                      <input id="postalCode" type="text" class="form-control" placeholder="Postal Code"
-                        formControlName="postalCode" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Created Date (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.createdAt">
-                    <div class="col-md-4">
-                      <label for="createdAt">Account Created:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="createdAt" type="text" class="form-control" [value]="loginDetails.createdAt | date:'medium'" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Last Login (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.lastLogin">
-                    <div class="col-md-4">
-                      <label for="lastLogin">Last Login:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="lastLogin" type="text" class="form-control" [value]="loginDetails.lastLogin | date:'medium'" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Experience (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.experience">
-                    <div class="col-md-4">
-                      <label for="experience">Experience (Years):</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="experience" type="text" class="form-control" [value]="loginDetails.experience" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Current Work Status (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.currentwork">
-                    <div class="col-md-4">
-                      <label for="currentwork">Current Work Status:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="currentwork" type="text" class="form-control" [value]="loginDetails.currentwork" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Looking For (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.lookingFor && loginDetails.lookingFor.length > 0">
-                    <div class="col-md-4">
-                      <label for="lookingFor">Looking For:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="lookingFor" type="text" class="form-control" [value]="loginDetails.lookingFor.join(', ')" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Expected Day Rate (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.expectedDayRate">
-                    <div class="col-md-4">
-                      <label for="expectedDayRate">Expected Day Rate (£):</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="expectedDayRate" type="text" class="form-control" [value]="loginDetails.expectedDayRate" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Notice Period (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.noticePeriodDay">
-                    <div class="col-md-4">
-                      <label for="noticePeriodDay">Notice Period:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="noticePeriodDay" type="text" class="form-control" [value]="loginDetails.noticePeriodDay" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Country Code (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.countrycode">
-                    <div class="col-md-4">
-                      <label for="countrycode">Country Code:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="countrycode" type="text" class="form-control" [value]="loginDetails.countrycode" readonly>
+                      <input id="UKVisaType" type="text" class="form-control" [value]="loginDetails.UKVisaType || 'No data'" readonly>
                     </div>
                   </div>
 
                   <!-- UK Driving License (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.UKDrivinglicense !== undefined">
+                  <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
                       <label for="UKDrivinglicense">UK Driving License:</label>
                     </div>
                     <div class="col-md-8">
-                      <input id="UKDrivinglicense" type="text" class="form-control" [value]="loginDetails.UKDrivinglicense ? 'Yes' : 'No'" readonly>
+                      <input id="UKDrivinglicense" type="text" class="form-control" [value]="loginDetails.UKDrivinglicense !== undefined ? (loginDetails.UKDrivinglicense ? 'Yes' : 'No') : 'No data'" readonly>
                     </div>
                   </div>
 
-                  <!-- Eligible for SC (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.eligible_for_SC !== undefined">
+                  <!-- Current Location/Postal Code (Read-only) -->
+                  <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
-                      <label for="eligible_for_SC">Eligible for Security Clearance:</label>
+                      <label for="postalCode">Current Location:</label>
                     </div>
                     <div class="col-md-8">
-                      <input id="eligible_for_SC" type="text" class="form-control" [value]="loginDetails.eligible_for_SC ? 'Yes' : 'No'" readonly>
+                      <input id="postalCode" type="text" class="form-control" placeholder="Current Location"
+                        formControlName="postalCode" readonly>
                     </div>
                   </div>
 
-                  <!-- Preferred Roles (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.preferredRoles && loginDetails.preferredRoles.length > 0">
+                  <!-- Current Work Status (Read-only) -->
+                  <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
-                      <label for="preferredRoles">Preferred Roles:</label>
+                      <label for="currentWork">Current Work Status:</label>
                     </div>
                     <div class="col-md-8">
-                      <textarea id="preferredRoles" class="form-control" rows="3" [value]="loginDetails.preferredRoles.join(', ')" readonly></textarea>
+                      <input id="currentWork" type="text" class="form-control" [value]="loginDetails.currentWork || 'No data'" readonly>
                     </div>
                   </div>
 
-                  <!-- Call Day Preferences (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.callDay && loginDetails.callDay.length > 0">
+                  <!-- Looking For (Read-only) -->
+                  <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
-                      <label for="callDay">Preferred Call Days:</label>
+                      <label for="lookingFor">Looking For:</label>
                     </div>
                     <div class="col-md-8">
-                      <input id="callDay" type="text" class="form-control" [value]="loginDetails.callDay.join(', ')" readonly>
+                      <input id="lookingFor" type="text" class="form-control" [value]="loginDetails.lookingFor && loginDetails.lookingFor.length > 0 ? loginDetails.lookingFor.join(', ') : 'No data'" readonly>
                     </div>
                   </div>
 
-                  <!-- Call Time Preferences (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.callTime && loginDetails.callTime.length > 0">
+                  <!-- Work Preferences (Read-only) -->
+                  <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
-                      <label for="callTime">Preferred Call Times:</label>
+                      <label for="workPreference">Work Preferences:</label>
                     </div>
                     <div class="col-md-8">
-                      <input id="callTime" type="text" class="form-control" [value]="loginDetails.callTime.join(', ')" readonly>
+                      <input id="workPreference" type="text" class="form-control" [value]="loginDetails.workPreference && loginDetails.workPreference.length > 0 ? loginDetails.workPreference.join(', ') : 'No data'" readonly>
                     </div>
                   </div>
 
-                  <!-- Any Questions (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.anyQuestion">
+                  <!-- Notice Period (Read-only) -->
+                  <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
-                      <label for="anyQuestion">Additional Questions:</label>
+                      <label for="noticePeriodDay">Notice Period:</label>
                     </div>
                     <div class="col-md-8">
-                      <input id="anyQuestion" type="text" class="form-control" [value]="loginDetails.anyQuestion" readonly>
+                      <input id="noticePeriodDay" type="text" class="form-control" [value]="loginDetails.noticePeriodDay || 'No data'" readonly>
                     </div>
                   </div>
 
                   <!-- CV File (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cv">
+                  <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
                       <label for="cv">CV File:</label>
                     </div>
                     <div class="col-md-8">
-                      <input id="cv" type="text" class="form-control" [value]="loginDetails.cv.key || 'CV uploaded'" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Address (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.address">
-                    <div class="col-md-4">
-                      <label for="address">Address:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="address" class="form-control" rows="3" [value]="loginDetails.address" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- City (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.city">
-                    <div class="col-md-4">
-                      <label for="city">City:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="city" type="text" class="form-control" [value]="loginDetails.city" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Country (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.country">
-                    <div class="col-md-4">
-                      <label for="country">Country:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="country" type="text" class="form-control" [value]="loginDetails.country" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Skills (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.skills">
-                    <div class="col-md-4">
-                      <label for="skills">Skills:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="skills" class="form-control" rows="3" [value]="loginDetails.skills" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- Company (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.company">
-                    <div class="col-md-4">
-                      <label for="company">Company:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="company" type="text" class="form-control" [value]="loginDetails.company" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Role (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.role">
-                    <div class="col-md-4">
-                      <label for="role">Role:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="role" type="text" class="form-control" [value]="loginDetails.role" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Status (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.status">
-                    <div class="col-md-4">
-                      <label for="status">Status:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="status" type="text" class="form-control" [value]="loginDetails.status" readonly>
-                    </div>
-                  </div>
-
-                  <!-- First Name (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.firstName">
-                    <div class="col-md-4">
-                      <label for="firstName">First Name:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="firstName" type="text" class="form-control" [value]="loginDetails.firstName" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Last Name (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.lastName">
-                    <div class="col-md-4">
-                      <label for="lastName">Last Name:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="lastName" type="text" class="form-control" [value]="loginDetails.lastName" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Phone (Alternative field) (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.phone && !loginDetails.phoneNumber">
-                    <div class="col-md-4">
-                      <label for="phone">Phone:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="phone" type="text" class="form-control" [value]="loginDetails.phone" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Password Hash (Read-only) - Hidden for security -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.password">
-                    <div class="col-md-4">
-                      <label for="password">Password Status:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="password" type="text" class="form-control" value="Password is set" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Decoded Token (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.DecodedToken">
-                    <div class="col-md-4">
-                      <label for="DecodedToken">Token Status:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="DecodedToken" type="text" class="form-control" value="Token is available" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Captcha Token (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails._grecaptcha">
-                    <div class="col-md-4">
-                      <label for="_grecaptcha">Captcha Status:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="_grecaptcha" type="text" class="form-control" value="Captcha is available" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Login Token (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.loginToken">
-                    <div class="col-md-4">
-                      <label for="loginToken">Login Token Status:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="loginToken" type="text" class="form-control" value="Login token is available" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Refer Earn (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.referEarn">
-                    <div class="col-md-4">
-                      <label for="referEarn">Refer & Earn:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="referEarn" type="text" class="form-control" [value]="loginDetails.referEarn" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Future Card (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.futureCard">
-                    <div class="col-md-4">
-                      <label for="futureCard">Future Card:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="futureCard" type="text" class="form-control" [value]="loginDetails.futureCard" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Public Future Card (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.publicFutureCard">
-                    <div class="col-md-4">
-                      <label for="publicFutureCard">Public Future Card:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="publicFutureCard" type="text" class="form-control" [value]="loginDetails.publicFutureCard" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Job Role (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.jobRole">
-                    <div class="col-md-4">
-                      <label for="jobRole">Job Role:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="jobRole" type="text" class="form-control" [value]="loginDetails.jobRole" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Job Role List (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.jobRoleList">
-                    <div class="col-md-4">
-                      <label for="jobRoleList">Job Role List:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="jobRoleList" type="text" class="form-control" [value]="loginDetails.jobRoleList" readonly>
-                    </div>
-                  </div>
-
-                  <!-- Projects (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.projects">
-                    <div class="col-md-4">
-                      <label for="projects">Projects:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="projects" class="form-control" rows="3" [value]="loginDetails.projects" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- Client Roles (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.clientRoles">
-                    <div class="col-md-4">
-                      <label for="clientRoles">Client Roles:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="clientRoles" class="form-control" rows="3" [value]="loginDetails.clientRoles" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Jobs (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrJobs">
-                    <div class="col-md-4">
-                      <label for="acrJobs">ACR Jobs:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrJobs" class="form-control" rows="3" [value]="loginDetails.acrJobs" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Jobs (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirJobs">
-                    <div class="col-md-4">
-                      <label for="cirJobs">CIR Jobs:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirJobs" class="form-control" rows="3" [value]="loginDetails.cirJobs" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR User (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrUser">
-                    <div class="col-md-4">
-                      <label for="acrUser">ACR User:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrUser" class="form-control" rows="3" [value]="loginDetails.acrUser" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR User (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirUser">
-                    <div class="col-md-4">
-                      <label for="cirUser">CIR User:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirUser" class="form-control" rows="3" [value]="loginDetails.cirUser" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Job Applicant (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrJobApplicant">
-                    <div class="col-md-4">
-                      <label for="acrJobApplicant">ACR Job Applicant:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrJobApplicant" class="form-control" rows="3" [value]="loginDetails.acrJobApplicant" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Job Applicant (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirJobApplicant">
-                    <div class="col-md-4">
-                      <label for="cirJobApplicant">CIR Job Applicant:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirJobApplicant" class="form-control" rows="3" [value]="loginDetails.cirJobApplicant" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Send Mail (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrSendMail">
-                    <div class="col-md-4">
-                      <label for="acrSendMail">ACR Send Mail:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrSendMail" class="form-control" rows="3" [value]="loginDetails.acrSendMail" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Send Mail (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirSendMail">
-                    <div class="col-md-4">
-                      <label for="cirSendMail">CIR Send Mail:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirSendMail" class="form-control" rows="3" [value]="loginDetails.cirSendMail" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Contract (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrContract">
-                    <div class="col-md-4">
-                      <label for="acrContract">ACR Contract:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrContract" class="form-control" rows="3" [value]="loginDetails.acrContract" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Contract Details (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrContractDetails">
-                    <div class="col-md-4">
-                      <label for="acrContractDetails">ACR Contract Details:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrContractDetails" class="form-control" rows="3" [value]="loginDetails.acrContractDetails" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Candidate (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrCandidate">
-                    <div class="col-md-4">
-                      <label for="acrCandidate">ACR Candidate:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrCandidate" class="form-control" rows="3" [value]="loginDetails.acrCandidate" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Candidate List (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrCandidateList">
-                    <div class="col-md-4">
-                      <label for="acrCandidateList">ACR Candidate List:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrCandidateList" class="form-control" rows="3" [value]="loginDetails.acrCandidateList" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Agency List (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrAgencyList">
-                    <div class="col-md-4">
-                      <label for="acrAgencyList">ACR Agency List:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrAgencyList" class="form-control" rows="3" [value]="loginDetails.acrAgencyList" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Job ID List (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrJobIdList">
-                    <div class="col-md-4">
-                      <label for="acrJobIdList">ACR Job ID List:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrJobIdList" class="form-control" rows="3" [value]="loginDetails.acrJobIdList" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Job ID List (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirJobIdList">
-                    <div class="col-md-4">
-                      <label for="cirJobIdList">CIR Job ID List:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirJobIdList" class="form-control" rows="3" [value]="loginDetails.cirJobIdList" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Apply Jobs (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrApplyJobs">
-                    <div class="col-md-4">
-                      <label for="acrApplyJobs">ACR Apply Jobs:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrApplyJobs" class="form-control" rows="3" [value]="loginDetails.acrApplyJobs" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Supply Job (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrSupplyJob">
-                    <div class="col-md-4">
-                      <label for="acrSupplyJob">ACR Supply Job:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrSupplyJob" class="form-control" rows="3" [value]="loginDetails.acrSupplyJob" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Forgot Password (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrForgotPassword">
-                    <div class="col-md-4">
-                      <label for="acrForgotPassword">ACR Forgot Password:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrForgotPassword" class="form-control" rows="3" [value]="loginDetails.acrForgotPassword" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Reset Password (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrResetPassword">
-                    <div class="col-md-4">
-                      <label for="acrResetPassword">ACR Reset Password:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrResetPassword" class="form-control" rows="3" [value]="loginDetails.acrResetPassword" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Admin Login (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrAdminLogin">
-                    <div class="col-md-4">
-                      <label for="acrAdminLogin">ACR Admin Login:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrAdminLogin" class="form-control" rows="3" [value]="loginDetails.acrAdminLogin" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Delete Job (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrDeleteJob">
-                    <div class="col-md-4">
-                      <label for="acrDeleteJob">ACR Delete Job:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrDeleteJob" class="form-control" rows="3" [value]="loginDetails.acrDeleteJob" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Delete Job (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirDeleteJob">
-                    <div class="col-md-4">
-                      <label for="cirDeleteJob">CIR Delete Job:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirDeleteJob" class="form-control" rows="3" [value]="loginDetails.cirDeleteJob" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Create Job (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrCreateJob">
-                    <div class="col-md-4">
-                      <label for="acrCreateJob">ACR Create Job:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrCreateJob" class="form-control" rows="3" [value]="loginDetails.acrCreateJob" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Create Job (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirCreateJob">
-                    <div class="col-md-4">
-                      <label for="cirCreateJob">CIR Create Job:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirCreateJob" class="form-control" rows="3" [value]="loginDetails.cirCreateJob" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Send Data (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrSendData">
-                    <div class="col-md-4">
-                      <label for="acrSendData">ACR Send Data:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrSendData" class="form-control" rows="3" [value]="loginDetails.acrSendData" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Send Data (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirSendData">
-                    <div class="col-md-4">
-                      <label for="cirSendData">CIR Send Data:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirSendData" class="form-control" rows="3" [value]="loginDetails.cirSendData" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR File Upload (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrFileUpload">
-                    <div class="col-md-4">
-                      <label for="acrFileUpload">ACR File Upload:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrFileUpload" class="form-control" rows="3" [value]="loginDetails.acrFileUpload" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR File Upload (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirFileUpload">
-                    <div class="col-md-4">
-                      <label for="cirFileUpload">CIR File Upload:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirFileUpload" class="form-control" rows="3" [value]="loginDetails.cirFileUpload" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Update Register (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrUpdateRegister">
-                    <div class="col-md-4">
-                      <label for="acrUpdateRegister">ACR Update Register:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrUpdateRegister" class="form-control" rows="3" [value]="loginDetails.acrUpdateRegister" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Update Register (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirUpdateRegister">
-                    <div class="col-md-4">
-                      <label for="cirUpdateRegister">CIR Update Register:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirUpdateRegister" class="form-control" rows="3" [value]="loginDetails.cirUpdateRegister" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Forgot Password (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrForgotPassword">
-                    <div class="col-md-4">
-                      <label for="acrForgotPassword">ACR Forgot Password:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrForgotPassword" class="form-control" rows="3" [value]="loginDetails.acrForgotPassword" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Forgot Password (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirForgotPassword">
-                    <div class="col-md-4">
-                      <label for="cirForgotPassword">CIR Forgot Password:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirForgotPassword" class="form-control" rows="3" [value]="loginDetails.cirForgotPassword" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Reset Password (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrResetPassword">
-                    <div class="col-md-4">
-                      <label for="acrResetPassword">ACR Reset Password:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrResetPassword" class="form-control" rows="3" [value]="loginDetails.acrResetPassword" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Reset Password (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirResetPassword">
-                    <div class="col-md-4">
-                      <label for="cirResetPassword">CIR Reset Password:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirResetPassword" class="form-control" rows="3" [value]="loginDetails.cirResetPassword" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR User Client Update (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrUserClientUpdate">
-                    <div class="col-md-4">
-                      <label for="acrUserClientUpdate">ACR User Client Update:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrUserClientUpdate" class="form-control" rows="3" [value]="loginDetails.acrUserClientUpdate" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR User Client Update (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirUserClientUpdate">
-                    <div class="col-md-4">
-                      <label for="cirUserClientUpdate">CIR User Client Update:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirUserClientUpdate" class="form-control" rows="3" [value]="loginDetails.cirUserClientUpdate" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Client Roles (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrClientRoles">
-                    <div class="col-md-4">
-                      <label for="acrClientRoles">ACR Client Roles:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrClientRoles" class="form-control" rows="3" [value]="loginDetails.acrClientRoles" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Client Roles (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirClientRoles">
-                    <div class="col-md-4">
-                      <label for="cirClientRoles">CIR Client Roles:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirClientRoles" class="form-control" rows="3" [value]="loginDetails.cirClientRoles" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Client (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrClient">
-                    <div class="col-md-4">
-                      <label for="acrClient">ACR Client:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrClient" class="form-control" rows="3" [value]="loginDetails.acrClient" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Client (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirClient">
-                    <div class="col-md-4">
-                      <label for="cirClient">CIR Client:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirClient" class="form-control" rows="3" [value]="loginDetails.cirClient" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Model (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrModel">
-                    <div class="col-md-4">
-                      <label for="acrModel">ACR Model:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrModel" class="form-control" rows="3" [value]="loginDetails.acrModel" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Model (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirModel">
-                    <div class="col-md-4">
-                      <label for="cirModel">CIR Model:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirModel" class="form-control" rows="3" [value]="loginDetails.cirModel" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Database Login (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrDatabaseLogin">
-                    <div class="col-md-4">
-                      <label for="acrDatabaseLogin">ACR Database Login:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrDatabaseLogin" class="form-control" rows="3" [value]="loginDetails.acrDatabaseLogin" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Database Login (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirDatabaseLogin">
-                    <div class="col-md-4">
-                      <label for="cirDatabaseLogin">CIR Database Login:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirDatabaseLogin" class="form-control" rows="3" [value]="loginDetails.cirDatabaseLogin" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Job (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrJob">
-                    <div class="col-md-4">
-                      <label for="acrJob">ACR Job:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrJob" class="form-control" rows="3" [value]="loginDetails.acrJob" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Job (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirJob">
-                    <div class="col-md-4">
-                      <label for="cirJob">CIR Job:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirJob" class="form-control" rows="3" [value]="loginDetails.cirJob" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- ACR Job List (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.acrJobList">
-                    <div class="col-md-4">
-                      <label for="acrJobList">ACR Job List:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="acrJobList" class="form-control" rows="3" [value]="loginDetails.acrJobList" readonly></textarea>
-                    </div>
-                  </div>
-
-                  <!-- CIR Job List (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.cirJobList">
-                    <div class="col-md-4">
-                      <label for="cirJobList">CIR Job List:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="cirJobList" class="form-control" rows="3" [value]="loginDetails.cirJobList" readonly></textarea>
-                    </div>
-                  </div>
-
-
-
-                  <!-- Client 1 (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.client1 && loginDetails.client1.name">
-                    <div class="col-md-4">
-                      <label for="client1">Client 1:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <div class="row">
-                        <div class="col-12 mb-2">
-                          <input type="text" class="form-control" [value]="'Name: ' + loginDetails.client1.name" readonly>
-                        </div>
-                        <div class="col-12 mb-2" *ngIf="loginDetails.client1.location">
-                          <input type="text" class="form-control" [value]="'Location: ' + loginDetails.client1.location" readonly>
-                        </div>
-                        <div class="col-12" *ngIf="loginDetails.client1.roles && loginDetails.client1.roles.length > 0">
-                          <textarea class="form-control" rows="2" [value]="'Roles: ' + loginDetails.client1.roles.join(', ')" readonly></textarea>
-                        </div>
+                      <div class="d-flex align-items-center" *ngIf="loginDetails.cv && loginDetails.cv.name">
+                        <input id="cv" type="text" class="form-control me-2" [value]="loginDetails.cv.name" readonly>
+                        <a *ngIf="loginDetails.cv.url" [href]="loginDetails.cv.url" target="_blank" class="btn btn-sm btn-outline-primary">
+                          <i class="fas fa-download"></i> Download
+                        </a>
                       </div>
+                      <input *ngIf="!loginDetails.cv || !loginDetails.cv.name" id="cv" type="text" class="form-control" value="No data" readonly>
                     </div>
                   </div>
 
-                  <!-- Client 2 (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.client2 && loginDetails.client2.name">
+                  <!-- Preferred Roles (Read-only) -->
+                  <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
-                      <label for="client2">Client 2:</label>
+                      <label for="preferredRoles">Preferred Roles:</label>
                     </div>
                     <div class="col-md-8">
-                      <div class="row">
-                        <div class="col-12 mb-2">
-                          <input type="text" class="form-control" [value]="'Name: ' + loginDetails.client2.name" readonly>
-                        </div>
-                        <div class="col-12 mb-2" *ngIf="loginDetails.client2.location">
-                          <input type="text" class="form-control" [value]="'Location: ' + loginDetails.client2.location" readonly>
-                        </div>
-                        <div class="col-12" *ngIf="loginDetails.client2.roles && loginDetails.client2.roles.length > 0">
-                          <textarea class="form-control" rows="2" [value]="'Roles: ' + loginDetails.client2.roles.join(', ')" readonly></textarea>
-                        </div>
-                      </div>
+                      <textarea id="preferredRoles" class="form-control" rows="3" [value]="loginDetails.preferredRoles && loginDetails.preferredRoles.length > 0 ? loginDetails.preferredRoles.join(', ') : 'No data'" readonly></textarea>
                     </div>
                   </div>
 
-                  <!-- Client 3 (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.client3 && loginDetails.client3.name">
+                  <!-- Referred By (Read-only) -->
+                  <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
-                      <label for="client3">Client 3:</label>
+                      <label for="referredBy">Referred By:</label>
                     </div>
                     <div class="col-md-8">
-                      <div class="row">
-                        <div class="col-12 mb-2">
-                          <input type="text" class="form-control" [value]="'Name: ' + loginDetails.client3.name" readonly>
-                        </div>
-                        <div class="col-12 mb-2" *ngIf="loginDetails.client3.location">
-                          <input type="text" class="form-control" [value]="'Location: ' + loginDetails.client3.location" readonly>
-                        </div>
-                        <div class="col-12" *ngIf="loginDetails.client3.roles && loginDetails.client3.roles.length > 0">
-                          <textarea class="form-control" rows="2" [value]="'Roles: ' + loginDetails.client3.roles.join(', ')" readonly></textarea>
-                        </div>
-                      </div>
+                      <input id="referredBy" type="text" class="form-control" [value]="loginDetails.referredBy || 'No data'" readonly>
                     </div>
                   </div>
 
-                  <!-- Client 4 (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.client4 && loginDetails.client4.name">
+                  <!-- SC/DV Clearance (Read-only) -->
+                  <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
-                      <label for="client4">Client 4:</label>
+                      <label for="sc_dv_clearance_hold">SC/DV Clearance:</label>
                     </div>
                     <div class="col-md-8">
-                      <div class="row">
-                        <div class="col-12 mb-2">
-                          <input type="text" class="form-control" [value]="'Name: ' + loginDetails.client4.name" readonly>
-                        </div>
-                        <div class="col-12 mb-2" *ngIf="loginDetails.client4.location">
-                          <input type="text" class="form-control" [value]="'Location: ' + loginDetails.client4.location" readonly>
-                        </div>
-                        <div class="col-12" *ngIf="loginDetails.client4.roles && loginDetails.client4.roles.length > 0">
-                          <textarea class="form-control" rows="2" [value]="'Roles: ' + loginDetails.client4.roles.join(', ')" readonly></textarea>
-                        </div>
-                      </div>
+                      <input id="sc_dv_clearance_hold" type="text" class="form-control" [value]="loginDetails.sc_dv_clearance_hold !== undefined ? (loginDetails.sc_dv_clearance_hold ? 'Yes' : 'No') : 'No data'" readonly>
                     </div>
                   </div>
 
-                  <!-- Client 5 (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.client5 && loginDetails.client5.name">
+                  <!-- Eligible for SC (Read-only) -->
+                  <div class="row mb-3 readonly-field">
                     <div class="col-md-4">
-                      <label for="client5">Client 5:</label>
+                      <label for="eligible_for_SC">Eligible for Security Clearance:</label>
                     </div>
                     <div class="col-md-8">
-                      <div class="row">
-                        <div class="col-12 mb-2">
-                          <input type="text" class="form-control" [value]="'Name: ' + loginDetails.client5.name" readonly>
-                        </div>
-                        <div class="col-12 mb-2" *ngIf="loginDetails.client5.location">
-                          <input type="text" class="form-control" [value]="'Location: ' + loginDetails.client5.location" readonly>
-                        </div>
-                        <div class="col-12" *ngIf="loginDetails.client5.roles && loginDetails.client5.roles.length > 0">
-                          <textarea class="form-control" rows="2" [value]="'Roles: ' + loginDetails.client5.roles.join(', ')" readonly></textarea>
-                        </div>
-                      </div>
+                      <input id="eligible_for_SC" type="text" class="form-control" [value]="loginDetails.eligible_for_SC !== undefined ? (loginDetails.eligible_for_SC ? 'Yes' : 'No') : 'No data'" readonly>
                     </div>
                   </div>
+
+                  <!-- SC/DV Valid Upto (Read-only) - Only show if clearance is held -->
+                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.sc_dv_clearance_hold">
+                    <div class="col-md-4">
+                      <label for="sc_dv_valid_upto">Clearance Valid Until:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="sc_dv_valid_upto" type="text" class="form-control" [value]="loginDetails.sc_dv_valid_upto ? (loginDetails.sc_dv_valid_upto | date:'medium') : 'No data'" readonly>
+                    </div>
+                  </div>
+
+                  <!-- Willing to Undertake (Read-only) - Only show if no clearance -->
+                  <div class="row mb-3 readonly-field" *ngIf="!loginDetails.sc_dv_clearance_hold">
+                    <div class="col-md-4">
+                      <label for="willing_to_undertake">Willing to Undertake Clearance:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="willing_to_undertake" type="text" class="form-control" [value]="loginDetails.willing_to_undertake || 'No data'" readonly>
+                    </div>
+                  </div>
+
+                  <!-- Call Day Preferences (Read-only) -->
+                  <div class="row mb-3 readonly-field">
+                    <div class="col-md-4">
+                      <label for="callDay">Preferred Call Days:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="callDay" type="text" class="form-control" [value]="loginDetails.callDay && loginDetails.callDay.length > 0 ? loginDetails.callDay.join(', ') : 'No data'" readonly>
+                    </div>
+                  </div>
+
+                  <!-- Call Time Preferences (Read-only) -->
+                  <div class="row mb-3 readonly-field">
+                    <div class="col-md-4">
+                      <label for="callTime">Preferred Call Times:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="callTime" type="text" class="form-control" [value]="loginDetails.callTime && loginDetails.callTime.length > 0 ? loginDetails.callTime.join(', ') : 'No data'" readonly>
+                    </div>
+                  </div>
+
+                  <!-- Any Questions (Read-only) -->
+                  <div class="row mb-3 readonly-field">
+                    <div class="col-md-4">
+                      <label for="anyQuestion">Additional Questions:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <textarea id="anyQuestion" class="form-control" rows="3" [value]="loginDetails.anyQuestion || 'No data'" readonly></textarea>
+                    </div>
+                  </div>
+
+                  <!-- Expected Day Rate (Read-only) -->
+                  <div class="row mb-3 readonly-field">
+                    <div class="col-md-4">
+                      <label for="expectedDayRate">Expected Day Rate (£):</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="expectedDayRate" type="text" class="form-control" [value]="loginDetails.expectedDayRate || 'No data'" readonly>
+                    </div>
+                  </div>
+
+                  <!-- Work Location (Read-only) -->
+                  <div class="row mb-3 readonly-field">
+                    <div class="col-md-4">
+                      <label for="workLocation">Work Location:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="workLocation" type="text" class="form-control" [value]="loginDetails.workLocation && loginDetails.workLocation.length > 0 ? loginDetails.workLocation.join(', ') : 'No data'" readonly>
+                    </div>
+                  </div>
+
+                  <!-- Currency (Read-only) -->
+                  <div class="row mb-3 readonly-field">
+                    <div class="col-md-4">
+                      <label for="currency">Currency:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="currency" type="text" class="form-control" [value]="loginDetails.currency || 'No data'" readonly>
+                    </div>
+                  </div>
+
+                  <!-- Account Created Date (Read-only) -->
+                  <div class="row mb-3 readonly-field">
+                    <div class="col-md-4">
+                      <label for="createdAt">Account Created:</label>
+                    </div>
+                    <div class="col-md-8">
+                      <input id="createdAt" type="text" class="form-control" [value]="loginDetails.createdAt ? (loginDetails.createdAt | date:'medium') : 'No data'" readonly>
+                    </div>
+                  </div>
+
 
 
                   <!-- <div class="row">
@@ -1168,3 +443,4 @@
     </div>
   </div>
 </section>
+

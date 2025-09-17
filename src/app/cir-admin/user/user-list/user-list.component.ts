@@ -31,7 +31,8 @@ export class UserListComponent implements OnInit {
     nationality: '',
     currentWork: '',
     eligible_for_SC: '',
-    sc_dv_clearance_hold: ''
+    sc_dv_clearance_hold: '',
+    referredBy: ''
   };
 
   // Table headers for basic view
@@ -208,7 +209,8 @@ export class UserListComponent implements OnInit {
       nationality: '',
       currentWork: '',
       eligible_for_SC: '',
-      sc_dv_clearance_hold: ''
+      sc_dv_clearance_hold: '',
+      referredBy: ''
     };
     this.getUsers();
   }
@@ -242,5 +244,34 @@ export class UserListComponent implements OnInit {
 
   getTotalPages(): number {
     return Math.ceil(this.totalRecords / this.pagesize);
+  }
+
+  getReferredByName(referredBy: string | number): string {
+    const referredByMap: { [key: string]: string } = {
+      '0': 'LinkedIn',
+      '1': 'SaiVen Technology Solutions Ltd',
+      '2': 'Delphi Services Ltd',
+      '3': 'Apex IT',
+      '4': 'Jamie Thompson',
+      '5': 'WhatsApp',
+      '6': 'LinkedIn',
+      '7': 'Westgate IT Hub Pvt Ltd',
+      '8': 'Spectrum',
+      '9': 'SWT',
+      '10': 'MC Personal',
+      '11': 'Akkodis',
+      '12': 'Next Move Recruitment Ltd',
+      '13': 'We Are Dcoded Limited',
+      '14': 'Heat Recruitment Limited',
+      '15': 'Starapex Recruitment',
+      '16': 'Colossus Recruitment Ltd',
+      '17': 'Hexwired Recruitment Limited',
+      '18': 'Fynity',
+      '19': 'Others',
+      '20': 'RH Portal'
+    };
+
+    const key = String(referredBy);
+    return referredByMap[key] || 'Unknown';
   }
 }

@@ -395,6 +395,10 @@ export class JobListComponent implements OnInit {
     return this.projectStatus?.toLowerCase() === 'future role';
   }
 
+  isProjectActive(): boolean {
+    return this.projectStatus?.toLowerCase() === 'active';
+  }
+
   getJobStatus(job: any): string {
     // If project is expired, show all jobs as expired
     if (this.isProjectExpired()) {
