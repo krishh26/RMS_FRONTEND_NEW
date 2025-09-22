@@ -44,11 +44,12 @@
                 </div>
               </td>
               <td>
-                <div class="banner-preview"
+                <div [innerHTML]="getBannerDetailsPreview(banner.content)"></div>
+                <!-- <div class="banner-preview"
                      (click)="showBannerPreview(banner)"
                      title="Click to view full content">
                   <div [innerHTML]="getBannerDetailsPreview(banner.content)"></div>
-                </div>
+                </div> -->
               </td>
               <td>
                 <div class="date-info">
@@ -57,6 +58,13 @@
               </td>
               <td>
                 <div class="action-buttons">
+                  <!-- <button
+                    class="btn btn-sm btn-outline-info"
+                    (click)="showBannerPreview(banner)"
+                    title="View Banner Preview"
+                    [disabled]="isLoading">
+                    <i class="fas fa-eye"></i>
+                  </button> -->
                   <button
                     class="btn btn-sm btn-outline-primary"
                     (click)="editBanner(banner)"
@@ -134,8 +142,73 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="banner-full-content"
-               [innerHTML]="selectedBannerContent">
+          <!-- Banner Preview Container -->
+          <div class="banner-preview-wrapper">
+            <div class="banner-preview-container"
+                 [style.background-color]="selectedBannerBackgroundColor">
+
+              <!-- Logo Section -->
+              <div class="banner-logo-section" *ngIf="selectedBannerLogo">
+                <div class="logo-container" [class.loading]="isImageLoading">
+                  <img [src]="selectedBannerLogo"
+                       alt="Banner Logo"
+                       class="banner-logo"
+                       (load)="onImageLoad()"
+                       (error)="onImageError($event)">
+                </div>
+              </div>
+
+              <!-- No Logo Message -->
+              <div class="banner-logo-section" *ngIf="!selectedBannerLogo">
+                <div class="no-logo-container">
+                  <i class="fas fa-image fa-3x"></i>
+                  <p>No Logo Available</p>
+                </div>
+              </div>
+
+              <!-- Content Section -->
+              <div class="banner-content-section">
+                <div class="banner-full-content"
+                     [innerHTML]="selectedBannerContent">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Banner Details -->
+          <div class="banner-details mt-4">
+            <h6 class="details-title">
+              <i class="fas fa-info-circle me-2"></i>
+              Banner Details
+            </h6>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="detail-item">
+                  <label>Background Color:</label>
+                  <div class="color-preview">
+                    <div class="color-swatch"
+                         [style.background-color]="selectedBannerBackgroundColor">
+                    </div>
+                    <span class="color-value">{{ selectedBannerBackgroundColor }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6" *ngIf="selectedBannerLogo">
+                <div class="detail-item">
+                  <label>Logo:</label>
+                  <div class="logo-preview">
+                    <img [src]="selectedBannerLogo"
+                         alt="Logo Preview"
+                         class="logo-thumbnail"
+                         (click)="viewFullSizeLogo(selectedBannerLogo)"
+                         (error)="onImageError($event)">
+                    <div class="logo-info">
+                      <small class="text-muted">Click to view full size</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="modal-footer">

@@ -3,31 +3,38 @@
     <div class="Titleheading">
       <h1>Profile Setup</h1>
     </div>
-    <div class="FlatCard mt-4 mb-3">
-      <ul class="nav nav-tabs pt-3" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" [class.active]="activeTab === 'profile'" id="Profile-tab"
-            (click)="setActiveTab('profile')" type="button" role="tab" aria-controls="Profile"
-            aria-selected="true">Profile</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" [class.active]="activeTab === 'password'" id="ChangePassword-tab"
-            (click)="setActiveTab('password')" type="button" role="tab" aria-controls="ChangePassword"
-            aria-selected="false">Change Password</button>
-        </li>
-      </ul>
+    <div class="FlatCard">
       <div class="row">
-        <!-- Left Panel (Personal Details Form) -->
         <div class="col-lg-7 col-xl-7 col-12">
           <div class="FormRight-panel">
-            <div class="tab-content" id="myTabContent">
-              <!-- Profile Tab Content -->
-              <div class="tab-pane fade" [class.show]="activeTab === 'profile'" [class.active]="activeTab === 'profile'"
-                id="Profile" role="tabpanel">
-                <form [formGroup]="profileForm" (ngSubmit)="submitProfile()">
-                  <div class="row mb-3">
-                    <div class="col-12">
-                      <div class="profile-image mt-4 mb-4">
+            <!-- Stepper Navigation -->
+            <div class="stepper-container">
+              <div class="stepper">
+                <div class="step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1">
+                  <div class="step-number">1</div>
+                  <div class="step-label">Profile Details</div>
+                </div>
+                <div class="step-line" [class.completed]="currentStep > 1"></div>
+                <div class="step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2">
+                  <div class="step-number">2</div>
+                  <div class="step-label">Change Password</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 1: Profile Details -->
+            <div *ngIf="currentStep === 1" class="step-content">
+              <h5><strong>Profile Details</strong></h5>
+              <br />
+              <form [formGroup]="profileForm" (ngSubmit)="submitProfile()">
+                <!-- Profile Image -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Profile Picture:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="profile-image-container">
+                      <div class="profile-image">
                         <img *ngIf="file?.url || loginDetails.profile.url"
                           [src]="file?.url || loginDetails.profile.url || 'assets/img/default-avatar.png'" />
                         <div class="input--file">
@@ -38,381 +45,434 @@
                       </div>
                     </div>
                   </div>
-                  <!-- User ID (Read-only) -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails._id">
-                    <div class="col-md-4">
-                      <label for="userId">User ID:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="userId" type="text" class="form-control" [value]="loginDetails._id" readonly>
+                </div>
+                <!-- User ID (Read-only) -->
+                <div class="row align-items-center" *ngIf="loginDetails._id">
+                  <div class="col-md-4">
+                    <label>User ID:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails._id" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Name (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="name">Your Name:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="name" type="text" class="form-control" placeholder="Your Name" formControlName="name"
-                        readonly>
+                <!-- Name (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Your Name:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Your Name" formControlName="name" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Email (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="email">Your Email:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="email" type="email" class="form-control" placeholder="Your Email"
-                        formControlName="email" readonly>
+                <!-- Email (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Your Email:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="email" class="form-control" placeholder="Your Email" formControlName="email" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Country Code (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="countrycode">Country Code:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="countrycode" type="text" class="form-control" [value]="loginDetails.countrycode || 'No data'" readonly>
+                <!-- Country Code (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Country Code:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.countrycode || 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Phone Number (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="phoneNumber">Your Phone Number:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="phoneNumber" type="tel" class="form-control" placeholder="Your Phone Number"
-                        [maxlength]="10" formControlName="phoneNumber" readonly>
+                <!-- Phone Number (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Your Phone Number:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="tel" class="form-control" placeholder="Your Phone Number" [maxlength]="10" formControlName="phoneNumber" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Nationality (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="nationality">Nationality:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="nationality" type="text" class="form-control" placeholder="Nationality"
-                        formControlName="nationality" readonly>
+                <!-- Nationality (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Nationality:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Nationality" formControlName="nationality" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- UK Visa Type (Read-only) - Only show if nationality is not British -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.nationality !== 'british'">
-                    <div class="col-md-4">
-                      <label for="UKVisaType">UK Visa Type:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="UKVisaType" type="text" class="form-control" [value]="loginDetails.UKVisaType || 'No data'" readonly>
+                <!-- UK Visa Type (Read-only) - Only show if nationality is not British -->
+                <div class="row align-items-center" *ngIf="loginDetails.nationality !== 'british'">
+                  <div class="col-md-4">
+                    <label>UK Visa Type:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.UKVisaType || 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- UK Driving License (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="UKDrivinglicense">UK Driving License:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="UKDrivinglicense" type="text" class="form-control" [value]="loginDetails.UKDrivinglicense !== undefined ? (loginDetails.UKDrivinglicense ? 'Yes' : 'No') : 'No data'" readonly>
+                <!-- UK Driving License (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>UK Driving License:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.UKDrivinglicense !== undefined ? (loginDetails.UKDrivinglicense ? 'Yes' : 'No') : 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Current Location/Postal Code (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="postalCode">Current Location:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="postalCode" type="text" class="form-control" placeholder="Current Location"
-                        formControlName="postalCode" readonly>
+                <!-- Current Location/Postal Code (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Current Location:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Current Location" formControlName="postalCode" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Current Work Status (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="currentWork">Current Work Status:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="currentWork" type="text" class="form-control" [value]="loginDetails.currentWork || 'No data'" readonly>
+                <!-- Current Work Status (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Current Work Status:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.currentWork || 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Looking For (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="lookingFor">Looking For:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="lookingFor" type="text" class="form-control" [value]="loginDetails.lookingFor && loginDetails.lookingFor.length > 0 ? loginDetails.lookingFor.join(', ') : 'No data'" readonly>
+                <!-- Looking For (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Looking For:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.lookingFor && loginDetails.lookingFor.length > 0 ? loginDetails.lookingFor.join(', ') : 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Work Preferences (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="workPreference">Work Preferences:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="workPreference" type="text" class="form-control" [value]="loginDetails.workPreference && loginDetails.workPreference.length > 0 ? loginDetails.workPreference.join(', ') : 'No data'" readonly>
+                <!-- Work Preferences (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Work Preferences:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.workPreference && loginDetails.workPreference.length > 0 ? loginDetails.workPreference.join(', ') : 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Notice Period (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="noticePeriodDay">Notice Period:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="noticePeriodDay" type="text" class="form-control" [value]="loginDetails.noticePeriodDay || 'No data'" readonly>
+                <!-- Notice Period (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Notice Period:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.noticePeriodDay || 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- CV File (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="cv">CV File:</label>
-                    </div>
-                    <div class="col-md-8">
+                <!-- CV File (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>CV File:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
                       <div class="d-flex align-items-center" *ngIf="loginDetails.cv && loginDetails.cv.name">
-                        <input id="cv" type="text" class="form-control me-2" [value]="loginDetails.cv.name" readonly>
+                        <input type="text" class="form-control me-2" [value]="loginDetails.cv.name" readonly>
                         <a *ngIf="loginDetails.cv.url" [href]="loginDetails.cv.url" target="_blank" class="btn btn-sm btn-outline-primary">
                           <i class="fas fa-download"></i> Download
                         </a>
                       </div>
-                      <input *ngIf="!loginDetails.cv || !loginDetails.cv.name" id="cv" type="text" class="form-control" value="No data" readonly>
+                      <input *ngIf="!loginDetails.cv || !loginDetails.cv.name" type="text" class="form-control" value="No data" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Preferred Roles (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="preferredRoles">Preferred Roles:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="preferredRoles" class="form-control" rows="3" [value]="loginDetails.preferredRoles && loginDetails.preferredRoles.length > 0 ? loginDetails.preferredRoles.join(', ') : 'No data'" readonly></textarea>
+                <!-- Preferred Roles (Read-only) -->
+                <div class="row align-items-start">
+                  <div class="col-md-4">
+                    <label>Preferred Roles:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <textarea class="form-control" rows="3" [value]="loginDetails.preferredRoles && loginDetails.preferredRoles.length > 0 ? loginDetails.preferredRoles.join(', ') : 'No data'" readonly></textarea>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Referred By (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="referredBy">Referred By:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="referredBy" type="text" class="form-control" [value]="loginDetails.referredBy || 'No data'" readonly>
+                <!-- Referred By (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Referred By:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.referredBy || 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- SC/DV Clearance (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="sc_dv_clearance_hold">SC/DV Clearance:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="sc_dv_clearance_hold" type="text" class="form-control" [value]="loginDetails.sc_dv_clearance_hold !== undefined ? (loginDetails.sc_dv_clearance_hold ? 'Yes' : 'No') : 'No data'" readonly>
+                <!-- SC/DV Clearance (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>SC/DV Clearance:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.sc_dv_clearance_hold !== undefined ? (loginDetails.sc_dv_clearance_hold ? 'Yes' : 'No') : 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Eligible for SC (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="eligible_for_SC">Eligible for Security Clearance:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="eligible_for_SC" type="text" class="form-control" [value]="loginDetails.eligible_for_SC !== undefined ? (loginDetails.eligible_for_SC ? 'Yes' : 'No') : 'No data'" readonly>
+                <!-- Eligible for SC (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Eligible for Security Clearance:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.eligible_for_SC !== undefined ? (loginDetails.eligible_for_SC ? 'Yes' : 'No') : 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- SC/DV Valid Upto (Read-only) - Only show if clearance is held -->
-                  <div class="row mb-3 readonly-field" *ngIf="loginDetails.sc_dv_clearance_hold">
-                    <div class="col-md-4">
-                      <label for="sc_dv_valid_upto">Clearance Valid Until:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="sc_dv_valid_upto" type="text" class="form-control" [value]="loginDetails.sc_dv_valid_upto ? (loginDetails.sc_dv_valid_upto | date:'medium') : 'No data'" readonly>
+                <!-- SC/DV Valid Upto (Read-only) - Only show if clearance is held -->
+                <div class="row align-items-center" *ngIf="loginDetails.sc_dv_clearance_hold">
+                  <div class="col-md-4">
+                    <label>Clearance Valid Until:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.sc_dv_valid_upto ? (loginDetails.sc_dv_valid_upto | date:'medium') : 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Willing to Undertake (Read-only) - Only show if no clearance -->
-                  <div class="row mb-3 readonly-field" *ngIf="!loginDetails.sc_dv_clearance_hold">
-                    <div class="col-md-4">
-                      <label for="willing_to_undertake">Willing to Undertake Clearance:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="willing_to_undertake" type="text" class="form-control" [value]="loginDetails.willing_to_undertake || 'No data'" readonly>
+                <!-- Willing to Undertake (Read-only) - Only show if no clearance -->
+                <div class="row align-items-center" *ngIf="!loginDetails.sc_dv_clearance_hold">
+                  <div class="col-md-4">
+                    <label>Willing to Undertake Clearance:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.willing_to_undertake || 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Call Day Preferences (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="callDay">Preferred Call Days:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="callDay" type="text" class="form-control" [value]="loginDetails.callDay && loginDetails.callDay.length > 0 ? loginDetails.callDay.join(', ') : 'No data'" readonly>
+                <!-- Call Day Preferences (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Preferred Call Days:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.callDay && loginDetails.callDay.length > 0 ? loginDetails.callDay.join(', ') : 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Call Time Preferences (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="callTime">Preferred Call Times:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="callTime" type="text" class="form-control" [value]="loginDetails.callTime && loginDetails.callTime.length > 0 ? loginDetails.callTime.join(', ') : 'No data'" readonly>
+                <!-- Call Time Preferences (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Preferred Call Times:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.callTime && loginDetails.callTime.length > 0 ? loginDetails.callTime.join(', ') : 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Any Questions (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="anyQuestion">Additional Questions:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <textarea id="anyQuestion" class="form-control" rows="3" [value]="loginDetails.anyQuestion || 'No data'" readonly></textarea>
+                <!-- Any Questions (Read-only) -->
+                <div class="row align-items-start">
+                  <div class="col-md-4">
+                    <label>Additional Questions:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <textarea class="form-control" rows="3" [value]="loginDetails.anyQuestion || 'No data'" readonly></textarea>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Expected Day Rate (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="expectedDayRate">Expected Day Rate (£):</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="expectedDayRate" type="text" class="form-control" [value]="loginDetails.expectedDayRate || 'No data'" readonly>
+                <!-- Expected Day Rate (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Expected Day Rate (£):</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.expectedDayRate || 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Work Location (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="workLocation">Work Location:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="workLocation" type="text" class="form-control" [value]="loginDetails.workLocation && loginDetails.workLocation.length > 0 ? loginDetails.workLocation.join(', ') : 'No data'" readonly>
+                <!-- Work Location (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Work Location:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.workLocation && loginDetails.workLocation.length > 0 ? loginDetails.workLocation.join(', ') : 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Currency (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="currency">Currency:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="currency" type="text" class="form-control" [value]="loginDetails.currency || 'No data'" readonly>
+                <!-- Currency (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Currency:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.currency || 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
-                  <!-- Account Created Date (Read-only) -->
-                  <div class="row mb-3 readonly-field">
-                    <div class="col-md-4">
-                      <label for="createdAt">Account Created:</label>
-                    </div>
-                    <div class="col-md-8">
-                      <input id="createdAt" type="text" class="form-control" [value]="loginDetails.createdAt ? (loginDetails.createdAt | date:'medium') : 'No data'" readonly>
+                <!-- Account Created Date (Read-only) -->
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Account Created:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <input type="text" class="form-control" [value]="loginDetails.createdAt ? (loginDetails.createdAt | date:'medium') : 'No data'" readonly>
                     </div>
                   </div>
+                </div>
 
+                <div class="row align-items-center">
+                  <div class="col-12 update">
+                    <button style="float: right !important" type="button" class="btn btn-primary btn-round" (click)="goToNextStep()">
+                      Next Step
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
 
-
-                  <!-- <div class="row">
-                    <div class="col-12 update">
-                      <button style="float: right!important" type="submit" class="btn btn-primary btn-round">Update </button>
-                    </div>
-                  </div> -->
-                </form>
-              </div>
-
-              <!-- Change Password Tab Content -->
-              <div class="tab-pane fade" [class.show]="activeTab === 'password'"
-                [class.active]="activeTab === 'password'" id="ChangePassword" role="tabpanel">
-                <form [formGroup]="passwordForm" (ngSubmit)="submitPassword()">
-                  <div class="form-group">
-                    <div class="row mb-3">
-                      <div class="col-md-4">
-                        <label for="password">Current Password:</label>
+            <!-- Step 2: Change Password -->
+            <div *ngIf="currentStep === 2" class="step-content">
+              <h5><strong>Change Password</strong></h5>
+              <br />
+              <form [formGroup]="passwordForm" (ngSubmit)="submitPassword()">
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Current Password:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <input [type]="currentShowPassword ? 'text' : 'password'" class="form-control" placeholder="Current Password" formControlName="currentPassword">
+                        <div class="input-group-append">
+                          <div class="input-group-text">
+                            <span *ngIf="!currentShowPassword" class="fas fa-eye" (click)="showHidePass('currentPassword')"></span>
+                            <span *ngIf="currentShowPassword" class="fas fa-eye-slash" (click)="showHidePass('currentPassword')"></span>
+                          </div>
+                        </div>
                       </div>
-                      <div class="col-md-8">
-                        <input id="password" [type]="currentShowPassword ? 'text' : 'password'" class="form-control"
-                          placeholder="Current Password" formControlName="currentPassword">
-                        <span *ngIf="!currentShowPassword" class="fas fa-eye showicon"
-                          (click)="showHidePass('currentPassword')"></span>
-                        <span *ngIf="currentShowPassword" class="fas fa-eye-slash showicon"
-                          (click)="showHidePass('currentPassword')"></span>
-                        <span class="text-danger"
-                          *ngIf="passwordForm?.controls?.['currentPassword']?.touched && passwordForm?.controls?.['currentPassword']?.errors?.['required']">
-                          Please enter a password.
-                        </span>
-                        <span class="text-danger"
-                          *ngIf="passwordForm?.controls?.['currentPassword']?.touched && passwordForm?.controls?.['currentPassword']?.errors?.['pattern']">
-                          Password must contain a capital letter, a number, and '&#64;'.
-                        </span>
-                      </div>
+                      <span class="text-danger" *ngIf="passwordForm?.controls?.['currentPassword']?.touched && passwordForm?.controls?.['currentPassword']?.errors?.['required']">
+                        Please enter a password.
+                      </span>
+                      <span class="text-danger" *ngIf="passwordForm?.controls?.['currentPassword']?.touched && passwordForm?.controls?.['currentPassword']?.errors?.['pattern']">
+                        Password must contain a capital letter, a number, and '@'.
+                      </span>
                     </div>
                   </div>
+                </div>
 
-                  <div class="form-group">
-                    <div class="row mb-3">
-                      <div class="col-md-4">
-                        <label for="password">New Password:</label>
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>New Password:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <input [type]="showPassword ? 'text' : 'password'" class="form-control" placeholder="New Password" formControlName="password">
+                        <div class="input-group-append">
+                          <div class="input-group-text">
+                            <span *ngIf="!showPassword" class="fas fa-eye" (click)="showHidePass('password')"></span>
+                            <span *ngIf="showPassword" class="fas fa-eye-slash" (click)="showHidePass('password')"></span>
+                          </div>
+                        </div>
                       </div>
-                      <div class="col-md-8">
-                        <input id="password" [type]="showPassword ? 'text' : 'password'" class="form-control"
-                          placeholder="New Password" formControlName="password">
-                        <span *ngIf="!showPassword" class="fas fa-eye showicon"
-                          (click)="showHidePass('password')"></span>
-                        <span *ngIf="showPassword" class="fas fa-eye-slash showicon"
-                          (click)="showHidePass('password')"></span>
-                        <span class="text-danger"
-                          *ngIf="passwordForm?.controls?.['password']?.touched && passwordForm?.controls?.['password']?.errors?.['required']">
-                          Please enter a password.
-                        </span>
-                        <span class="text-danger"
-                          *ngIf="passwordForm?.controls?.['password']?.touched && passwordForm?.controls?.['password']?.errors?.['pattern']">
-                          Password must contain a capital letter, a number, and '&#64;'.
-                        </span>
-                      </div>
+                      <span class="text-danger" *ngIf="passwordForm?.controls?.['password']?.touched && passwordForm?.controls?.['password']?.errors?.['required']">
+                        Please enter a password.
+                      </span>
+                      <span class="text-danger" *ngIf="passwordForm?.controls?.['password']?.touched && passwordForm?.controls?.['password']?.errors?.['pattern']">
+                        Password must contain a capital letter, a number, and '@'.
+                      </span>
                     </div>
                   </div>
+                </div>
 
-                  <div class="form-group">
-                    <div class="row mb-3">
-                      <div class="col-md-4">
-                        <label for="confirmPassword">Confirm Password:</label>
+                <div class="row align-items-center">
+                  <div class="col-md-4">
+                    <label>Confirm Password:</label>
+                  </div>
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <div class="input-group">
+                        <input [type]="confirmShowPassword ? 'text' : 'password'" class="form-control" placeholder="Confirm Password" formControlName="confirmPassword">
+                        <div class="input-group-append">
+                          <div class="input-group-text">
+                            <span *ngIf="!confirmShowPassword" class="fas fa-eye" (click)="showHidePass('confirmPassword')"></span>
+                            <span *ngIf="confirmShowPassword" class="fas fa-eye-slash" (click)="showHidePass('confirmPassword')"></span>
+                          </div>
+                        </div>
                       </div>
-                      <div class="col-md-8">
-                        <input id="confirmPassword" [type]="confirmShowPassword ? 'text' : 'password'"
-                          class="form-control" placeholder="Confirm Password" formControlName="confirmPassword">
-                        <span *ngIf="!confirmShowPassword" class="fas fa-eye showicon"
-                          (click)="showHidePass('confirmPassword')"></span>
-                        <span *ngIf="confirmShowPassword" class="fas fa-eye-slash showicon"
-                          (click)="showHidePass('confirmPassword')"></span>
-                        <span class="text-danger"
-                          *ngIf="passwordForm?.controls?.['confirmPassword']?.touched && passwordForm?.controls?.['confirmPassword']?.errors?.['required']">
-                          Please confirm your password.
-                        </span>
-                        <span class="text-danger"
-                          *ngIf="passwordForm?.controls?.['confirmPassword']?.touched && passwordForm?.controls?.['confirmPassword']?.errors?.['pattern']">
-                          Password must contain a capital letter, a number, and '&#64;'.
-                        </span>
-                      </div>
+                      <span class="text-danger" *ngIf="passwordForm?.controls?.['confirmPassword']?.touched && passwordForm?.controls?.['confirmPassword']?.errors?.['required']">
+                        Please confirm your password.
+                      </span>
+                      <span class="text-danger" *ngIf="passwordForm?.controls?.['confirmPassword']?.touched && passwordForm?.controls?.['confirmPassword']?.errors?.['pattern']">
+                        Password must contain a capital letter, a number, and '@'.
+                      </span>
                     </div>
                   </div>
+                </div>
 
-                  <div class="row">
-                    <div class="col-12 update">
-                      <button style="float: right!important" type="submit" class="btn btn-primary btn-round">Update
-                        Password</button>
-                    </div>
+                <div class="row align-items-center">
+                  <div class="col-12 update">
+                    <button style="float: left !important;" class="btn btn-primary" type="button" (click)="goToPreviousStep()">Back</button>
+                    <button style="float: right !important;" class="btn btn-primary" type="submit">Update Password</button>
                   </div>
-                </form>
-              </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -423,20 +483,28 @@
             <div class="text-center">
               <img src="../../../../assets/img/Saivenlogo.png" width="200" class="mb-5" />
             </div>
-            <h3><strong>"Elevate Your Career with SaiVen: Join Public Sector IT Projects"</strong></h3>
-            <p class="mb-5 textfont">SaiVen, is an emerging IT QA lead business with 40+ business collaborations
-              across UK and India. We are a dedicated business to lead the governance of all public sector QA projects
-              signed by the group and we are the driving force for client relationship management, project governance,
-              and people/delivery management.<br><br>
-              Our job is to ensure seamless execution for exceptional results, through bringing our industry expertise
-              added with right skills at right time - enabling quick and cost-effective resource augmentation, for
-              benefit of our clients.<br><br>Partner with us for exciting contract opportunities and be a part of our
-              success story</p>
-            <p><strong>SaiVen Technology Solutions Limited</strong><br>
-              1-04, Focal Point, <br>27-35 Fleet Street, <br>Swindon SN1 1RQ
+            <h1 class="HeadingLarge">
+              "Elevate Your Career with SaiVen: Join Public Sector IT Projects"
+            </h1>
+            <p class="mb-5 textfont">
+              SaiVen, is an emerging IT QA lead business with 40+ business
+              collaborations across UK and India. We are a dedicated business to
+              lead the governance of all public sector QA projects signed by the
+              group and we are the driving force for client relationship
+              management, project governance, and people/delivery management.<br /><br />
+              Our job is to ensure seamless execution for exceptional results,
+              through bringing our industry expertise added with right skills at
+              right time - enabling quick and cost-effective resource
+              augmentation, for benefit of our clients.<br /><br />Partner with
+              us for exciting contract opportunities and be a part of our
+              success story
+            </p>
+            <p>
+              <strong>SaiVen Technology Solutions Limited</strong><br />
+              1-04, Focal Point, <br />27-35 Fleet Street, <br />Swindon SN1 1RQ
             </p>
             <p>Company Registration Number: 8856876</p>
-            <p>Email: Info&#64;saivensolutions.co.uk</p>
+            <p>Email: Info@saivensolutions.co.uk</p>
           </div>
         </div>
       </div>

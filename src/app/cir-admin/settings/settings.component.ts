@@ -4,6 +4,8 @@ import { Editor, Toolbar, toHTML } from 'ngx-editor';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { CirSericeService } from '../../services/cir-service/cir-serice.service';
+import { NotificationService } from '../../services/notification/notification.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -24,7 +26,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
   pageTypes = [
     { value: 'home', label: 'Home Page' },
     { value: 'profile_page', label: 'Profile Page' },
-    { value: 'add_user', label: 'Add User Page' },
     { value: 'job_post', label: 'Job Post Page' }
   ];
   toolbar: Toolbar = [
@@ -64,16 +65,22 @@ export class SettingsComponent implements OnInit, OnDestroy {
   };
 
   bannerData: any;
+  file: any = null;
+  logoFile: any = null;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private cirservice: CirSericeService,
+    private notificationService: NotificationService
   ) {
     this.mandatoryDetailsForm = this.fb.group({
       page_type: ['', Validators.required],
-      content: [''] // Remove required validator as we'll handle it via editor
+      content: [''], // Remove required validation as we'll handle it via editor
+      background_color: ['#ffffff', Validators.required],
+      logo: ['']
     });
   }
 
@@ -115,15 +122,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
     // Check if content is valid
     let contentValid = false;
     if (typeof formData.content === 'string') {
-      contentValid = formData.content && 
-                    formData.content !== '<p></p>' && 
-                    formData.content.trim() !== '' && 
+      contentValid = formData.content &&
+                    formData.content !== '<p></p>' &&
+                    formData.content.trim() !== '' &&
                     formData.content !== '<p><br></p>';
     } else if (typeof formData.content === 'object' && formData.content !== null) {
       // If it's an object (JSON from editor), check if it has meaningful content
-      contentValid = formData.content && 
-                    formData.content.type && 
-                    formData.content.content && 
+      contentValid = formData.content &&
+                    formData.content.type &&
+                    formData.content.content &&
                     formData.content.content.length > 0;
     }
 
@@ -163,7 +170,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
     // Use the form control content which contains the HTML from the editor
     const bannerData = {
       page_type: formData.page_type,
-      content: htmlContent // Get HTML content from form control
+      content: htmlContent, // Get HTML content from form control
+      background_color: formData.background_color,
+      logo: formData.logo || (this.logoFile?.url || '')
     };
 
     console.log('Saving banner with content:', htmlContent);
@@ -262,8 +271,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
         // Set the form values - the editor will automatically update
         this.mandatoryDetailsForm.patchValue({
           page_type: this.bannerData.page_type,
-          content: this.bannerData.content
+          content: this.bannerData.content,
+          background_color: this.bannerData.background_color || '#ffffff',
+          logo: this.bannerData.logo || ''
         });
+
+        // Set logo file if exists
+        if (this.bannerData.logo) {
+          this.logoFile = { url: this.bannerData.logo };
+        }
 
         this.isLoading = false;
       },
@@ -297,6 +313,73 @@ export class SettingsComponent implements OnInit, OnDestroy {
     if (confirm('Are you sure you want to reset all settings to default?')) {
       // Reset to default values
       console.log('Settings reset');
+    }
+  }
+
+  // File upload functionality for logo
+  logoUpload(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Invalid File Type',
+          text: 'Please select a valid image file (JPEG, JPG, PNG, or GIF).',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#dc3545'
+        });
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        Swal.fire({
+          icon: 'error',
+          title: 'File Too Large',
+          text: 'Please select an image file smaller than 5MB.',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#dc3545'
+        });
+        return;
+      }
+
+      const data = new FormData();
+      data.append('files', file);
+
+      this.cirservice.fileUpload(data).subscribe((response) => {
+        if (response?.status) {
+          this.logoFile = response?.data;
+          this.mandatoryDetailsForm.patchValue({
+            logo: this.logoFile?.url || ''
+          });
+          console.log('Logo uploaded:', this.logoFile);
+          this.notificationService.showSuccess(response?.message || 'Logo successfully uploaded.');
+        } else {
+          this.notificationService.showError(response?.message || 'Error uploading logo.');
+        }
+      }, (error) => {
+        console.error('Error uploading logo:', error);
+        this.notificationService.showError('Error uploading logo. Please try again.');
+      });
+    }
+  }
+
+  // Remove logo
+  removeLogo(): void {
+    this.logoFile = null;
+    this.mandatoryDetailsForm.patchValue({
+      logo: ''
+    });
+  }
+
+  // Trigger logo upload
+  triggerLogoUpload(): void {
+    const fileInput = document.getElementById('logoUpload') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
     }
   }
 }

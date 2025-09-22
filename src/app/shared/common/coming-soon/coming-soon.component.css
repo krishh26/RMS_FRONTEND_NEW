@@ -1,0 +1,29 @@
+.coming-soon-icon {
+  font-size: 4rem;
+  color: #007bff;
+  animation: bounce 2s infinite;
+}
+
+.coming-soon-title {
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.coming-soon-description {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}

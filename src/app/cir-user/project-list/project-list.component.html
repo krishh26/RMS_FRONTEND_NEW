@@ -5,7 +5,7 @@
       <span class="separator">/</span>
       <span class="current">Projects</span>
     </div> -->
-    <h2>Project Management</h2>
+    <h2>CIR Portal</h2>
     <div class="header-buttons">
       <button class="refresh-btn" (click)="refreshProjects()" title="Refresh Projects">
         <i class="fas fa-sync-alt"></i>
@@ -147,8 +147,11 @@
       <tbody>
 
         <tr>
-          <td *ngIf="!projectlist?.length" colspan="5">
+          <td *ngIf="!projectlist?.length && selectedStatus !== 'Active'" colspan="6" >
             <app-no-record-found></app-no-record-found>
+          </td>
+          <td *ngIf="!projectlist?.length && selectedStatus === 'Active'" colspan="6" >
+            <app-coming-soon></app-coming-soon>
           </td>
         </tr>
 

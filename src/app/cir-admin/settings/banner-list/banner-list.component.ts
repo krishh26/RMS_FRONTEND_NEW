@@ -8,6 +8,8 @@ interface Banner {
   _id: string;
   page_type: string;
   content: string; // HTML content
+  background_color?: string;
+  logo?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -26,12 +28,14 @@ export class BannerListComponent implements OnInit {
   showPreviewModal = false;
   selectedBannerContent = '';
   selectedBannerPageType = '';
+  selectedBannerBackgroundColor = '#ffffff';
+  selectedBannerLogo = '';
+  isImageLoading = false;
 
   // Page type labels for display
   pageTypeLabels: { [key: string]: string } = {
     'home': 'Home Page',
     'profile_page': 'Profile Page',
-    'add_user': 'Add User Page',
     'job_post': 'Job Post Page'
   };
 
@@ -75,31 +79,33 @@ export class BannerListComponent implements OnInit {
   }
 
   loadStaticBanners(): void {
-    // Static data for demonstration when API fails
+    // Static data for demonstration when API fails - matches your API response structure
     this.banners = [
       {
-        _id: '1',
+        _id: '68c44311383209c7faf8ee8a',
         page_type: 'home',
-        content: '<div class="banner-home"><h2>Welcome to our Resource Management System</h2><p>This is the main banner displayed on the dashboard.</p></div>',
-        createdAt: '2024-01-15T10:00:00Z'
+        content: '<p>ETsztsdgdfgdgdsfgdfg dgdgfdg d</p>',
+        background_color: '#00f1f5',
+        logo: 'https://f005.backblazeb2.com/file/whyqtech1/files/1758545275133_test3 (1).png',
+        createdAt: '2025-09-12T15:58:09.933Z',
+        updatedAt: '2025-09-22T12:48:04.683Z'
       },
       {
-        _id: '2',
+        _id: '68bf41826f7b2e8c59720c3b',
         page_type: 'profile_page',
-        content: '<div class="banner-notice"><h3>System Maintenance</h3><p>System maintenance scheduled for this weekend. Please save your work.</p></div>',
-        createdAt: '2024-01-20T10:00:00Z'
+        content: '<ul><li><p>asdad</p></li><li><p>1</p></li><li><p>2</p></li><li><p>3</p></li></ul>',
+        background_color: '#ffffff',
+        createdAt: '2025-09-08T20:50:10.143Z',
+        updatedAt: '2025-09-08T20:50:35.687Z'
       },
       {
-        _id: '3',
-        page_type: 'add_user',
-        content: '<div class="banner-feature"><h3>New Features Available</h3><p>Check out our latest features including improved user management and reporting tools.</p></div>',
-        createdAt: '2024-01-25T10:00:00Z'
-      },
-      {
-        _id: '4',
+        _id: '68c44311383209c7faf8ee8b',
         page_type: 'job_post',
-        content: '<div class="banner-security"><h3>Security Alert</h3><p>Please update your password regularly for better security.</p></div>',
-        createdAt: '2024-02-01T10:00:00Z'
+        content: '<h3>Job Posting Guidelines</h3><p>Please follow our guidelines when posting new job opportunities.</p><ul><li>Clear job description</li><li>Required qualifications</li><li>Salary range</li></ul>',
+        background_color: '#e8f5e8',
+        logo: 'https://via.placeholder.com/200x80/28a745/ffffff?text=Job+Logo',
+        createdAt: '2025-09-15T10:30:00.000Z',
+        updatedAt: '2025-09-15T10:30:00.000Z'
       }
     ];
     this.totalItems = this.banners.length;
@@ -203,6 +209,9 @@ export class BannerListComponent implements OnInit {
   showBannerPreview(banner: Banner): void {
     this.selectedBannerContent = banner.content;
     this.selectedBannerPageType = this.getPageTypeLabel(banner.page_type);
+    this.selectedBannerBackgroundColor = banner.background_color || '#ffffff';
+    this.selectedBannerLogo = banner.logo || '';
+    this.isImageLoading = banner.logo ? true : false;
     this.showPreviewModal = true;
   }
 
@@ -210,5 +219,26 @@ export class BannerListComponent implements OnInit {
     this.showPreviewModal = false;
     this.selectedBannerContent = '';
     this.selectedBannerPageType = '';
+    this.selectedBannerBackgroundColor = '#ffffff';
+    this.selectedBannerLogo = '';
+    this.isImageLoading = false;
+  }
+
+  onImageError(event: Event): void {
+    const target = event.target as HTMLImageElement;
+    if (target) {
+      target.style.display = 'none';
+    }
+    this.isImageLoading = false;
+  }
+
+  onImageLoad(): void {
+    this.isImageLoading = false;
+  }
+
+  viewFullSizeLogo(logoUrl: string): void {
+    if (logoUrl) {
+      window.open(logoUrl, '_blank');
+    }
   }
 }

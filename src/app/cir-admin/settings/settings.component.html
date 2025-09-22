@@ -235,6 +235,69 @@
           </div>
 
           <div class="form-group mb-3">
+            <label for="backgroundColor" class="form-label">Background Color:</label>
+            <div class="input-group">
+              <input
+                type="color"
+                id="backgroundColor"
+                formControlName="background_color"
+                class="form-control color-picker"
+                style="width: 60px; height: 38px;"
+              >
+              <input
+                type="text"
+                formControlName="background_color"
+                class="form-control"
+                placeholder="#ffffff"
+                readonly
+              >
+            </div>
+            <div *ngIf="mandatoryDetailsForm.get('background_color')?.touched && mandatoryDetailsForm.get('background_color')?.invalid" class="text-danger">
+              Background Color is required.
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="logoUpload" class="form-label">Logo Upload:</label>
+            <div class="logo-upload-container">
+              <div class="logo-preview" *ngIf="logoFile?.url || mandatoryDetailsForm.get('logo')?.value">
+                <img [src]="logoFile?.url || mandatoryDetailsForm.get('logo')?.value" alt="Logo Preview" class="logo-image">
+                <button type="button" class="btn btn-sm btn-danger remove-logo-btn" (click)="removeLogo()">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              <div class="logo-upload-area" *ngIf="!logoFile?.url && !mandatoryDetailsForm.get('logo')?.value">
+                <div class="upload-icon">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <p class="upload-text">Click to upload logo</p>
+                <p class="upload-hint">Supports: JPG, PNG, GIF (Max 5MB)</p>
+                <input
+                  type="file"
+                  id="logoUpload"
+                  class="file-input"
+                  (change)="logoUpload($event)"
+                  accept="image/jpeg,image/jpg,image/png,image/gif"
+                >
+              </div>
+              <div class="logo-upload-area" *ngIf="logoFile?.url || mandatoryDetailsForm.get('logo')?.value">
+                <button type="button" class="btn btn-outline-primary" (click)="triggerLogoUpload()">
+                  <i class="fas fa-edit"></i>
+                  Change Logo
+                </button>
+                <input
+                  type="file"
+                  id="logoUpload"
+                  class="file-input"
+                  (change)="logoUpload($event)"
+                  accept="image/jpeg,image/jpg,image/png,image/gif"
+                  style="display: none;"
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
             <label for="bannerContent" class="form-label">Banner Content:</label>
             <div class="NgxEditor__Wrapper">
               <ngx-editor-menu [editor]="mandatoryDetailsEditor" [toolbar]="toolbar" style="padding: 15px !important;">
