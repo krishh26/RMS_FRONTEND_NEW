@@ -46,6 +46,9 @@ export class CirUserLoginComponent {
       this.cirservice.loginUser(loginData).subscribe((response) => {
         if (response?.status == true) {
           const token = response?.data?.token;
+
+
+
           this.DecodedToken = jwtDecode(token);
           console.log('Decoded Token:', this.DecodedToken);
           localStorage.setItem("DecodedToken", JSON.stringify(this.DecodedToken));

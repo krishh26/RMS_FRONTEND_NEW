@@ -34,9 +34,12 @@ export class BannerListComponent implements OnInit {
 
   // Page type labels for display
   pageTypeLabels: { [key: string]: string } = {
-    'home': 'Home Page',
-    'profile_page': 'Profile Page',
-    'job_post': 'Job Post Page'
+    'cir_profile': 'CIR Profile Page',
+    'cir_user_registration': 'User Registration Page',
+    'cir_change_password': 'Change Password Page',
+    // 'home': 'Home Page',
+    // 'profile_page': 'Profile Page',
+    // 'job_post': 'Job Post Page'
   };
 
   constructor(

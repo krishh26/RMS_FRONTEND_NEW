@@ -24,9 +24,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   // Page types for dropdown
   pageTypes = [
-    { value: 'home', label: 'Home Page' },
-    { value: 'profile_page', label: 'Profile Page' },
-    { value: 'job_post', label: 'Job Post Page' }
+    { value: 'cir_profile', label: 'CIR Profile Page' },
+    { value: 'cir_user_registration', label: 'User Registration Page' },
+    { value: 'cir_change_password', label: 'Change Password Page' },
+    // { value: 'home', label: 'Home Page' },
+    // { value: 'profile_page', label: 'Profile Page' },
+    // { value: 'job_post', label: 'Job Post Page' }
   ];
   toolbar: Toolbar = [
     ['bold', 'italic'],
