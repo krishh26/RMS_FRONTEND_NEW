@@ -477,8 +477,43 @@
           </div>
         </div>
 
+        <!-- Change Password Banner Panel -->
+        <div class="col-lg-5 col-xl-5 col-12" *ngIf="!changePasswordBannerDetails && currentStep === 2">
+          <div class="FormLeft-panel">
+            <div class="text-center">
+              <img src="../../../../assets/img/Saivenlogo.png" width="200" class="mb-5" />
+            </div>
+            <h1 class="HeadingLarge">
+              "Secure Your Account: Change Your Password"
+            </h1>
+            <p class="mb-5 textfont">
+              Keep your account secure by regularly updating your password.
+              Choose a strong password that includes uppercase letters, numbers,
+              and special characters to ensure maximum security for your profile.<br /><br />
+              Remember to use a unique password that you haven't used elsewhere
+              and avoid sharing your login credentials with anyone.
+            </p>
+            <p>
+              <strong>Security Tips:</strong><br />
+              • Use a combination of letters, numbers, and symbols<br />
+              • Avoid using personal information<br />
+              • Change your password regularly<br />
+              • Never share your password with others
+            </p>
+          </div>
+        </div>
+
+        <div class="col-lg-5 col-xl-5 col-12" *ngIf="changePasswordBannerDetails && currentStep === 2">
+          <div class="FormLeft-panel" [style.background-color]="changePasswordBannerDetails.background_color">
+            <div class="text-center">
+              <img [src]="changePasswordBannerDetails.logo" width="200" class="mb-5" />
+            </div>
+            <div [innerHTML]="changePasswordBannerDetails.content"></div>
+          </div>
+        </div>
+
         <!-- Right Panel -->
-        <div class="col-lg-5 col-xl-5 col-12">
+        <div class="col-lg-5 col-xl-5 col-12" *ngIf="!bannerDetails && currentStep === 1">
           <div class="FormLeft-panel">
             <div class="text-center">
               <img src="../../../../assets/img/Saivenlogo.png" width="200" class="mb-5" />
@@ -505,6 +540,15 @@
             </p>
             <p>Company Registration Number: 8856876</p>
             <p>Email: Info@saivensolutions.co.uk</p>
+          </div>
+        </div>
+
+        <div class="col-lg-5 col-xl-5 col-12" *ngIf="bannerDetails && currentStep === 1">
+          <div class="FormLeft-panel">
+            <div class="text-center">
+              <img [src]="bannerDetails.logo" width="200" class="mb-5" />
+            </div>
+            <p class="mb-5 textfont" [innerHTML]="bannerDetails.content"></p>
           </div>
         </div>
       </div>

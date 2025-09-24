@@ -614,7 +614,7 @@
   </div>
 </div>
         </div>
-        <div class="col-lg-5 col-xl-5 col-12">
+        <div class="col-lg-5 col-xl-5 col-12" *ngIf="!bannerDetails">
           <div class="FormLeft-panel">
             <div class="text-center">
               <img src="../../../../assets/img/Saivenlogo.png" width="200" class="mb-5" />
@@ -641,6 +641,14 @@
             </p>
             <p>Company Registration Number: 8856876</p>
             <p>Email: Info@saivensolutions.co.uk</p>
+          </div>
+        </div>
+        <div class="col-lg-5 col-xl-5 col-12" *ngIf="bannerDetails">
+          <div class="FormLeft-panel">
+            <div class="text-center">
+              <img [src]="bannerDetails.logo" width="200" class="mb-5" />
+            </div>
+            <p class="mb-5 textfont" [innerHTML]="bannerDetails.content"></p>
           </div>
         </div>
       </div>

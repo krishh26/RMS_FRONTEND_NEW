@@ -26,7 +26,8 @@ export enum CirEndPoint {
   JOB_ROLE = '/futures/card/',
   JOB_ROLE_LIST = '/futures/card/',
   GET_PROJECTS = '/project/projects',
-  CIR_DASHBOARD = '/dashboard/cir-dashboard'
+  CIR_DASHBOARD = '/dashboard/cir-dashboard',
+  GET_BANER_DETAILS = '/banner/page/',
 }
 
 @Injectable({
@@ -90,6 +91,11 @@ export class CirSericeService {
   getJobDetails(jobId: string, jobType: string = 'CIR'): Observable<any> {
     return this.httpClient
       .get<any>(this.baseUrl + CirEndPoint.GET_JOB_DETAILS + `?job_id=${jobId}&job_type=${jobType}`);
+  }
+
+  getBanerDetails(bannerType: string): Observable<any> {
+    return this.httpClient
+      .get<any>(this.baseUrl + CirEndPoint.GET_BANER_DETAILS + bannerType);
   }
 
   getCIRJobApplicant(jobId: string): Observable<any> {

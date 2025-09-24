@@ -120,6 +120,8 @@ export class CirRegisterComponent implements OnInit {
     { label: 'Trainee Tester', value: 'Trainee Tester' }
   ];
 
+  bannerDetails: any = null;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -158,6 +160,8 @@ export class CirRegisterComponent implements OnInit {
       }
       this.otherDetailForm.get('sc_dv_valid_upto')?.updateValueAndValidity();
     });
+
+    this.getBanerDetails();
   }
 
   private setupReferredByOptions() {
@@ -586,5 +590,15 @@ export class CirRegisterComponent implements OnInit {
 
   onSCDVChange(event: any) {
     this.showValidUptoDate = event.target.value === 'yes';
+  }
+
+  getBanerDetails(): void {
+    this.cirservice.getBanerDetails('cir_user_registration').subscribe((response) => {
+      if (response?.status) {
+        this.bannerDetails = response?.data || null;
+      } else {
+        this.bannerDetails = null;
+      }
+    });
   }
 }
