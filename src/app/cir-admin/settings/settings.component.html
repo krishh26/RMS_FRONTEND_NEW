@@ -259,14 +259,27 @@
 
           <div class="form-group mb-3">
             <label for="logoUpload" class="form-label">Logo Upload:</label>
-            <div class="logo-upload-container">
-              <div class="logo-preview" *ngIf="logoFile?.url || mandatoryDetailsForm.get('logo')?.value">
+            <div class="logo-upload-container" [class.uploading]="isLogoUploading">
+
+              <!-- Loading State -->
+              <div class="logo-upload-loading" *ngIf="isLogoUploading">
+                <div class="loading-spinner">
+                  <i class="fas fa-spinner fa-spin fa-2x"></i>
+                </div>
+                <p class="loading-text">Uploading logo...</p>
+                <p class="loading-hint">Please wait while we upload your image</p>
+              </div>
+
+              <!-- Logo Preview -->
+              <div class="logo-preview" *ngIf="!isLogoUploading && (logoFile?.url || mandatoryDetailsForm.get('logo')?.value)">
                 <img [src]="logoFile?.url || mandatoryDetailsForm.get('logo')?.value" alt="Logo Preview" class="logo-image">
-                <button type="button" class="btn btn-sm btn-danger remove-logo-btn" (click)="removeLogo()">
+                <button type="button" class="btn btn-sm btn-danger remove-logo-btn" (click)="removeLogo()" [disabled]="isLogoUploading">
                   <i class="fas fa-times"></i>
                 </button>
               </div>
-              <div class="logo-upload-area" *ngIf="!logoFile?.url && !mandatoryDetailsForm.get('logo')?.value">
+
+              <!-- Upload Area - No Logo -->
+              <div class="logo-upload-area" *ngIf="!isLogoUploading && !logoFile?.url && !mandatoryDetailsForm.get('logo')?.value">
                 <div class="upload-icon">
                   <i class="fas fa-cloud-upload-alt"></i>
                 </div>
@@ -278,10 +291,13 @@
                   class="file-input"
                   (change)="logoUpload($event)"
                   accept="image/jpeg,image/jpg,image/png,image/gif"
+                  [disabled]="isLogoUploading"
                 >
               </div>
-              <div class="logo-upload-area" *ngIf="logoFile?.url || mandatoryDetailsForm.get('logo')?.value">
-                <button type="button" class="btn btn-outline-primary" (click)="triggerLogoUpload()">
+
+              <!-- Upload Area - With Logo -->
+              <div class="logo-upload-area" *ngIf="!isLogoUploading && (logoFile?.url || mandatoryDetailsForm.get('logo')?.value)">
+                <button type="button" class="btn btn-outline-primary" (click)="triggerLogoUpload()" [disabled]="isLogoUploading">
                   <i class="fas fa-edit"></i>
                   Change Logo
                 </button>
@@ -292,6 +308,7 @@
                   (change)="logoUpload($event)"
                   accept="image/jpeg,image/jpg,image/png,image/gif"
                   style="display: none;"
+                  [disabled]="isLogoUploading"
                 >
               </div>
             </div>

@@ -70,6 +70,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   bannerData: any;
   file: any = null;
   logoFile: any = null;
+  isLogoUploading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -349,10 +350,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
         return;
       }
 
+      // Start loading
+      this.isLogoUploading = true;
+
       const data = new FormData();
       data.append('files', file);
 
       this.cirservice.fileUpload(data).subscribe((response) => {
+        this.isLogoUploading = false; // Stop loading
         if (response?.status) {
           this.logoFile = response?.data;
           this.mandatoryDetailsForm.patchValue({
@@ -364,6 +369,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           this.notificationService.showError(response?.message || 'Error uploading logo.');
         }
       }, (error) => {
+        this.isLogoUploading = false; // Stop loading on error
         console.error('Error uploading logo:', error);
         this.notificationService.showError('Error uploading logo. Please try again.');
       });

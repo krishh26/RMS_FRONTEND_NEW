@@ -151,7 +151,8 @@
                 <button class="action-btn apply"
                   [disabled]="job.status === 'Applied' || job.status === 'Expired' || job.status === 'Inactive' || isProjectExpired()"
                   (click)="openModal(job)">
-                  Apply
+                  <span *ngIf="isProjectFutureRole()" [ngbTooltip]="'Applications are closed, due date crossed.'">Apply Test</span>
+                  <span *ngIf="!isProjectFutureRole()">Apply</span>
                 </button>
               </div>
               <div *ngIf="job.applied == true">

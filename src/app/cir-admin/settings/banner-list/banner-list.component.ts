@@ -60,7 +60,7 @@ export class BannerListComponent implements OnInit {
       next: (response: any) => {
         console.log('Banners loaded:', response);
 
-        // Handle the API response structure
+        // Handle the new API response structure
         if (response.status && response.data) {
           this.banners = response.data;
           this.totalItems = response.meta_data?.items || response.data.length;
@@ -85,30 +85,31 @@ export class BannerListComponent implements OnInit {
     // Static data for demonstration when API fails - matches your API response structure
     this.banners = [
       {
-        _id: '68c44311383209c7faf8ee8a',
-        page_type: 'home',
-        content: '<p>ETsztsdgdfgdgdsfgdfg dgdgfdg d</p>',
-        background_color: '#00f1f5',
-        logo: 'https://f005.backblazeb2.com/file/whyqtech1/files/1758545275133_test3 (1).png',
-        createdAt: '2025-09-12T15:58:09.933Z',
-        updatedAt: '2025-09-22T12:48:04.683Z'
+        _id: '68d3941c93a230098596e0e2',
+        page_type: 'cir_change_password',
+        content: '<p>Hi this is a Test <br>dbgd<br>hjdvghd<br>d jhdvg</p>',
+        background_color: '#004cff',
+        logo: 'https://f005.backblazeb2.com/file/whyqtech1/files/1759786093352_istockphoto-1420676204-612x612.jpg',
+        createdAt: '2025-09-24T06:47:56.275Z',
+        updatedAt: '2025-10-06T21:28:23.883Z'
       },
       {
-        _id: '68bf41826f7b2e8c59720c3b',
-        page_type: 'profile_page',
-        content: '<ul><li><p>asdad</p></li><li><p>1</p></li><li><p>2</p></li><li><p>3</p></li></ul>',
-        background_color: '#ffffff',
-        createdAt: '2025-09-08T20:50:10.143Z',
-        updatedAt: '2025-09-08T20:50:35.687Z'
+        _id: '68d3940293a230098596e0dd',
+        page_type: 'cir_user_registration',
+        content: '<p><strong><span style="color: rgb(0, 0, 0);"><span style="background-color: rgb(255, 255, 255);">Lorem Ipsum</span></span></strong><span style="color: rgb(0, 0, 0);"><span style="background-color: rgb(255, 255, 255);"> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop</span></span></p>',
+        background_color: '#ff0000',
+        logo: 'https://f005.backblazeb2.com/file/whyqtech1/files/1758696418855_hourse_1.jpg',
+        createdAt: '2025-09-24T06:47:30.900Z',
+        updatedAt: '2025-09-24T06:47:30.900Z'
       },
       {
-        _id: '68c44311383209c7faf8ee8b',
-        page_type: 'job_post',
-        content: '<h3>Job Posting Guidelines</h3><p>Please follow our guidelines when posting new job opportunities.</p><ul><li>Clear job description</li><li>Required qualifications</li><li>Salary range</li></ul>',
-        background_color: '#e8f5e8',
-        logo: 'https://via.placeholder.com/200x80/28a745/ffffff?text=Job+Logo',
-        createdAt: '2025-09-15T10:30:00.000Z',
-        updatedAt: '2025-09-15T10:30:00.000Z'
+        _id: '68d393d293a230098596e0d7',
+        page_type: 'cir_profile',
+        content: '<p>Test</p>',
+        background_color: '#f90101',
+        logo: 'https://f005.backblazeb2.com/file/whyqtech1/files/1758696393297_hourse_1.jpg',
+        createdAt: '2025-09-24T06:46:42.804Z',
+        updatedAt: '2025-09-24T06:46:42.804Z'
       }
     ];
     this.totalItems = this.banners.length;

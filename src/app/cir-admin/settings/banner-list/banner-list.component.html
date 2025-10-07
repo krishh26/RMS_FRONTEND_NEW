@@ -29,6 +29,8 @@
              <tr>
                <th>Sr No</th>
                <th>Page Type</th>
+               <th>Logo</th>
+               <th>Background Color</th>
                <th>Content Preview</th>
                <th>Created Date</th>
                <th>Actions</th>
@@ -40,16 +42,31 @@
               <td>
                 <div class="banner-title">
                   <strong>{{ getPageTypeLabel(banner.page_type) }}</strong>
-
+                </div>
+              </td>
+              <td>
+                <div class="logo-preview">
+                  <img *ngIf="banner.logo"
+                       [src]="banner.logo"
+                       alt="Banner Logo"
+                       class="logo-thumbnail"
+                       (error)="onImageError($event)">
+                  <div *ngIf="!banner.logo" class="no-logo">
+                    <i class="fas fa-image"></i>
+                    <span>No Logo</span>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="color-preview">
+                  <div class="color-swatch"
+                       [style.background-color]="banner.background_color || '#ffffff'">
+                  </div>
+                  <span class="color-value">{{ banner.background_color || '#ffffff' }}</span>
                 </div>
               </td>
               <td>
                 <div [innerHTML]="getBannerDetailsPreview(banner.content)"></div>
-                <!-- <div class="banner-preview"
-                     (click)="showBannerPreview(banner)"
-                     title="Click to view full content">
-                  <div [innerHTML]="getBannerDetailsPreview(banner.content)"></div>
-                </div> -->
               </td>
               <td>
                 <div class="date-info">
@@ -58,13 +75,13 @@
               </td>
               <td>
                 <div class="action-buttons">
-                  <!-- <button
+                  <button
                     class="btn btn-sm btn-outline-info"
                     (click)="showBannerPreview(banner)"
                     title="View Banner Preview"
                     [disabled]="isLoading">
                     <i class="fas fa-eye"></i>
-                  </button> -->
+                  </button>
                   <button
                     class="btn btn-sm btn-outline-primary"
                     (click)="editBanner(banner)"
@@ -83,7 +100,7 @@
               </td>
             </tr>
             <tr *ngIf="banners.length === 0">
-              <td colspan="5" class="text-center no-data">
+              <td colspan="7" class="text-center no-data">
                 <div class="no-data-content">
                   <i class="fas fa-image fa-3x text-muted"></i>
                   <p class="text-muted">No banners found</p>
@@ -144,10 +161,9 @@
         <div class="modal-body">
           <!-- Banner Preview Container -->
           <div class="banner-preview-wrapper">
-            <div class="banner-preview-container"
-                 [style.background-color]="selectedBannerBackgroundColor">
+            <div class="banner-preview-container">
 
-              <!-- Logo Section -->
+              <!-- Logo Section - Centered -->
               <div class="banner-logo-section" *ngIf="selectedBannerLogo">
                 <div class="logo-container" [class.loading]="isImageLoading">
                   <img [src]="selectedBannerLogo"
@@ -158,7 +174,7 @@
                 </div>
               </div>
 
-              <!-- No Logo Message -->
+              <!-- No Logo Message - Centered -->
               <div class="banner-logo-section" *ngIf="!selectedBannerLogo">
                 <div class="no-logo-container">
                   <i class="fas fa-image fa-3x"></i>
@@ -166,8 +182,9 @@
                 </div>
               </div>
 
-              <!-- Content Section -->
-              <div class="banner-content-section">
+              <!-- Content Section with Background Color -->
+              <div class="banner-content-section"
+                   [style.background-color]="selectedBannerBackgroundColor">
                 <div class="banner-full-content"
                      [innerHTML]="selectedBannerContent">
                 </div>
@@ -176,7 +193,7 @@
           </div>
 
           <!-- Banner Details -->
-          <div class="banner-details mt-4">
+          <!-- <div class="banner-details mt-4">
             <h6 class="details-title">
               <i class="fas fa-info-circle me-2"></i>
               Banner Details
@@ -209,7 +226,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="modal-footer">
           <button type="button"

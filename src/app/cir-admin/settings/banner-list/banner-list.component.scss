@@ -144,6 +144,84 @@
                 color: #333;
               }
 
+              .logo-preview {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .logo-thumbnail {
+                  max-width: 60px;
+                  max-height: 40px;
+                  width: auto;
+                  height: auto;
+                  object-fit: contain;
+                  border-radius: 6px;
+                  border: 1px solid #dee2e6;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                  transition: transform 0.3s ease;
+
+                  &:hover {
+                    transform: scale(1.1);
+                    cursor: pointer;
+                  }
+                }
+
+                .no-logo {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  width: 60px;
+                  height: 40px;
+                  background-color: #f8f9fa;
+                  border: 1px dashed #dee2e6;
+                  border-radius: 6px;
+                  color: #6c757d;
+                  font-size: 10px;
+
+                  i {
+                    font-size: 16px;
+                    margin-bottom: 2px;
+                  }
+
+                  span {
+                    font-size: 8px;
+                    text-align: center;
+                  }
+                }
+              }
+
+              .color-preview {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                .color-swatch {
+                  width: 30px;
+                  height: 30px;
+                  border-radius: 6px;
+                  border: 2px solid #ffffff;
+                  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                  transition: transform 0.3s ease;
+
+                  &:hover {
+                    transform: scale(1.1);
+                    cursor: pointer;
+                  }
+                }
+
+                .color-value {
+                  font-family: 'Courier New', monospace;
+                  font-size: 12px;
+                  font-weight: 600;
+                  color: #495057;
+                  background: #f8f9fa;
+                  padding: 4px 8px;
+                  border-radius: 4px;
+                  border: 1px solid #dee2e6;
+                }
+              }
+
               .banner-preview {
                 color: #6c757d;
                 line-height: 1.4;
@@ -236,6 +314,16 @@
                   border-radius: 6px;
                   font-size: 12px;
                   transition: all 0.3s ease;
+
+                  &.btn-outline-info {
+                    color: #17a2b8;
+                    border-color: #17a2b8;
+
+                    &:hover {
+                      background-color: #17a2b8;
+                      color: white;
+                    }
+                  }
 
                   &.btn-outline-primary {
                     color: #007bff;
@@ -431,6 +519,41 @@
 
             .banner-preview {
               max-width: 200px;
+            }
+
+            .logo-preview {
+              .logo-thumbnail {
+                max-width: 40px;
+                max-height: 30px;
+              }
+
+              .no-logo {
+                width: 40px;
+                height: 30px;
+
+                i {
+                  font-size: 12px;
+                }
+
+                span {
+                  font-size: 6px;
+                }
+              }
+            }
+
+            .color-preview {
+              flex-direction: column;
+              gap: 4px;
+
+              .color-swatch {
+                width: 20px;
+                height: 20px;
+              }
+
+              .color-value {
+                font-size: 10px;
+                padding: 2px 4px;
+              }
             }
 
             .action-buttons {
@@ -672,10 +795,10 @@
 
             .banner-preview-container {
               width: 100%;
-              max-width: 600px;
-              min-height: 400px;
+              max-width: 800px;
+              min-height: 600px;
               border-radius: 12px;
-              padding: 40px;
+              padding: 0;
               box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
               border: 1px solid rgba(255, 255, 255, 0.2);
               position: relative;
@@ -683,7 +806,7 @@
               display: flex;
               flex-direction: column;
               align-items: center;
-              justify-content: center;
+              justify-content: flex-start;
 
               &::before {
                 content: '';
@@ -698,28 +821,30 @@
 
               .banner-logo-section {
                 width: 100%;
-                margin-bottom: 30px;
+                padding: 40px 20px;
                 position: relative;
                 z-index: 1;
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                background: rgba(255, 255, 255, 0.95);
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
                 .logo-container {
-                  width: 300px;
-                  height: 120px;
+                  width: 400px;
+                  height: 150px;
                   display: flex;
                   justify-content: center;
                   align-items: center;
-                  background: rgba(255, 255, 255, 0.1);
+                  background: transparent;
                   border-radius: 12px;
-                  border: 2px dashed rgba(255, 255, 255, 0.3);
+                  border: none;
                   position: relative;
                   overflow: hidden;
 
                   .banner-logo {
-                    max-width: 280px;
-                    max-height: 100px;
+                    max-width: 380px;
+                    max-height: 130px;
                     width: auto;
                     height: auto;
                     object-fit: contain;
@@ -755,16 +880,16 @@
                 }
 
                 .no-logo-container {
-                  width: 300px;
-                  height: 120px;
+                  width: 400px;
+                  height: 150px;
                   display: flex;
                   flex-direction: column;
                   justify-content: center;
                   align-items: center;
-                  background: rgba(255, 255, 255, 0.1);
+                  background: transparent;
                   border-radius: 12px;
-                  border: 2px dashed rgba(255, 255, 255, 0.3);
-                  color: rgba(255, 255, 255, 0.7);
+                  border: 2px dashed #dee2e6;
+                  color: #6c757d;
                   text-align: center;
 
                   i {
@@ -774,7 +899,7 @@
 
                   p {
                     margin: 0;
-                    font-size: 14px;
+                    font-size: 16px;
                     font-weight: 500;
                   }
                 }
@@ -788,19 +913,21 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                padding: 40px 20px;
+                min-height: 300px;
 
                 .banner-full-content {
                   width: 100%;
-                  padding: 25px;
-                  min-height: 150px;
-                  line-height: 1.7;
-                  font-size: 16px;
+                  padding: 30px;
+                  min-height: 200px;
+                  line-height: 1.8;
+                  font-size: 18px;
                   color: #333;
                   text-align: center;
-                  background: rgba(255, 255, 255, 0.1);
+                  background: rgba(255, 255, 255, 0.9);
                   border-radius: 12px;
-                  border: 1px solid rgba(255, 255, 255, 0.2);
-                  backdrop-filter: blur(10px);
+                  border: 1px solid rgba(0, 0, 0, 0.1);
+                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
                   h1, h2, h3, h4, h5, h6 {
                     margin-top: 0;
@@ -957,41 +1084,43 @@
             padding: 15px;
 
             .banner-preview-container {
-              padding: 25px;
-              min-height: 350px;
+              min-height: 500px;
 
               .banner-logo-section {
-                margin-bottom: 25px;
+                padding: 30px 15px;
 
                 .logo-container {
-                  width: 250px;
-                  height: 100px;
+                  width: 300px;
+                  height: 120px;
 
                   .banner-logo {
-                    max-width: 230px;
-                    max-height: 80px;
+                    max-width: 280px;
+                    max-height: 100px;
                   }
                 }
 
                 .no-logo-container {
-                  width: 250px;
-                  height: 100px;
+                  width: 300px;
+                  height: 120px;
 
                   i {
                     font-size: 2rem;
                   }
 
                   p {
-                    font-size: 12px;
+                    font-size: 14px;
                   }
                 }
               }
 
               .banner-content-section {
+                padding: 30px 15px;
+                min-height: 250px;
+
                 .banner-full-content {
                   padding: 20px;
-                  font-size: 14px;
-                  min-height: 120px;
+                  font-size: 16px;
+                  min-height: 150px;
                 }
               }
             }
