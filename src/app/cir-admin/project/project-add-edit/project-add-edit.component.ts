@@ -36,7 +36,7 @@ export class ProjectAddEditComponent implements OnInit {
       publishedDate: ['', [Validators.required]],
       client: ['', [Validators.required]],
       clientLocation: ['', [Validators.required]],
-      workType: ['Remote', [Validators.required]],
+      workType: ['', [Validators.required]],
       dayRatesRange: this.fb.group({
         min: ['', [Validators.required, Validators.min(0)]],
         max: ['', [Validators.required, Validators.min(0)]],

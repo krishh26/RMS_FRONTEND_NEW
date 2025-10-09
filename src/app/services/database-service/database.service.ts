@@ -205,4 +205,17 @@ export class DatabaseService {
         })
       );
   }
+
+  changeUserStatus(userId: string, isActive: boolean): Observable<any> {
+    const apiUrl = `${this.baseUrl}/user/change-status/${userId}`;
+    const payload = { isActive };
+
+    return this.httpClient.patch<any>(apiUrl, payload, { headers: this.getHeader() })
+      .pipe(
+        catchError((error: any) => {
+          console.error('Error changing user status:', error);
+          return throwError(error);
+        })
+      );
+  }
 }

@@ -71,7 +71,21 @@
     </div>
 
     <div class="form-row">
+
       <div class="form-group">
+        <label for="clientLocation">Work Type</label>
+        <input
+          type="text"
+          id="workType"
+          formControlName="workType"
+          placeholder="Enter work type"
+          [class.error]="projectForm.get('workType')?.invalid && projectForm.get('workType')?.touched">
+        <div class="error-message"  *ngIf="projectForm.get('workType')?.invalid && projectForm.get('workType')?.touched">
+          Work type is required
+        </div>
+      </div>
+
+      <!-- <div class="form-group">
         <label for="workType">Work Type</label>
         <select
           id="workType"
@@ -82,10 +96,10 @@
         <div class="error-message" *ngIf="projectForm.get('workType')?.invalid && projectForm.get('workType')?.touched">
           Work type is required
         </div>
-      </div>
+      </div> -->
 
       <div class="form-group" formGroupName="dayRatesRange">
-        <label>Day Rates Range ($)</label>
+        <label>Day Rates Range (£)</label>
         <div class="range-inputs">
           <input
             type="number"

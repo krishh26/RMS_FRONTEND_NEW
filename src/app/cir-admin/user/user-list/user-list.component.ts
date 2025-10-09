@@ -36,7 +36,7 @@ export class UserListComponent implements OnInit {
   };
 
   // Table headers for basic view
-  basicHeaders = ['Name', 'Email', 'Phone Number', 'Nationality', 'Current Work',
+  basicHeaders = ['Name', 'Email', 'Phone Number', 'Nationality', 'Current Work', 'Status',
     // 'Actions'
   ];
 
@@ -133,9 +133,55 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  toggleUserStatus(userId: string): void {
-    console.log('Toggle user status:', userId);
-    // Implement status toggle logic
+  toggleUserStatus(event: Event, userId: string, currentStatus: boolean): void {
+    // Prevent the default checkbox behavior
+    event.preventDefault();
+    
+    const newStatus = !currentStatus;
+    const statusText = newStatus ? 'activate' : 'deactivate';
+ 
+    Swal.fire({
+      title: 'Change User Status',
+      text: `Are you sure you want to ${statusText} this user?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: newStatus ? '#28a745' : '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: `Yes, ${statusText.charAt(0).toUpperCase() + statusText.slice(1)}!`,
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.databaseService.changeUserStatus(userId, newStatus).subscribe(
+          (response) => {
+            if (response?.status) {
+              this.notificationService.showSuccess(response.message || `User ${statusText}d successfully`);
+              // Update the user status in the local array
+              const userIndex = this.users.findIndex(user => user.id === userId);
+              if (userIndex !== -1) {
+                this.users[userIndex].isActive = newStatus;
+              }
+            } else {
+              this.notificationService.showError(response?.message || `Failed to ${statusText} user`);
+              // Revert the status on error
+              const userIndex = this.users.findIndex(user => user.id === userId);
+              if (userIndex !== -1) {
+                this.users[userIndex].isActive = currentStatus;
+              }
+            }
+          },
+          (error) => {
+            console.error('Error changing user status:', error);
+            this.notificationService.showError(`Error occurred while trying to ${statusText} user`);
+            // Revert the status on error
+            const userIndex = this.users.findIndex(user => user.id === userId);
+            if (userIndex !== -1) {
+              this.users[userIndex].isActive = currentStatus;
+            }
+          }
+        );
+      }
+      // If cancelled, the checkbox will remain in its original state since we prevented the default behavior
+    });
   }
 
   openDocument(document: any): void {

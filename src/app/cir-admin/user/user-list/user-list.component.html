@@ -139,6 +139,20 @@
               <td>{{ user.phoneNumber }}</td>
               <td>{{ user.nationality }}</td>
               <td>{{ user.currentWork }}</td>
+              <td>
+                <div class="status-container">
+                  <span class="status-badge" [ngClass]="user.isActive ? 'active' : 'inactive'">
+                    {{ user.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                  <label class="status-toggle">
+                    <input type="checkbox" 
+                           [checked]="user.isActive" 
+                           (click)="toggleUserStatus($event, user.id, user.isActive)"
+                           class="toggle-input">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </td>
               <!-- <td class="actions">
                 <button class="action-btn view" (click)="viewDetails(user.id)" title="View Details">
                   <i class="fa fa-eye"></i>
@@ -161,7 +175,7 @@
 
             <!-- Expanded Details Row -->
             <tr *ngIf="expandedUser === user.id" class="details-row">
-              <td colspan="6" class="details-cell">
+              <td colspan="7" class="details-cell">
                 <div class="details-content">
                   <h4>Detailed Information</h4>
                   <div class="details-grid">

@@ -27,6 +27,7 @@ export interface User {
   cv: {
     url: string;
   };
+  isActive: boolean;
   createdAt: string;
   updatedAt: string;
 }

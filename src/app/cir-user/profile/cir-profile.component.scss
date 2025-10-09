@@ -1,92 +1,70 @@
-// Stepper Styles
-.stepper-container {
+// Tab Navigation Styles
+.tab-navigation {
   margin-bottom: 30px;
-  padding: 20px 0;
-}
+  border-bottom: 2px solid #e9ecef;
 
-.stepper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  z-index: 2;
-  background: white;
-  padding: 0 20px;
-
-  .step-number {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #e9ecef;
-    color: #6c757d;
+  .nav-tabs {
+    border: none;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-weight: 600;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    border: 3px solid #e9ecef;
-  }
+    margin-bottom: 0;
 
-  .step-label {
-    margin-top: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    color: #6c757d;
-    text-align: center;
-    transition: all 0.3s ease;
-  }
+    .nav-item {
+      margin: 0 10px;
 
-  &.active {
-    .step-number {
-      background-color: #007bff;
-      color: white;
-      border-color: #007bff;
-    }
-    .step-label {
-      color: #007bff;
-      font-weight: 600;
-    }
-  }
+      .nav-link {
+        border: none;
+        background: none;
+        color: #6c757d;
+        font-weight: 500;
+        font-size: 16px;
+        padding: 15px 25px;
+        border-radius: 8px 8px 0 0;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        position: relative;
 
-  &.completed {
-    .step-number {
-      background-color: #28a745;
-      color: white;
-      border-color: #28a745;
-    }
-    .step-label {
-      color: #28a745;
-      font-weight: 600;
+        i {
+          font-size: 18px;
+        }
+
+        &:hover {
+          color: #007bff;
+          background-color: #f8f9fa;
+        }
+
+        &.active {
+          color: #007bff;
+          background-color: white;
+          border-bottom: 3px solid #007bff;
+          font-weight: 600;
+
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #007bff;
+          }
+        }
+      }
     }
   }
 }
 
-.step-line {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  right: 50%;
-  height: 3px;
-  background-color: #e9ecef;
-  z-index: 1;
-  transition: all 0.3s ease;
-
-  &.completed {
-    background-color: #28a745;
+// Tab Content Styles
+.tab-content {
+  .tab-pane {
+    animation: fadeIn 0.3s ease-in-out;
+    
+    &.active {
+      display: block;
+    }
   }
-}
-
-// Step Content
-.step-content {
-  animation: fadeIn 0.3s ease-in-out;
 }
 
 @keyframes fadeIn {
@@ -379,6 +357,26 @@ textarea.form-control[readonly] {
 
   .FormLeft-panel .HeadingLarge {
     font-size: 20px;
+  }
+
+  .tab-navigation {
+    .nav-tabs {
+      flex-direction: column;
+      align-items: center;
+
+      .nav-item {
+        margin: 5px 0;
+        width: 100%;
+        max-width: 300px;
+
+        .nav-link {
+          width: 100%;
+          justify-content: center;
+          border-radius: 8px;
+          margin-bottom: 5px;
+        }
+      }
+    }
   }
 }
 

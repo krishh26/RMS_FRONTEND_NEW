@@ -9,8 +9,8 @@ import { LocalStorageService } from 'src/app/services/local-storage/local-storag
   styleUrls: ['./cir-profile.component.scss'],
 })
 export class CirProfileComponent implements OnInit {
-  // Stepper properties
-  currentStep = 1;
+  // Tab properties
+  activeTab = 'profile';
 
   profileForm!: FormGroup;
   passwordForm!: FormGroup;
@@ -91,17 +91,9 @@ export class CirProfileComponent implements OnInit {
     });
   }
 
-  // Stepper navigation methods
-  goToNextStep(): void {
-    if (this.currentStep < 2) {
-      this.currentStep++;
-    }
-  }
-
-  goToPreviousStep(): void {
-    if (this.currentStep > 1) {
-      this.currentStep--;
-    }
+  // Tab navigation methods
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
   }
 
   fileUpload(event: any): void {
@@ -134,8 +126,7 @@ export class CirProfileComponent implements OnInit {
       // Here you would typically call a service to update the profile
       this.loginDetails = { ...this.loginDetails, ...this.profileForm.value };
       this.localStorageService.setLogger(this.loginDetails);
-      // Move to next step after successful profile update
-      this.goToNextStep();
+      // Profile updated successfully - could show success message
     } else {
       Object.keys(this.profileForm.controls).forEach((key) => {
         const control = this.profileForm.get(key);
@@ -157,8 +148,7 @@ export class CirProfileComponent implements OnInit {
       // Here you would typically call a service to update the password
       // Reset form after successful password update
       this.passwordForm.reset();
-      // Optionally go back to profile step
-      this.goToPreviousStep();
+      // Password updated successfully - could show success message
     } else {
       Object.keys(this.passwordForm.controls).forEach((key) => {
         const control = this.passwordForm.get(key);

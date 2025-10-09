@@ -7,23 +7,36 @@
       <div class="row">
         <div class="col-lg-7 col-xl-7 col-12">
           <div class="FormRight-panel">
-            <!-- Stepper Navigation -->
-            <div class="stepper-container">
-              <div class="stepper">
-                <div class="step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1">
-                  <div class="step-number">1</div>
-                  <div class="step-label">Profile Details</div>
-                </div>
-                <div class="step-line" [class.completed]="currentStep > 1"></div>
-                <div class="step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2">
-                  <div class="step-number">2</div>
-                  <div class="step-label">Change Password</div>
-                </div>
-              </div>
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+              <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" 
+                          [class.active]="activeTab === 'profile'" 
+                          (click)="setActiveTab('profile')"
+                          type="button" 
+                          role="tab">
+                    <i class="fas fa-user"></i>
+                    Profile Details
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" 
+                          [class.active]="activeTab === 'password'" 
+                          (click)="setActiveTab('password')"
+                          type="button" 
+                          role="tab">
+                    <i class="fas fa-lock"></i>
+                    Change Password
+                  </button>
+                </li>
+              </ul>
             </div>
 
-            <!-- Step 1: Profile Details -->
-            <div *ngIf="currentStep === 1" class="step-content">
+            <!-- Tab Content -->
+            <div class="tab-content">
+              <!-- Profile Details Tab -->
+              <div *ngIf="activeTab === 'profile'" class="tab-pane active" role="tabpanel">
               <h5><strong>Profile Details</strong></h5>
               <br />
               <form [formGroup]="profileForm" (ngSubmit)="submitProfile()">
@@ -378,16 +391,16 @@
 
                 <div class="row align-items-center">
                   <div class="col-12 update">
-                    <button style="float: right !important" type="button" class="btn btn-primary btn-round" (click)="goToNextStep()">
-                      Next Step
+                    <button style="float: right !important" type="submit" class="btn btn-primary btn-round">
+                      Update Profile
                     </button>
                   </div>
                 </div>
               </form>
-            </div>
+              </div>
 
-            <!-- Step 2: Change Password -->
-            <div *ngIf="currentStep === 2" class="step-content">
+              <!-- Change Password Tab -->
+              <div *ngIf="activeTab === 'password'" class="tab-pane active" role="tabpanel">
               <h5><strong>Change Password</strong></h5>
               <br />
               <form [formGroup]="passwordForm" (ngSubmit)="submitPassword()">
@@ -468,17 +481,17 @@
 
                 <div class="row align-items-center">
                   <div class="col-12 update">
-                    <button style="float: left !important;" class="btn btn-primary" type="button" (click)="goToPreviousStep()">Back</button>
                     <button style="float: right !important;" class="btn btn-primary" type="submit">Update Password</button>
                   </div>
                 </div>
               </form>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Change Password Banner Panel -->
-        <div class="col-lg-5 col-xl-5 col-12" *ngIf="!changePasswordBannerDetails && currentStep === 2">
+        <div class="col-lg-5 col-xl-5 col-12" *ngIf="!changePasswordBannerDetails && activeTab === 'password'">
           <div class="FormLeft-panel">
             <div class="text-center">
               <img src="../../../../assets/img/Saivenlogo.png" width="200" class="mb-5" />
@@ -503,7 +516,7 @@
           </div>
         </div>
 
-        <div class="col-lg-5 col-xl-5 col-12" *ngIf="changePasswordBannerDetails && currentStep === 2">
+        <div class="col-lg-5 col-xl-5 col-12" *ngIf="changePasswordBannerDetails && activeTab === 'password'">
           <div class="FormLeft-panel" [style.background-color]="changePasswordBannerDetails.background_color">
             <div class="text-center">
               <img [src]="changePasswordBannerDetails.logo" width="200" class="mb-5" />
@@ -513,7 +526,7 @@
         </div>
 
         <!-- Right Panel -->
-        <div class="col-lg-5 col-xl-5 col-12" *ngIf="!bannerDetails && currentStep === 1">
+        <div class="col-lg-5 col-xl-5 col-12" *ngIf="!bannerDetails && activeTab === 'profile'">
           <div class="FormLeft-panel">
             <div class="text-center">
               <img src="../../../../assets/img/Saivenlogo.png" width="200" class="mb-5" />
@@ -543,7 +556,7 @@
           </div>
         </div>
 
-        <div class="col-lg-5 col-xl-5 col-12" *ngIf="bannerDetails && currentStep === 1">
+        <div class="col-lg-5 col-xl-5 col-12" *ngIf="bannerDetails && activeTab === 'profile'">
           <div class="FormLeft-panel">
             <div class="text-center">
               <img [src]="bannerDetails.logo" width="200" class="mb-5" />
