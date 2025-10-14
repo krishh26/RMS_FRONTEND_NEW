@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 import { CirAdminLoginComponent } from './cir-admin-login/cir-admin-login.component';
 import { CirUserLoginComponent } from './cir-user-login/cir-user-login.component';
@@ -49,6 +50,7 @@ const routes: Routes = [
     RecaptchaModule,
     RecaptchaFormsModule,
     NgMultiSelectDropDownModule,
+    NgSelectModule,
     RouterModule.forChild(routes)
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

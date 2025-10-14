@@ -32,6 +32,7 @@ import { NgxEditorModule } from 'ngx-editor';
 import { SharedModule } from '../shared/shared.module';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { DatabaseService } from '../services/database-service/database.service';
 import { NotificationService } from '../services/notification/notification.service';
 
@@ -106,6 +107,7 @@ const routes: Routes = [
     NgxEditorModule,
     NgxPaginationModule,
     NgMultiSelectDropDownModule,
+    NgSelectModule,
     SharedModule
   ],
   providers: [

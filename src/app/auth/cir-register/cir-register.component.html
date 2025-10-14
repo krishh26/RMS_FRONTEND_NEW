@@ -364,15 +364,22 @@
                   </div>
                   <div class="col-lg-8">
                     <div class="form-group">
-                      <ng-multiselect-dropdown
-                        [placeholder]="'Select Preferred Roles'"
-                        [data]="preferredRoles"
-                        [(ngModel)]="selectedPreferredRoles"
-                        [settings]="dropdownSettings"
-                        (onSelect)="onItemSelect($event)"
-                        (onSelectAll)="onSelectAll($event)"
+                      <ng-select
+                        [items]="preferredRoles"
+                        bindLabel="label"
+                        bindValue="value"
+                        [multiple]="true"
+                        [closeOnSelect]="false"
+                        placeholder="Select Preferred Roles"
+                        [clearable]="true"
                         formControlName="preferredRoles">
-                      </ng-multiselect-dropdown>
+                        <ng-template ng-multi-label-tmp let-items="items">
+                          <span class="ng-value" *ngFor="let it of items; let last = last">{{ it.label }}<span *ngIf="!last">, </span></span>
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                          {{ item.label }}
+                        </ng-template>
+                      </ng-select>
                       <span class="text-danger" *ngIf="
                         otherDetailForm.controls?.['preferredRoles']?.touched &&
                         otherDetailForm.controls?.['preferredRoles']?.errors?.['required']">
@@ -490,15 +497,22 @@
                   </div>
                   <div class="col-lg-8">
                     <div class="form-group">
-                      <ng-multiselect-dropdown
-                        [placeholder]="'Select Preferred Contact Time'"
-                        [data]="timeSlots"
-                        [(ngModel)]="selectedCallTime"
-                        [settings]="dropdownSettings"
-                        (onSelect)="onItemSelect($event)"
-                        (onSelectAll)="onSelectAll($event)"
+                      <ng-select
+                        [items]="timeSlots"
+                        bindLabel="label"
+                        bindValue="value"
+                        [multiple]="true"
+                        [closeOnSelect]="false"
+                        placeholder="Select Preferred Contact Time"
+                        [clearable]="true"
                         formControlName="callTime">
-                      </ng-multiselect-dropdown>
+                        <ng-template ng-multi-label-tmp let-items="items">
+                          <span class="ng-value" *ngFor="let it of items; let last = last">{{ it.label }}<span *ngIf="!last">, </span></span>
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item">
+                          {{ item.label }}
+                        </ng-template>
+                      </ng-select>
                       <span class="text-danger" *ngIf="
                     otherDetailForm.controls?.['callTime']?.touched &&
                     otherDetailForm.controls?.['callTime']?.errors?.['required']">
@@ -513,15 +527,22 @@
                   </div>
                   <div class="col-lg-8">
                     <div class="form-group">
-                      <ng-multiselect-dropdown
-                        [placeholder]="'Select Preferred Contact Day'"
-                        [data]="daysOfWeek"
-                        [(ngModel)]="selectedCallDay"
-                        [settings]="dropdownSettings"
-                        (onSelect)="onItemSelect($event)"
-                        (onSelectAll)="onSelectAll($event)"
+                      <ng-select
+                        [items]="daysOfWeek"
+                        bindLabel="label"
+                        bindValue="value"
+                        [multiple]="true"
+                        [closeOnSelect]="false"
+                        placeholder="Select Preferred Contact Day"
+                        [clearable]="true"
                         formControlName="callDay">
-                      </ng-multiselect-dropdown>
+                        <ng-template ng-multi-label-tmp let-items="items">
+                          <span class="ng-value" *ngFor="let it of items; let last = last">{{ it.label }}<span *ngIf="!last">, </span></span>
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item">
+                          {{ item.label }}
+                        </ng-template>
+                      </ng-select>
                       <span class="text-danger" *ngIf="
                     otherDetailForm.controls?.['callDay']?.touched &&
                     otherDetailForm.controls?.['callDay']?.errors?.['required']">

@@ -461,26 +461,7 @@ export class CirRegisterComponent implements OnInit {
     this.currentStep = 1;
   }
 
-  onItemSelect(item: any) {
-    console.log('Item selected:', item);
-    // Update form controls with selected values
-    this.updateFormControls();
-  }
-
-  onSelectAll(items: any) {
-    console.log('All items selected:', items);
-    // Update form controls with selected values
-    this.updateFormControls();
-  }
-
-  updateFormControls() {
-    // Update form controls with current multi-select values
-    this.otherDetailForm.patchValue({
-      preferredRoles: this.selectedPreferredRoles,
-      callTime: this.selectedCallTime,
-      callDay: this.selectedCallDay
-    });
-  }
+  // Removed multi-select dropdown event handlers; ng-select binds directly via reactive forms
 
   setWillingToUndertakeVisibility(): void {
     const scDvClearanceValue = this.otherDetailForm.get('sc_dv_clearance_hold')?.value;
@@ -543,13 +524,10 @@ export class CirRegisterComponent implements OnInit {
       return this.notificationService.showError('Please upload file');
     }
 
-    // Update form controls with current multi-select values
-    this.updateFormControls();
-
-    // Extract values from multi-select dropdowns
-    const selectedDays = this.selectedCallDay.map(day => day.value);
-    const selectedTimes = this.selectedCallTime.map(time => time.value);
-    const selectedRoles = this.selectedPreferredRoles.map(role => role.value);
+    // Extract values from ng-select reactive controls (arrays of primitive values)
+    const selectedDays = this.otherDetailForm.get('callDay')?.value || [];
+    const selectedTimes = this.otherDetailForm.get('callTime')?.value || [];
+    const selectedRoles = this.otherDetailForm.get('preferredRoles')?.value || [];
 
     const cvObject = {
       key: this.file?.key,
