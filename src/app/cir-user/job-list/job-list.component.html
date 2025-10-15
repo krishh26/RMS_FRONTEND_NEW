@@ -182,7 +182,15 @@
   <div class="modal-overlay" (click)="closeModal()"></div>
   <div class="modal-container">
     <div class="modal-header">
-      <h5 class="modal-title" id="ViewLogin">Upload Details</h5>
+      <div class="modal-title-section">
+        <div class="modal-icon">
+          <i class="fas fa-upload"></i>
+        </div>
+        <div class="modal-title-content">
+          <h5 class="modal-title" id="ViewLogin">Upload Details</h5>
+          <p class="modal-subtitle">Please provide your CV and work preferences</p>
+        </div>
+      </div>
       <button type="button" class="close-btn" (click)="closeModal()" title="Close">
         <i class="fas fa-times"></i>
       </button>
@@ -191,50 +199,92 @@
       <form [formGroup]="resourcesForm">
         <!-- CV Option Section -->
         <div class="form-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="section-title">
+              <h6>Choose CV Option</h6>
+              <span class="required-indicator">* Required</span>
+            </div>
+          </div>
           <div class="form-group">
-            <label class="form-label">
-              Choose CV option: <span class="required">*</span>
-            </label>
             <div class="radio-group">
               <label class="radio-option">
                 <input type="radio" id="existing-cv" name="currentWork" value="existing-cv" formControlName="currentWork"
                   (change)="onSelectExistingCV()">
-                <span class="radio-label">USE EXISTING CV</span>
+                <div class="radio-content">
+                  <div class="radio-icon">
+                    <i class="fas fa-folder-open"></i>
+                  </div>
+                  <div class="radio-text">
+                    <span class="radio-label">Use Existing CV</span>
+                    <span class="radio-description">Select from your previously uploaded CVs</span>
+                  </div>
+                </div>
               </label>
               <label class="radio-option">
                 <input type="radio" id="upload-cv" name="currentWork" value="upload-cv" formControlName="currentWork"
                   (change)="newselectedCv()">
-                <span class="radio-label">UPLOAD NEW CV</span>
+                <div class="radio-content">
+                  <div class="radio-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                  </div>
+                  <div class="radio-text">
+                    <span class="radio-label">Upload New CV</span>
+                    <span class="radio-description">Upload a new CV file</span>
+                  </div>
+                </div>
               </label>
             </div>
 
-            <!-- CV Details Container - Both options in one line -->
+            <!-- CV Details Container -->
             <div class="cv-details-container">
               <!-- Existing CV Details -->
               <div *ngIf="selectedCV" class="cv-details">
                 <div class="cv-info">
-                  <h6>Existing CV Details</h6>
-                  <p><strong>CV Name:</strong> {{selectedCV?.name}}</p>
-                  <a [href]="selectedCV?.url" target="_blank" class="btn btn-info">
-                    <i class="fas fa-download"></i>
-                    Download CV
-                  </a>
+                  <div class="cv-header">
+                    <div class="cv-icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="cv-title">
+                      <h6>Selected CV</h6>
+                      <p class="cv-name">{{selectedCV?.name}}</p>
+                    </div>
+                  </div>
+                  <div class="cv-actions">
+                    <a [href]="selectedCV?.url" target="_blank" class="btn btn-download">
+                      <i class="fas fa-download"></i>
+                      Download
+                    </a>
+                  </div>
                 </div>
               </div>
 
               <!-- New CV Upload -->
               <div *ngIf="newCV" class="file-upload">
                 <div class="upload-info">
-                  <h6>Upload new CV</h6>
+                  <div class="upload-header">
+                    <div class="upload-icon">
+                      <i class="fas fa-upload"></i>
+                    </div>
+                    <div class="upload-title">
+                      <h6>Upload New CV</h6>
+                      <p>Choose a file to upload</p>
+                    </div>
+                  </div>
                   <div class="file-input-wrapper">
                     <input type="file" id="file-upload" aria-label="file example" class="file-input" (change)="fileUpload($event)"
                       accept=".doc, .docx,.pdf">
                     <label for="file-upload" class="file-label">
-                      <i class="fas fa-cloud-upload-alt"></i>
-                      Choose File
+                      <i class="fas fa-plus"></i>
+                      <span>Choose File</span>
                     </label>
                   </div>
-                  <p class="file-hint">Supported formats: .doc, .docx, .pdf</p>
+                  <div class="file-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Supported formats: .doc, .docx, .pdf (Max 10MB)</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -243,33 +293,71 @@
 
         <!-- Work Preferences Section -->
         <div class="form-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="section-title">
+              <h6>Work Preferences</h6>
+              <span class="required-indicator">* Required</span>
+            </div>
+          </div>
           <div class="form-group">
-            <label class="form-label">
-              Work Preferences <span class="required">*</span>
-            </label>
             <div class="checkbox-group">
               <label class="checkbox-option">
                 <input type="checkbox" name="roles" value="Remote Only with Informed client travel"
                   (change)="onCheckboxWorkPReference($event)"
                   [checked]="selectedWorkPreference('Remote Only with Informed client travel')">
-                <span class="checkbox-label">Remote Only with Informed client travel</span>
+                <div class="checkbox-content">
+                  <div class="checkbox-icon">
+                    <i class="fas fa-home"></i>
+                  </div>
+                  <div class="checkbox-text">
+                    <span class="checkbox-label">Remote Only with Informed client travel</span>
+                    <span class="checkbox-description">Work remotely with occasional client site visits</span>
+                  </div>
+                </div>
               </label>
               <label class="checkbox-option">
                 <input type="checkbox" name="roles" value="Remote only - No client tavel"
                   (change)="onCheckboxWorkPReference($event)"
                   [checked]="selectedWorkPreference('Remote only - No client tavel')">
-                <span class="checkbox-label">Remote only - No client travel</span>
+                <div class="checkbox-content">
+                  <div class="checkbox-icon">
+                    <i class="fas fa-laptop-house"></i>
+                  </div>
+                  <div class="checkbox-text">
+                    <span class="checkbox-label">Remote only - No client travel</span>
+                    <span class="checkbox-description">Work completely remotely without any travel</span>
+                  </div>
+                </div>
               </label>
               <label class="checkbox-option">
                 <input type="checkbox" name="roles" value="Full time at client site"
                   (change)="onCheckboxWorkPReference($event)"
                   [checked]="selectedWorkPreference('Full time at client site')">
-                <span class="checkbox-label">Full time at client site</span>
+                <div class="checkbox-content">
+                  <div class="checkbox-icon">
+                    <i class="fas fa-building"></i>
+                  </div>
+                  <div class="checkbox-text">
+                    <span class="checkbox-label">Full time at client site</span>
+                    <span class="checkbox-description">Work on-site at the client location</span>
+                  </div>
+                </div>
               </label>
               <label class="checkbox-option">
                 <input type="checkbox" name="roles" value="Hybrid" (change)="onCheckboxWorkPReference($event)"
                   [checked]="selectedWorkPreference('Hybrid')">
-                <span class="checkbox-label">Hybrid</span>
+                <div class="checkbox-content">
+                  <div class="checkbox-icon">
+                    <i class="fas fa-balance-scale"></i>
+                  </div>
+                  <div class="checkbox-text">
+                    <span class="checkbox-label">Hybrid</span>
+                    <span class="checkbox-description">Mix of remote and on-site work</span>
+                  </div>
+                </div>
               </label>
             </div>
           </div>
@@ -279,11 +367,12 @@
         <div class="form-actions">
           <button type="button" (click)="submitResources()" class="btn btn-primary submit-btn"
                   [disabled]="submitRes">
-            <span *ngIf="!submitRes">Submit</span>
-            <span *ngIf="submitRes">
-              <i class="fas fa-spinner fa-spin"></i>
-              Submitting...
-            </span>
+            <div class="btn-content">
+              <i *ngIf="!submitRes" class="fas fa-paper-plane"></i>
+              <i *ngIf="submitRes" class="fas fa-spinner fa-spin"></i>
+              <span *ngIf="!submitRes">Submit Application</span>
+              <span *ngIf="submitRes">Submitting...</span>
+            </div>
           </button>
         </div>
       </form>
