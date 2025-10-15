@@ -552,7 +552,7 @@ export class CirRegisterComponent implements OnInit {
     this.cirservice.updateregister(this.userID, formData).subscribe(
       (response) => {
         if (response?.status == true) {
-          this.router.navigate(['/cir/cir-thankyou']);
+          this.router.navigate(['/auth/cir-user-login']);
           this.notificationService.showSuccess(response?.message, 'Success !');
           localStorage.removeItem('rmsRolesDetails');
         } else {
